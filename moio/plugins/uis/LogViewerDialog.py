@@ -177,6 +177,7 @@ class LogViewerDialog(QDialog):
 
     def encodeData(self, data):
         """Restituisce la data in formato yymmdd da dd/mm/yy"""
+        data = unicode(data)
         if re.match('\d\d/\d\d/\d\d',data):
             data = (data[6:8]+data[3:5]+data[0:2])
         return data

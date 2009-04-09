@@ -127,21 +127,25 @@ class MainFrame(QFrame):
         if self.tray.supportsMessages():
             self.traymessage = self.tray.showMessage
         if self.tray.isSystemTrayAvailable():
+
+
+            #imposto il menu contestuale
+            self.menu = QMenu("MoioSMS", self)
+            self.mostra = self.menu.addAction('Nascondi MoioSMS',
+                                              self.systemTrayEventHandler)
+            self.menu.addSeparator()
+            log = self.menu.addAction('Mostra Log',
+                                      self.logButtonEventHandler)
+            self.menu.addSeparator()
+            esci = self.menu.addAction('Esci', self.closeEvent)
+
+            self.tray.setContextMenu(self.menu)
             self.tray.show()
             self.connect(self.tray,
                      SIGNAL('activated(QSystemTrayIcon::ActivationReason)'),
                      self.systemTrayEventHandler)
-        else: self.tray = None
-
-        #imposto il menu contestuale
-        self.menu = QMenu("MoioSMS", self)
-        self.mostra = self.menu.addAction('Nascondi MoioSMS',
-                                          self.systemTrayEventHandler)
-        self.menu.addSeparator()
-        log = self.menu.addAction('Mostra Log',
-                                  self.logButtonEventHandler)
-        self.menu.addSeparator()
-        esci = self.menu.addAction('Esci', self.closeEvent)
+        else: 
+            self.tray = None
 
         #Evento: il testo nella combobox cambia
         #PRIMA viene richiamato destinationComboBoxEventHandler
@@ -622,18 +626,36 @@ class MainFrame(QFrame):
         if hadError:
             self.setIcon(getErrorData())
             self.messageLabel.setText(hadError)
-            if self.traymessage: self.traymessage(u"Messaggio NON inviato",
-                             u"Messaggio NON inviato utilizzando " +\
+            try:
+                import pynotify
+                pynotify.init ("MoioSMS")
+                n = pynotify.Notification ("MoioSMS",
+                    u"Messaggio non inviato tramite " +\
                              self.getSender()+u"\ndiretto a "+\
-                             unicode(self.destinationComboBox.currentText()),
-                             QSystemTrayIcon.Warning, 2000)
+                             unicode(self.destinationComboBox.currentText()), "MoioSMS")
+                n.show()
+            except ImportError:
+                if self.traymessage: self.traymessage(u"Messaggio NON inviato",
+                                 u"Messaggio NON inviato utilizzando " +\
+                                 self.getSender()+u"\ndiretto a "+\
+                                 unicode(self.destinationComboBox.currentText()),
+                                 QSystemTrayIcon.Warning, 2000)
         else:
             self.messageLabel.setText("SMS INVIATO!")
             self.setIcon(getOkData())
-            if self.traymessage: self.traymessage(u"Messaggio inviato",
-                             u"Messaggio inviato correttamente tramite " +\
+            try:
+                import pynotify
+                pynotify.init ("MoioSMS")
+                n = pynotify.Notification ("MoioSMS",
+                    u"Messaggio inviato correttamente tramite " +\
                              self.getSender()+u"\ndiretto a "+\
-                             unicode(self.destinationComboBox.currentText()))
+                             unicode(self.destinationComboBox.currentText()), "MoioSMS")
+                n.show()
+            except ImportError:
+                if self.traymessage: self.traymessage(u"Messaggio inviato",
+                                 u"Messaggio inviato correttamente tramite " +\
+                                 self.getSender()+u"\ndiretto a "+\
+                                 unicode(self.destinationComboBox.currentText()))
             #cancella il messaggio salvato
             if self.pm.isLastUsedAvailable("message"):
                 self.pm.unsetField('lastused','message')
@@ -743,10 +765,12 @@ class MainFrame(QFrame):
                 self.setWindowState(self.windowState() & ~Qt.WindowActive |
                                     Qt.WindowMinimized)
                 self.hide()
+                self.mostra.setText("Mostra MoioSMS")
             else:
                 self.setWindowState(self.windowState() & ~Qt.WindowMinimized |
                                     Qt.WindowActive)
                 self.show()
+                self.mostra.setText("Nascondi MoioSMS")
                 self.raise_()
                 self.activateWindow()
         elif event == Qt.WindowActive:
@@ -766,7 +790,7 @@ class MainFrame(QFrame):
         y = event.globalY()-self.menu.sizeHint().height()
         self.menu.popup(QPoint(x,y))
 
-    def closeEvent(self, event):
+    def closeEvent(self, event = None):
         """Salva il file di configurazione e termina il programma."""
         if self.offlineSend:
             if not self.offlineSend.listBox.count() == 0:
