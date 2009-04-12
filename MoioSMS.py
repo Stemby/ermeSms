@@ -11,19 +11,19 @@ Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
 Distribuito in licenza GNU GPL.
 """
 #controlla che il programma non sia già avviato
-try:
-    import psutil
-except: pass
-else:
-    thispid = psutil.os.getpid()
-    this = psutil.Process(thispid)
-    count = 0
-    for i in psutil.get_process_list():
-        try:
-            if i.cmdline == this.cmdline: count +=1
-        except: pass
-    if count > 1:
-        sys.exit(0)
+#try:
+#    import psutil
+#except: pass
+#else:
+#    thispid = psutil.os.getpid()
+#    this = psutil.Process(thispid)
+#    count = 0
+#    for i in psutil.get_process_list():
+#        try:
+#            if i.cmdline == this.cmdline: count +=1
+#        except: pass
+#    if count > 1:
+#        sys.exit(0)
 
 #carico i moduli e avvio il programma
 from moio.plugins.UI import UI
@@ -33,6 +33,7 @@ from moio.FatalExceptionHandler import FatalExceptionHandler
 from moio.plugins.senders import *
 from moio.plugins.uis import *
 from moio.plugins.captchadecoders import *
+from moio.plugins.books import *
 
 #Ricerca la migliore interfaccia utilizzabile (interfaccia disponibile
 #a priorità massima)

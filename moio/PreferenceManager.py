@@ -38,7 +38,7 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-    version = "2.19 BuNbUrY Beta"
+    version = "2.19 Qt"
     """Versione del programma"""
 
     def __init__(self):
@@ -81,17 +81,6 @@ class PreferenceManager(Singleton):
         for sender, state in items:
             if state == 'True': senderList.append(sender)
         return senderList
-
-    def getContacts(self):
-        """Ritorna un dizionario con tutti i contatti in rubrica."""
-        result = {}
-        if self.c.has_section("contacts") == True:
-            items = self.c.items("contacts")
-            for name, number in items:
-                name = self.cm.unQuoteUnicode(name)
-                number = self.cm.unQuoteUnicode(number)
-                result[name] = number
-        return result
 
     def isLastUsedAvailable(self, key):
         """Ritorna True se esiste una chiave LRU."""
@@ -150,55 +139,6 @@ class PreferenceManager(Singleton):
         logfile.write(logdata)
         logfile.close()
 
-    def lookup(self, name):
-        """Cerca un nome nella rubrica."""
-        try:
-            return self.getField("contacts", name)
-        except (NoSectionError, NoOptionError, PreferenceManagerError):
-            raise NotFoundError(name)
-
-    def lookupNumber(self, number):
-        """Cerca un numero nella rubrica."""
-        number = self.cm.quoteUnicode(number)
-        #Decisamente non il modo migliore, ma funziona.
-        contacts = self.getContacts()
-        inverseContacts = dict([[v, k] for k, v in contacts.items()])
-        try:
-            return inverseContacts[number]
-        except KeyError:
-            if number[:3]=="+39":
-                number = number[3:]
-            else:
-                number = "+39"+number
-            try:
-                return inverseContacts[number]
-            except KeyError:
-                raise NotFoundError(number)
-
-    def isInContacts(self, name):
-        """Ritorna True se un contatto è presente in rubrica."""
-        try:
-            self.lookup(name)
-            return True
-        except NotFoundError:
-            return False
-
-    def isNumberInContacts(self, number):
-        """Ritorna True se il numero di un contatto è presente in rubrica."""
-        try:
-            self.lookupNumber(number)
-            return True
-        except NotFoundError:
-            #ricerca alternativa
-            if number[:3]=="+39":
-                number = number[3:]
-            else:
-                number = "+39"+number
-            try:
-                self.lookupNumber(number)
-                return True
-            except NotFoundError:
-                return False
 
     def isProxyEnabled(self):
         """Ritorna True se un proxy è configurato."""
@@ -229,11 +169,11 @@ class PreferenceManager(Singleton):
                     self.setEncryptedField(section, "e"+option, value, key)
                     self.unsetField(section, option)
         self.setField("encryption", "enabled", "true")
-        self.setField("encryption", "keyhash", self.cm.quoteBase64(hashlib.sha.new(key).digest()))
+        self.setField("encryption", "keyhash", self.cm.quoteBase64(hashlib.sha1.new(key).digest()))
 
     def checkEncryptionKey(self, key):
         """Ritorna True se la chiave passata corrisponde con la chiave utilizzata per la cifratura."""
-        keyHash1 = hashlib.sha.new(key).digest()
+        keyHash1 = hashlib.sha1.new(key).digest()
         keyHash2 = self.cm.unQuoteBase64(self.getField("encryption", "keyhash"))
         return keyHash1 == keyHash2
 
@@ -334,7 +274,7 @@ class PreferenceManager(Singleton):
     def getEncryptedField(self, section, key, encryptionKey):
         """Ritorna il valore corrispondente a key nella sezione
         section, decrittandolo con la chiave encryptionKey."""
-        r = rijndael(hashlib.md5.new(encryptionKey).digest())
+        r = rijndael(hashlib.sha1(encryptionKey).digest())
         encryptedValue = self.cm.unQuoteBase64(self.getField(section, key))
         cleartextValue = ""
         for i in range(len(encryptedValue)/16):
@@ -347,7 +287,7 @@ class PreferenceManager(Singleton):
     def setEncryptedField(self, section, key, value, encryptionKey):
         """Setta una coppia chiave-valore corrispondente nella sezione
         section crittando key con la chiave encryptionKey."""
-        r = rijndael(hashlib.md5.new(encryptionKey).digest())
+        r = rijndael(hashlib.sha1(encryptionKey).digest())
         paddedValue = value  + (16 - (len(value) % 16)) * self.paddingChar
         encryptedValue = ""
         for i in range(len(paddedValue)/16):
@@ -385,3 +325,15 @@ class PreferenceManager(Singleton):
         if os.path.isdir(self.configDirName) == False:
             os.makedirs(self.configDirName)
         self.c.write(file(self.configFileName,"w"))
+
+    def getBook(self):
+        """Ritorna il book preferito."""
+        return self.getField("books", "preferito")
+    
+    def setBook(self, book):
+        """Setta il book preferito."""
+        self.setField("books", "preferito", book) 
+
+    def isBookSet(self):
+        """Ritorna True se un book è configurato."""
+        return self.hasField("books", "preferito")

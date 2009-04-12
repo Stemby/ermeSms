@@ -6,6 +6,7 @@ import sys
 
 from PyQt4.QtCore import SIGNAL
 
+from moio.plugins.Book import Book
 from moio.plugins.Sender import Sender
 from moio.CodingManager import CodingManager
 from moio.errors.SiteAuthError import SiteAuthError
@@ -29,6 +30,7 @@ class SendMessage(threading.Thread):
         self.mf = mf
         self.pm = self.mf.pm
         self.masterKey = self.mf.masterKey
+        self.book = self.mf.book
 
            
     def run(self):
@@ -48,7 +50,7 @@ class SendMessage(threading.Thread):
                         reg[i] = self.pm.getAccount(senderName,i,
                                                     self.masterKey)
                 if self.mf.isValid(dn)==False:
-                    dn = self.pm.lookup(
+                    dn = self.book.lookup(
                         CodingManager.getInstance().quoteUnicode(dn))
                         
                 if self.pm.isProxyEnabled():
@@ -125,7 +127,7 @@ class SendMessage(threading.Thread):
             except:
                 done = True
                 hadError = u"L'ultimo SMS non è stato" +\
-                            u"inviato a causa di un errore."
+                            u" inviato a causa di un errore."
                 message = u"Si è verificato un errore imprevisto.\n" + \
                           u"Il sender "+senderName+u" non puo' essere " + \
                           u"utilizzato.\nDettagli dell'errore:\n" + \

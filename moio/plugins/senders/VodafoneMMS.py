@@ -62,9 +62,6 @@ class Vodafonemms(Sender):
             c.setopt(pycurl.URL, "http://mmsviaweb.net.vodafone.it/WebComposer/web/elaborapop.jsp")
             self.perform(self.stop)
             self.checkForErrors(saver.getvalue())
-            f=open('a.txt','wb')
-            f.write(saver.getvalue())
-            f.close()
             
             if (re.search("Il tuo messaggio &egrave; stato inviato", saver.getvalue()) is None):
                 raise SenderError(self.__class__.__name__)
