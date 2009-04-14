@@ -110,7 +110,6 @@ class MainFrame(QFrame):
         self.senderBoxes[senderList[0]].setChecked(True)
         self.logButton = QPushButton("Apri Registro")
         self.prefButton = QPushButton("Preferenze")
-        self.sentLabel = QLabel("Inviati: 0")
         self.check = QCheckBox("Posticipa invio")
         self.sendButton = QPushButton("Invia!")
         self.stopButton = QPushButton("Annulla invio...")
@@ -137,8 +136,6 @@ class MainFrame(QFrame):
         self.addButton.setToolTip("Aggiungi il numero inserito in rubrica")
         self.deleteButton.setToolTip("Rimuovi l'elemento selezionato dalla" +\
                                      "rubrica")
-        self.sentLabel.setToolTip("SMS inviati oggi con il gestore " +\
-                                    self.getSender())
 
         #imposto la system tray icon
         self.tray = QSystemTrayIcon(icon)
@@ -310,9 +307,6 @@ class MainFrame(QFrame):
         grid.addWidget(self.senderRadioBox, 3, 0)
 
         sentBox = QGroupBox()
-        sent = QHBoxLayout()
-        sent.addWidget(self.sentLabel)
-        sentBox.setLayout(sent)
         hbox_5.addWidget(sentBox, 0)
         hbox_5.addStretch(1)
         hbox_5.addWidget(self.sendButton, 1)
@@ -502,12 +496,13 @@ class MainFrame(QFrame):
     def updateSentMessages(self):
         """Controlla e aggiorna il numero di SMS inviati da un gestore"""
         self.pm.checkSentSender()
-        sentmessage = 'Inviati: 0'
-        if self.pm.isSentSenderAvailable(self.getSender()):
-            sentmessage = 'Inviati: ' + self.pm.getSentSender(self.getSender())
-        self.sentLabel.setText(sentmessage)
-        self.sentLabel.setToolTip( "SMS inviati con il gestore "+\
-                                    self.getSender())
+        i = self.getSender()
+        if self.pm.isSentSenderAvailable(i):
+            self.senderBoxes[i].setText(i + " ("+self.pm.getSentSender(i)+")")
+            self.senderBoxes[i].setToolTip(i + " ("+self.pm.getSentSender(i)+")")
+        else:
+            self.senderBoxes[i].setText(i + " (0)")
+            self.senderBoxes[i].setToolTip(i + " (0)")
 
     def deleteButtonEventHandler(self, event):
         """Cancella un contatto dalla rubrica e aggiorna la visualizzazione."""
