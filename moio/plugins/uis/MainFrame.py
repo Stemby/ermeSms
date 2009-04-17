@@ -10,7 +10,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from moio.plugins.Book import Book
-#from moio.plugins.uis.PreferenzeBookDialog import PreferenzeBookDialog
+from moio.plugins.uis.PreferencesDialog import PreferencesDialog
 from moio.plugins.uis.Icons import getOkData, getErrorData, getIconData
 from moio.plugins.uis.SenderChoicesDialog import SenderChoicesDialog
 from moio.plugins.uis.OfflineSendDialog import OfflineSendDialog
@@ -185,6 +185,8 @@ class MainFrame(QFrame):
                      self.stopButtonEventHandler)
         self.connect(self.sendButton, SIGNAL('clicked(bool)'),
                      self.sendButtonEventHandler)
+        self.connect(self.prefButton, SIGNAL('clicked(bool)'),
+                     self.prefButtonEventHandler)
 
         #Altri eventi che comportano aggiornamenti della barra di stato
         self.connect(self.messageTextCtrl, SIGNAL('textChanged()'),
@@ -709,6 +711,10 @@ class MainFrame(QFrame):
             for i in data['request']:
                 dataR[i] = md.getValue(i)
             self.qReq.put(dataR)
+            
+    def prefButtonEventHandler(self):
+        pd = PreferencesDialog(self)
+        pd.show()
 
     def proxyRequestEventHandler(self):
         """Gestisce l'evento di richiesta proxy durante l'invio di un SMS"""
