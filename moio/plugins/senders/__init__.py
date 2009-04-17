@@ -14,5 +14,6 @@ __all__ = [
     'Wadja',
     'Enel',
     'Rossoalice',
-    'Tin'
+    'Tin',
+    'Skebby'
     ]
