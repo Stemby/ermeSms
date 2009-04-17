@@ -169,11 +169,11 @@ class PreferenceManager(Singleton):
                     self.setEncryptedField(section, "e"+option, value, key)
                     self.unsetField(section, option)
         self.setField("encryption", "enabled", "true")
-        self.setField("encryption", "keyhash", self.cm.quoteBase64(hashlib.sha1.new(key).digest()))
+        self.setField("encryption", "keyhash", self.cm.quoteBase64(hashlib.sha1(key).digest()))
 
     def checkEncryptionKey(self, key):
         """Ritorna True se la chiave passata corrisponde con la chiave utilizzata per la cifratura."""
-        keyHash1 = hashlib.sha1.new(key).digest()
+        keyHash1 = hashlib.sha1(key).digest()
         keyHash2 = self.cm.unQuoteBase64(self.getField("encryption", "keyhash"))
         return keyHash1 == keyHash2
 

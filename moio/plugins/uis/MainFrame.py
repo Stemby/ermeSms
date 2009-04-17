@@ -241,9 +241,9 @@ class MainFrame(QFrame):
                         "sender")].setChecked(True)
 
         #sposto al centro la Main
-        #posx = (QDesktopWidget().width()-self.width())/2
-        #posy = ((QDesktopWidget().height()/3*2)-self.height())/2
-        #self.move(posx,posy)
+        posx = (QDesktopWidget().width()-self.width())/2
+        posy = ((QDesktopWidget().height()/3*2)-self.height())
+        self.move(posx,posy)
 
         #Per evitare di riscrivere codice di inizializzazione già presente
         #negli eventHandler, li avvio manualmente la prima volta
@@ -496,13 +496,13 @@ class MainFrame(QFrame):
     def updateSentMessages(self):
         """Controlla e aggiorna il numero di SMS inviati da un gestore"""
         self.pm.checkSentSender()
-        i = self.getSender()
-        if self.pm.isSentSenderAvailable(i):
-            self.senderBoxes[i].setText(i + " ("+self.pm.getSentSender(i)+")")
-            self.senderBoxes[i].setToolTip(i + " ("+self.pm.getSentSender(i)+")")
-        else:
-            self.senderBoxes[i].setText(i + " (0)")
-            self.senderBoxes[i].setToolTip(i + " (0)")
+        for i in self.pm.getSenderList():
+            if self.pm.isSentSenderAvailable(i):
+                self.senderBoxes[i].setText(i + " ("+self.pm.getSentSender(i)+")")
+                self.senderBoxes[i].setToolTip(i + " ("+self.pm.getSentSender(i)+")")
+            else:
+                self.senderBoxes[i].setText(i + " (0)")
+                self.senderBoxes[i].setToolTip(i + " (0)")
 
     def deleteButtonEventHandler(self, event):
         """Cancella un contatto dalla rubrica e aggiorna la visualizzazione."""
