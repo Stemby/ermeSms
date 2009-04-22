@@ -22,7 +22,7 @@ import exceptions
 
 #TODO: add logic for preferences
 
-class PreferencesDialog(QDialog):
+class PreferenceDialog(QDialog):
 
     def __init__(self, mf):
         QDialog.__init__(self, mf, mf.defaultFlag)
