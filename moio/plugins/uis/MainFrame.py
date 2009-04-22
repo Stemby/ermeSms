@@ -10,7 +10,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from moio.plugins.Book import Book
-from moio.plugins.uis.PreferencesDialog import PreferencesDialog
+from moio.plugins.uis.PreferenceDialog import PreferenceDialog
 from moio.plugins.uis.Icons import getOkData, getErrorData, getIconData
 from moio.plugins.uis.SenderChoicesDialog import SenderChoicesDialog
 from moio.plugins.uis.OfflineSendDialog import OfflineSendDialog
@@ -135,7 +135,7 @@ class MainFrame(QFrame):
         self.check.setToolTip("Selezione per posticipare l'invio")
         self.addButton.setToolTip("Aggiungi il numero inserito in rubrica")
         self.deleteButton.setToolTip("Rimuovi l'elemento selezionato dalla" +\
-                                     "rubrica")
+                                     " rubrica")
 
         #imposto la system tray icon
         self.tray = QSystemTrayIcon(icon)
@@ -500,8 +500,10 @@ class MainFrame(QFrame):
         self.pm.checkSentSender()
         for i in self.pm.getSenderList():
             if self.pm.isSentSenderAvailable(i):
-                self.senderBoxes[i].setText(i + " ("+self.pm.getSentSender(i)+")")
-                self.senderBoxes[i].setToolTip(i + " ("+self.pm.getSentSender(i)+")")
+                self.senderBoxes[i].setText(i + \
+                    " ("+self.pm.getSentSender(i)+")")
+                self.senderBoxes[i].setToolTip(i + \
+                    " ("+self.pm.getSentSender(i)+")")
             else:
                 self.senderBoxes[i].setText(i + " (0)")
                 self.senderBoxes[i].setToolTip(i + " (0)")
@@ -648,7 +650,8 @@ class MainFrame(QFrame):
                 n = pynotify.Notification ("MoioSMS",
                     u"Messaggio non inviato tramite " +\
                              self.getSender()+u" a "+\
-                             unicode(self.destinationComboBox.currentText()), "MoioSMS")
+                             unicode(self.destinationComboBox.currentText()), 
+                                     "MoioSMS")
                 n.show()
             except ImportError:
                 if self.traymessage: self.traymessage(u"Messaggio NON inviato",
@@ -665,7 +668,8 @@ class MainFrame(QFrame):
                 n = pynotify.Notification ("MoioSMS",
                     u"Messaggio inviato correttamente tramite " +\
                              self.getSender()+u" a "+\
-                             unicode(self.destinationComboBox.currentText()), "MoioSMS")
+                             unicode(self.destinationComboBox.currentText()), 
+                                     "MoioSMS")
                 n.show()
             except ImportError:
                 if self.traymessage: self.traymessage(u"Messaggio inviato",
@@ -713,7 +717,7 @@ class MainFrame(QFrame):
             self.qReq.put(dataR)
             
     def prefButtonEventHandler(self):
-        pd = PreferencesDialog(self)
+        pd = PreferenceDialog(self)
         pd.show()
 
     def proxyRequestEventHandler(self):

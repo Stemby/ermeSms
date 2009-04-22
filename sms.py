@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 """Un programma per mandare SMS via Internet.
 
 Con questo piccolo programma a base di pycurl ed espressioni regolari sarete
@@ -10,20 +11,21 @@ Login manager e rubrica telefonica sono inclusi.
 Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
 Distribuito in licenza GNU GPL.
 """
+
 #controlla che il programma non sia già avviato
-#try:
-#    import psutil
-#except: pass
-#else:
-#    thispid = psutil.os.getpid()
-#    this = psutil.Process(thispid)
-#    count = 0
-#    for i in psutil.get_process_list():
-#        try:
-#            if i.cmdline == this.cmdline: count +=1
-#        except: pass
-#    if count > 1:
-#        sys.exit(0)
+try:
+    import psutil
+except: pass
+else:
+    thispid = psutil.os.getpid()
+    this = psutil.Process(thispid)
+    count = 0
+    for i in psutil.get_process_list():
+        try:
+            if i.cmdline == this.cmdline: count +=1
+        except: pass
+    if count > 1:
+        sys.exit(0)
 
 #carico i moduli e avvio il programma
 from moio.plugins.UI import UI
