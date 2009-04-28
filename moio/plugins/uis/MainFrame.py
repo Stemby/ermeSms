@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 import sys
 import os
@@ -22,6 +22,9 @@ from moio.plugins.uis.GraphicalUI import GraphicalUI
 from moio.PreferenceManager import PreferenceManager
 from moio.plugins.uis.SendMessage import SendMessage
 from moio.plugins.Sender import Sender
+
+from moio.errors.PreferenceManagerError import PreferenceManagerError
+from moio.errors.BookError import BookError
 
 class MainFrame(QFrame):
 
@@ -50,17 +53,13 @@ class MainFrame(QFrame):
     book = None
     
     def __init_book(self):
-        if self.pm.isBookSet() and (self.pm.getBook() in Book.getPlugins().keys()):
-            self.book = Book.getPlugins()[self.pm.getBook()]
-        else:
-            self.pm.setBook("BuiltInBook")
-            #dg = PreferenzeBookDialog(None, -1, "", style=wx.CENTRE)
-            #dg.setChoices( "BuiltInBook", Book.getPlugins().keys())
-            #if dg.ShowModal() == wx.ID_OK:
-            #    self.pm.setBook(dg.getSelectedBook())
-            #else:
-            #    self.pm.setBook("BuiltInBook")
-            self.book = Book.getPlugins()[self.pm.getBook()]
+        try:
+            if not (self.pm.isBookSet() and 
+               (self.pm.getBook() in Book.getPlugins().keys())):
+                self.pm.setBook("BuiltInBook")
+        except PreferenceManagerError:
+             pass
+        self.book = Book.getPlugins()[self.pm.getBook()]
 
     def __init__(self):
         self.flag = Qt.WindowFlags(Qt.Window)
@@ -86,8 +85,11 @@ class MainFrame(QFrame):
         self.destinationComboBox.setEditable(True)
         self.destinationComboBox.completer().setCaseSensitivity(
             Qt.CaseSensitive)
-        contatti = self.book.getContacts().keys()
-        contatti.sort()
+        try:
+            contatti = self.book.getContacts().keys()
+            contatti.sort()
+        except BookError, be:
+            QMessageBox.critical(self, u"Errore", be.__str__())
         self.destinationComboBox.addItems(contatti)
         self.deleteButton = QPushButton("Cancella")
         self.addButton = QPushButton("Metti in rubrica")
@@ -308,8 +310,6 @@ class MainFrame(QFrame):
         self.senderRadioBox.setLayout(grid_2)
         grid.addWidget(self.senderRadioBox, 3, 0)
 
-        sentBox = QGroupBox()
-        hbox_5.addWidget(sentBox, 0)
         hbox_5.addStretch(1)
         hbox_5.addWidget(self.sendButton, 1)
         hbox_5.addWidget(self.stopButton, 1)
@@ -513,7 +513,10 @@ class MainFrame(QFrame):
         destString = unicode(self.destinationComboBox.currentText())
         destIndex = self.destinationComboBox.findText(
                                 self.destinationComboBox.currentText())
-        self.book.deleteContact(destString)
+        try:
+            self.book.deleteContact(destString)
+        except BookError, be:
+            QMessageBox.critical(self, u"Errore", be.__str__())
         self.destinationComboBox.removeItem(destIndex)
         self.destinationComboBox.setEditText("")
         self.destinationComboBoxEventHandler(event)
@@ -546,7 +549,10 @@ class MainFrame(QFrame):
                         retried = True
                     else:
                         valid = True
-                        self.book.addContact(name, text)
+                        try:
+                            self.book.addContact(name, text)
+                        except BookError, be:
+                            QMessageBox.critical(self, u"Errore", be.__str__())
                         self.insertDestinationComboBox(name)
                         self.messageTextCtrl.setFocus()
         else:
@@ -570,7 +576,10 @@ class MainFrame(QFrame):
                         retried = True
                     else:
                         valid = True
-                        self.book.addContact(text, number)
+                        try:
+                            self.book.addContact(text, number)
+                        except BookError, be:
+                            QMessageBox.critical(self, u"Errore", be.__str__())
                         self.insertDestinationComboBox(text)
                         self.messageTextCtrl.setFocus()
 
@@ -651,7 +660,7 @@ class MainFrame(QFrame):
                     u"Messaggio non inviato tramite " +\
                              self.getSender()+u" a "+\
                              unicode(self.destinationComboBox.currentText()), 
-                                     "MoioSMS")
+                                     "error")
                 n.show()
             except ImportError:
                 if self.traymessage: self.traymessage(u"Messaggio NON inviato",
