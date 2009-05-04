@@ -148,6 +148,8 @@ class MainFrame(QFrame):
             self.menu = QMenu("MoioSMS", self)
             self.mostra = self.menu.addAction('Nascondi MoioSMS',
                                               self.systemTrayEventHandler)
+            self.preferenze = self.menu.addAction('Preferenze',
+                                                  self.prefButtonEventHandler)
             self.menu.addSeparator()
             log = self.menu.addAction('Mostra Log',
                                       self.logButtonEventHandler)
