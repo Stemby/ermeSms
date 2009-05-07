@@ -49,7 +49,7 @@ class SendMessage(threading.Thread):
                     for i in sender.requiresRegistration:
                         reg[i] = self.pm.getAccount(senderName,i,
                                                     self.masterKey)
-                if self.mf.isValid(dn)==False:
+                if not self.mf.isValid(dn):
                     dn = self.book.lookup(
                         CodingManager.getInstance().quoteUnicode(dn))
                         

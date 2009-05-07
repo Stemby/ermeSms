@@ -153,14 +153,6 @@ class PreferenceDialog(QDialog):
                 keyValid = self.mf.pm.checkEncryptionKey(self.mf.masterKey)
             self.mf.pm.disableEncryption()
             self.mf.masterKey = None
-            pd, result = QInputDialog.getText(None, "Master Password",
-                    u"Inserisci la nuova Master Password",
-                    QLineEdit.Password)
-            if result == False:
-                return
-            pd = unicode(pd)
-            self.mf.masterKey = pd
-            self.mf.pm.enableEncryption(pd)
         else:
             result = QMessageBox.question(self,
                 u"Vuoi crittare i tuoi dati sensibili?",

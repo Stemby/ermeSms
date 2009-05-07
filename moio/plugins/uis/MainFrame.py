@@ -574,7 +574,7 @@ class MainFrame(QFrame):
                     cancelled = True
                 else:
                     number = unicode(number)
-                    if self.isValid(number) == False:
+                    if not self.isValid(number):
                         retried = True
                     else:
                         valid = True
@@ -796,7 +796,7 @@ class MainFrame(QFrame):
     def systemTrayEventHandler(self, event = QSystemTrayIcon.Trigger):
         """Gestore degli eventi sulla tray icon"""
         if event == QSystemTrayIcon.Trigger:
-            if self.isVisible() == True:
+            if self.isVisible():
                 self.setWindowState(self.windowState() & ~Qt.WindowActive |
                                     Qt.WindowMinimized)
                 self.hide()
@@ -843,7 +843,7 @@ class MainFrame(QFrame):
         self.pm.setLastUsed("destination",
                             unicode(self.destinationComboBox.currentText()))
 
-        if self.pm.isEncryptionSpecified() == False:
+        if not self.pm.isEncryptionSpecified():
             result = QMessageBox.question(self,
                 u"Vuoi crittare i tuoi dati sensibili?",
                 u"MoioSMS sta per salvare i tuoi dati su disco.\n" +

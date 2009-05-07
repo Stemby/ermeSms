@@ -11,13 +11,14 @@ Login manager e rubrica telefonica sono inclusi.
 Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
 Distribuito in licenza GNU GPL.
 """
+import os
 
 #controlla che il programma non sia già avviato
 try:
     import psutil
 except: pass
 else:
-    thispid = psutil.os.getpid()
+    thispid = os.getpid()
     this = psutil.Process(thispid)
     count = 0
     for i in psutil.get_process_list():
