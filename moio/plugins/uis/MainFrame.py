@@ -96,6 +96,7 @@ class MainFrame(QFrame):
         self.label.setMinimumHeight(self.addButton.minimumSizeHint().height())
         self.messageTextCtrl = QTextEdit("Inserisci il tuo messaggio qui.")
         self.messageTextCtrl.setMinimumHeight(70)
+        self.messageTextCtrl.setTabChangesFocus(True)
         if self.pm.isSenderListAvailable(Sender.getPlugins().keys()) == False:
             scd=SenderChoicesDialog(self)
             result = scd.exec_()

@@ -35,13 +35,18 @@ class PreferenceDialog(QDialog):
 
         self.bookComboBox = QComboBox()
         self.bookComboBox.addItems(Book.getPlugins().keys())
-        self.bookComboBox.setCurrentIndex(self.bookComboBox.findText(mf.pm.getBook(), Qt.MatchExactly))
+        self.bookComboBox.setCurrentIndex(
+            self.bookComboBox.findText(mf.pm.getBook(), Qt.MatchExactly))
         self.proxyUrl = QLineEdit()
         self.proxyUrl.setMaxLength(255)
         if mf.pm.isProxyEnabled():
             self.proxyUrl.setText(mf.pm.getProxy())
         self.resetSenderListButton = QPushButton("Reimposta lista Sender")
-        self.changePasswordButton = QPushButton("Cambia password")
+        self.changePasswordButton = None
+        if mf.pm.isEncryptionEnabled():
+            self.changePasswordButton = QPushButton("Rimuovi password")
+        else:
+            self.changePasswordButton = QPushButton("Imposta password")
         self.applyButton = QPushButton("Applica")
         self.closeButton = QPushButton("Chiudi")
 
@@ -125,11 +130,12 @@ class PreferenceDialog(QDialog):
         self.close()
 
     def proxyUrlHandler(self, newProxyUrl):
-        self.edited = True
+        if self.mf.pm.isProxyEnabled():
+            self.edited = self.mf.pm.getProxy() != newProxyUrl
 
     def bookComboBoxHandler(self, bookIndex):
-        self.edited = True
-        self.needRestart = True
+        self.edited = self.mf.pm.getBook() != unicode(self.bookComboBox.currentText())
+        self.needRestart = self.edited
 
     def resetSenderListHandler(self):
         self.edited = True
@@ -143,16 +149,23 @@ class PreferenceDialog(QDialog):
 
     def changePasswordEventHandler(self):
         if self.mf.pm.isEncryptionEnabled():
-            keyValid = False
-            while keyValid == False:
-                pd, result = QInputDialog.getText(None, "Master Password",
-                        u"Inserisci la vecchia Master Password",
-                        QLineEdit.Password)
-                if result == False:
-                    return
-                keyValid = self.mf.pm.checkEncryptionKey(self.mf.masterKey)
-            self.mf.pm.disableEncryption()
-            self.mf.masterKey = None
+            result = QMessageBox.question(self,
+                u"Attenzione!",
+                u"Tutti i dati relativi agli account registrati verranno \
+                persi, continuare?\n", 'Si','No')
+            if result==0:
+                keyValid = False
+                while not keyValid:
+                    pd, result = QInputDialog.getText(None, "Master Password",
+                            u"Inserisci la vecchia Master Password",
+                            QLineEdit.Password)
+                    if not result:
+                        return
+                    keyValid = self.mf.pm.checkEncryptionKey(self.mf.masterKey)
+                self.mf.pm.disableEncryption()
+                self.mf.masterKey = None
+            else:
+                return
         else:
             result = QMessageBox.question(self,
                 u"Vuoi crittare i tuoi dati sensibili?",
@@ -166,8 +179,7 @@ class PreferenceDialog(QDialog):
                 self.mf.masterKey = pd
                 self.mf.pm.enableEncryption(pd)
             else:
-                self.mf.masterKey = None
-                self.mf.pm.disableEncryption()
+                return
     
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
