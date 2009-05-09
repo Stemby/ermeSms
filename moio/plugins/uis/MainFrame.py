@@ -290,7 +290,6 @@ class MainFrame(QFrame):
         hbox_1.addWidget(self.destinationComboBox, 1)
         hbox_1.addWidget(self.deleteButton, 0)
         hbox_1.addWidget(self.addButton, 0)
-        hbox_1.addWidget(self.prefButton, 0)
         grid.addLayout(hbox_1, 0, 0)
 
         hbox_2.addWidget(self.bitmap)
@@ -314,10 +313,10 @@ class MainFrame(QFrame):
         grid.addWidget(self.senderRadioBox, 3, 0)
 
         hbox_5.addStretch(1)
-        hbox_5.addWidget(self.sendButton, 1)
-        hbox_5.addWidget(self.stopButton, 1)
-        hbox_5.addStretch(1)
+        hbox_5.addWidget(self.sendButton, 0)
+        hbox_5.addWidget(self.stopButton, 0)
         hbox_5.addWidget(self.logButton,0)
+        hbox_5.addWidget(self.prefButton, 0)
         checkBox = QGroupBox()
         check = QHBoxLayout()
         check.addWidget(self.check)
