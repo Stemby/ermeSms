@@ -15,7 +15,7 @@ from moio.errors.SiteConnectionError import SiteConnectionError
 from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
 
-class Vodafonemms(Sender):
+class VodafoneMMS(Sender):
     """Permette di spedire MMS testuali dal sito vodafone.it"""
 
     maxLength = 500
@@ -47,7 +47,6 @@ class Vodafonemms(Sender):
 
             #Invio l'sms
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             postFields = {}
             postFields["recipient"] = "+39" + number
             postFields["subjecttosend"] = "Da: "+mittente
@@ -58,11 +57,11 @@ class Vodafonemms(Sender):
             postFields["nextPage"] = "/web/servletresult.html"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))            
+                self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, "http://mmsviaweb.net.vodafone.it/WebComposer/web/elaborapop.jsp")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
-            
+
             if (re.search("Il tuo messaggio &egrave; stato inviato", saver.getvalue()) is None):
                 raise SenderError(self.__class__.__name__)
 

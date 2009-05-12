@@ -19,7 +19,8 @@ class SenderError(Exception):
                u"MoioSMS necessita un aggiornamento. \n\n" +
                u"Se il problema persiste ed è possibile inviare SMS \n" +
                u"dal Web, controlla che non sia uscita una nuova \n" +
-               u"versione sul sito ufficiale: www.moioli.net")
+               u"versione sul forum del sito ufficiale: \n"
+               u"http://www.moioli.net/forum/")
 
         return (msg)
 

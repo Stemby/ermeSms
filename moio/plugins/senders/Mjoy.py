@@ -44,9 +44,6 @@ class Mjoy(Sender):
             password = dati['Password']                   
            
             #visito la pagina iniziale
-            saver = StringIO()
-            c.setopt(pycurl.POST, False)
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.URL, "http://www.mjoy.com/m/login.htm")
             self.perform(self.stop)
 
@@ -54,7 +51,6 @@ class Mjoy(Sender):
 
             #eseguo il login
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             postFields = {}
             postFields["nickname"] = username
             postFields["password"] = password
@@ -62,7 +58,7 @@ class Mjoy(Sender):
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.URL, "http://www.mjoy.com/m/login.htm")
             c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
             
@@ -75,11 +71,10 @@ class Mjoy(Sender):
             
             #vado alla pagina degli SMS
             saver = StringIO()           
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, False)
             url = 'http://www.mjoy.com/m/messages/' + code + '/new.htm'
             c.setopt(pycurl.URL, url)
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
 
@@ -87,7 +82,6 @@ class Mjoy(Sender):
 
             #Invio un sms           
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["recipient"] = number
@@ -96,7 +90,7 @@ class Mjoy(Sender):
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, url)
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
     

@@ -32,9 +32,7 @@ class AimonFree(Sender):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
         """
-
         try:
-
             #Costruisco un nuovo oggetto Curl e lo inizializzo
             c = self.connectionManager.getCurl()
             
@@ -44,8 +42,6 @@ class AimonFree(Sender):
             username = dati['Nome utente']
             password = dati['Password']                  
         
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.URL, "http://aimon.it/?cmd=smsgratis")
             postFields = {}
             postFields["inputUsername"] = username + '@aimon.it'
@@ -53,15 +49,14 @@ class AimonFree(Sender):
             postFields["submit"] = 'procedi'
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
-            self.perform(self.stop)
-
+            saver = StringIO()
+            self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
 
             if ui: ui.gaugeIncrement(self.incValue)
 
             #Invio di un sms
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["tiposms"] = '0'
@@ -72,8 +67,7 @@ class AimonFree(Sender):
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, 'http://aimon.it/index.php?cmd=smsgratis&sez=smsgratis')
-            self.perform(self.stop)
-
+            self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
             
             if (re.search("Messaggio inviato con successo", saver.getvalue()) is None):

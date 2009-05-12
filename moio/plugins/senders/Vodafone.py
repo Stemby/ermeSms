@@ -53,30 +53,28 @@ class Vodafone(Sender):
 
             #Visito la pagina iniziale
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.URL, "http://www.vodafone.it/190/trilogy/jsp/home.do")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
 
             if "http://lavori.vodafone.it/Courtesy.html" == c.getinfo(pycurl.EFFECTIVE_URL):
                 raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
 
             if ui: ui.gaugeIncrement(self.incValue)
-            
+
             #Sono già autenticato?
             if(re.search("Ciao: <b><!-- TY_DISP -->", saver.getvalue()) is None):
                 #No, ammazzo i vecchi cookie e mi riautentico
                 self.connectionManager.forgetCookiesFromDomain("190.it")
                 self.connectionManager.forgetCookiesFromDomain("vodafone.it")
                 saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
                 c.setopt(pycurl.URL, "https://www.vodafone.it/190/trilogy/jsp/login.do")
                 postFields = {}
                 postFields["username"] = username
                 postFields["password"] = password
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
 
                 self.checkForErrors(saver.getvalue())
 
@@ -84,21 +82,19 @@ class Vodafone(Sender):
                     raise SiteAuthError(self.__class__.__name__)
 
             if ui: ui.gaugeIncrement(self.incValue)
-            
+
             #se Sim e se non è attiva, cambio la SIM attiva
             if sim and (re.search('value="'+sim+'" selected >',
                                   saver.getvalue()) is None):
                 saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
                 c.setopt(pycurl.URL, "http://www.areaprivati.vodafone.it/190/trilogy/jsp/swapSim.do?tk=9616,1&ty_sim="+sim)
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
                 self.checkForErrors(saver.getvalue())
 
             if ui: ui.gaugeIncrement(self.incValue)
 
             #Visito la pubblicità obbligatoria
             c.setopt(pycurl.POST, False)
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.URL,
                 "http://www.vodafone.it/190/trilogy/jsp/dispatcher.do?ty_key=fdt_invia_sms&tk=9616,2")
             self.perform(self.stop)
@@ -116,7 +112,6 @@ class Vodafone(Sender):
 
             #Spedisco l'SMS
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             postFields = {}
             postFields["pageTypeId"] = "9604"
             postFields["programId"] = "10384"
@@ -128,7 +123,7 @@ class Vodafone(Sender):
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL,
                 "http://www.areaprivati.vodafone.it/190/fsms/prepare.do")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
 
@@ -147,19 +142,18 @@ class Vodafone(Sender):
 
             captchaBroken = False
             while captchaBroken == False:
-                
+
                 postFields = {}
                 if re.search("generateimg.do", saver.getvalue()) is not None:
                     try:
                         saver = StringIO()
-                        c.setopt(pycurl.WRITEFUNCTION, saver.write)
                         c.setopt(pycurl.POST, False)
                         c.setopt(pycurl.URL, "http://www.areaprivati.vodafone.it/190/fsms/generateimg.do")
-                        self.perform(self.stop)
+                        self.perform(self.stop, saver)
 
-                        self.checkForErrors(saver.getvalue())                       
-                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__)                      
-                        c.setopt(pycurl.POST, True)                        
+                        self.checkForErrors(saver.getvalue())
+                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__)
+                        c.setopt(pycurl.POST, True)
                     except CaptchaError:
                         raise SenderError(self.__class__.__name__)
                     if not postFields["verifyCode"]:
@@ -176,13 +170,12 @@ class Vodafone(Sender):
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS,
                     self.codingManager.urlEncode(postFields))
-								
+
                 #Confermo l'invio
                 saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
                 c.setopt(pycurl.URL,
                     "http://www.areaprivati.vodafone.it/190/fsms/send.do")
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
 
                 if (re.search("generateimg.do", saver.getvalue()) is None):
                     captchaBroken = True

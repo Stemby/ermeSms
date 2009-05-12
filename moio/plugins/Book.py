@@ -48,7 +48,10 @@ class Book(Plugin):
     def deleteContact(self, name):
         """Rimuove un contatto dalla rubrica."""
         raise NotImplementedError()
-        
+
+    def clearContacts(self):
+        raise NotImplementedError()
+
     def saveBook(self):
         """Salva le impostazioni."""
         raise NotImplementedError()

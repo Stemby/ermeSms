@@ -38,7 +38,7 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-    version = "2.19.3"
+    version = "2.19.7"
     """Versione del programma"""
 
     def __init__(self):
@@ -130,7 +130,9 @@ class PreferenceManager(Singleton):
 
     def logSMS(self, sender, dest, text):
         """Salvataggio dei dati da loggare"""
-        if os.path.isfile(self.getlogFileName()) == False :
+        if not os.path.isfile(self.getlogFileName()):
+            if not os.path.isdir(self.configDirName):
+                os.makedirs(self.configDirName)
             logfile = open(self.getlogFileName(), 'w+')
         else: logfile = open(self.getlogFileName(), 'a+')
         logdata = 'data='+time.strftime('%y%m%d')+'\nora='+\

@@ -142,6 +142,10 @@ class BuiltInBook(Book):
         """Rimuove un contatto dalla rubrica."""
         self.__unsetField("contacts", name)
 
+    def clearContacts(self):
+        if self.c.has_section("contacts"):
+            self.c.remove_section("contacts")
+
     def saveBook(self):
         """Salva su file i contatti."""
         # elimino il vecchio file delle impostazioni, se esiste

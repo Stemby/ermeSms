@@ -17,7 +17,7 @@ class CaptchaDialog(QDialog):
         self.captchaLabel = QLabel("Not Loaded")
         self.decodeText = QLineEdit("")
         self.okButton = QPushButton("OK")
-        
+
         self.__set_properties()
         self.__do_layout()
 
@@ -53,4 +53,4 @@ class CaptchaDialog(QDialog):
         pixmap = QPixmap()
         loaded = pixmap.loadFromData(stream.getvalue())
         if not loaded: raise
-        self.captchaLabel.setPixmap(pixmap)       
+        self.captchaLabel.setPixmap(pixmap)

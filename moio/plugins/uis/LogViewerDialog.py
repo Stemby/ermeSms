@@ -37,6 +37,7 @@ class LogViewerDialog(QDialog):
         self.logTree.setAlternatingRowColors(True)
         self.logTree.setContextMenuPolicy(Qt.CustomContextMenu)
         self.logTree.setExpandsOnDoubleClick(False)
+        self.logTree.header().setResizeMode(QHeaderView.ResizeToContents)
         self.logTree.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.logTree.setSelectionMode(QAbstractItemView.ExtendedSelection)        
         self.connect(self.logTree,
@@ -329,7 +330,10 @@ class LogViewerDialog(QDialog):
             if (re.match('\d\d:\d\d:\d\d',lista[0]) and (len(lista[0]) == 8)) or \
                (re.match('\d\d\d\d\d\d',lista[0]) and (len(lista[0]) == 6)):
                 finallist = sorted(lista, reverse=True)      
-            else:         
+            elif re.search('#\d+',str(lista)):
+                finallist = sorted(lista,
+                    cmp=lambda x,y: +2*(x[0]=='#')-2*(y[0]=='#')+cmp(x,y))
+            else:
                 finallist = sorted(lista)
         else:
             link = {}            
@@ -344,7 +348,7 @@ class LogViewerDialog(QDialog):
             finallist = []
             for i in elenco:
                 finallist.append(link[(i)])
-        return finallist             
+        return finallist
 
     def treeClickHandler(self, item, column):
         """Gestisce l'espansione e collasso degli elementi nel logTree"""
@@ -373,16 +377,21 @@ class LogViewerDialog(QDialog):
     def saveButtonHandler(self):
         """Evento di gestione del salvataggio del registro"""
         self.edited = False
+        rubrica = self.mf.book.getContacts()        
         try:        
             f = open(self.mf.pm.getlogFileName(),'w')
             n=0
             messaggio = {}
             for i in self.messages.keys():
                 data = self.messages[i]['data']
-                dest = self.messages[i]['dest']
+                if self.messages[i]['dest'][0] == '#':
+                    dest = self.messages[i]['dest'][1:]
+                elif rubrica.has_key(self.messages[i]['dest']):
+                    dest = rubrica[self.messages[i]['dest']]
+                else: dest = self.messages[i]['dest']
                 sender = self.messages[i]['sender']
                 ora = self.messages[i]['ora']
-                text = self.messages[i]['text']            
+                text = self.messages[i]['text']
                 logdata = 'data='+data+'\nora='+ora+'\nsender='+sender+\
                           '\ndest='+dest+'\ntext='+text+'\n---\n'      
                 f.write(logdata)
@@ -463,9 +472,11 @@ class LogViewerDialog(QDialog):
     def reloadButtonHandler(self):
         """Evento di gestione del ricaricamento dal file di log"""
         self.edited = False        
-        self.findString.setText("Inserisci il testo da ricercare")        
+        self.findString.setText("Inserisci il testo da ricercare")
         if not os.path.isfile(self.mf.pm.getlogFileName()):
             try:
+                if not os.path.isdir(self.mf.pm.configDirName):
+                    os.makedirs(self.mf.pm.configDirName)                
                 f = open(self.mf.pm.getlogFileName(),'w')
                 f.close()
             except exceptions.IOError:
@@ -480,6 +491,10 @@ class LogViewerDialog(QDialog):
 
     def loadMessages(self):
         """Carica i dati dal file di log al programma"""
+        oldrubrica = self.mf.book.getContacts()
+        rubrica = {}
+        for i in oldrubrica.items():
+            rubrica[i[1]] = i[0]            
         f = open(self.mf.pm.getlogFileName(),'r')
         n=0
         messaggio = {}
@@ -494,7 +509,11 @@ class LogViewerDialog(QDialog):
             elif i[:7] == 'sender=':
                 messaggio['sender']=i[7:]
             elif i[:5] == 'dest=':
-                messaggio['dest']=i[5:]            
+                if i[5:].isdigit():
+                    if rubrica.has_key(i[5:]):
+                        messaggio['dest'] = rubrica[i[5:]]
+                    else: messaggio['dest'] = '#'+ i[5:]
+                else: messaggio['dest'] = i[5:]
             elif i[:5] == 'text=':
                 messaggio['text']=i[5:]
             elif i == '---':

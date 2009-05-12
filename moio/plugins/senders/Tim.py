@@ -51,8 +51,6 @@ class Tim(Sender):
             username = dati['Nome utente']
             password = dati['Password']
 
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.URL, "http://www.tim.it")
             self.perform(self.stop)
 
@@ -60,7 +58,6 @@ class Tim(Sender):
 
             #Faccio il login
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["urlOk"] = "https%3A%2F%2Fwww.tim.it%2F119%2Fconsumerdispatcher"
@@ -71,7 +68,7 @@ class Tim(Sender):
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL,
                 "https://www.tim.it/authfe/login.do")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             if (re.search(u'loginerror.do', saver.getvalue()) is not None):
                 raise SiteAuthError(self.__class__.__name__)
@@ -82,10 +79,9 @@ class Tim(Sender):
             captchaBroken = False
             while captchaBroken == False:
                 saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
                 c.setopt(pycurl.URL,
                     "https://www.tim.it/smsdaweb/smsdaweb.do")
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
 
                 if (re.search(
                     "Oggi hai raggiunto il numero massimo di SMS gratis a tua disposizione.",
@@ -104,10 +100,9 @@ class Tim(Sender):
                 postFields["tel"] = number
                 try:
                     saver = StringIO()
-                    c.setopt(pycurl.WRITEFUNCTION, saver.write)
                     c.setopt(pycurl.POST, False)
                     c.setopt(pycurl.URL, "https://www.tim.it/smsdaweb/imagecode.jpg?"+idimage)
-                    self.perform(self.stop)
+                    self.perform(self.stop, saver)
                     postFields["imagecode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__)
                     c.setopt(pycurl.POST, True)
                 except CaptchaError:
@@ -124,8 +119,7 @@ class Tim(Sender):
                 c.setopt(pycurl.URL,
                     "https://www.tim.it/smsdaweb/inviasms.do")
                 saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
 
                 if re.search("Il testo inserito non corrisponde", saver.getvalue()) is None:
                     captchaBroken = True

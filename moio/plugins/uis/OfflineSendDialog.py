@@ -148,9 +148,6 @@ class OfflineSendDialog(QDialog):
         self.sendButton.setEnabled(False)
         self.removeButton.setEnabled(False)
         self.listBox.setEnabled(False)
-
-        self.update()
-        self.mf.update()        
         
         i = 0
         data = []
@@ -258,9 +255,7 @@ class OfflineSendDialog(QDialog):
         self.sendButton.setEnabled(not self.delayedSend.isChecked())
         self.removeButton.setEnabled(True)
         self.listBox.setEnabled(True)        
-        if close: self.hide()
-        else: self.update()
-        self.mf.update()
+        if close: self.done(1)
 
     def closeEvent(self, event):
         """Resetta il riferimento e nasconde la dialog"""
@@ -278,7 +273,6 @@ class OfflineSendDialog(QDialog):
         self.destText.setText('')
         self.senderText.setText('')
         self.messageText.setText('')
-        self.hide()
 
     def removeButtonEventHandler(self, event):
         """Toglie dalla lista dei messaggi quello selezionato"""

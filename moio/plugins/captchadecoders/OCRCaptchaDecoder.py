@@ -134,12 +134,26 @@ class OCRCaptchaDecoder(CaptchaDecoder):
         guess = guess.replace("r","T")
         guess = guess.replace("?","F")
         guess = guess.replace("lt","H")
-        if "8" not in self.chars:
-            guess = guess.replace("8","B")
+        if "l" not in self.chars:
+            guess = guess.replace("l","1")
         if "1" not in self.chars:
             guess = guess.replace("1","I")
+        if "2" not in self.chars:
+            guess = guess.replace("2","Z")
+        if "3" not in self.chars:
+            guess = guess.replace("3","B")
         if "4" not in self.chars:
-            guess = guess.replace("4","A")            
+            guess = guess.replace("4","A")
+        if "5" not in self.chars:
+            guess = guess.replace("5","S")
+        if "7" not in self.chars:
+            guess = guess.replace("7","J")
+        if "8" not in self.chars:
+            guess = guess.replace("8","B")
+        if "9" not in self.chars:
+            guess = guess.replace("9","Q")
+        if "0" not in self.chars:
+            guess = guess.replace("0","O")
         return self.normalize(guess)
 
     def decodeCaptcha(self, stream, senderName):

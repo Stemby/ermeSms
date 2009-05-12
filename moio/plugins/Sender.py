@@ -35,7 +35,7 @@ class Sender(Plugin):
     def send(self, proxy, number, text, dati = None, ui = None):
         """Spedisce un SMS (con le eventuali credenziali specificate)."""
         #Controllo pre-condizioni
-        self.connectionManager.setCurlProxy(proxy)        
+        self.connectionManager.setCurlProxy(proxy)
         if self.connectionManager.isInternetReachable() == False:
             raise ConnectionError()
         text = self.replaceNonAscii(text)
@@ -46,7 +46,7 @@ class Sender(Plugin):
         self.stop = False
         for i in texts:
             #resetta la gauge
-            if ui: ui.gaugeIncrement(0)            
+            if ui: ui.gaugeIncrement(0)
             self.sendOne(number, i, dati, ui)
 
     def replaceNonAscii(sender, text):
@@ -101,15 +101,10 @@ class Sender(Plugin):
             return int(math.ceil(textLength/(self.maxLength - 8.0)))
 
     def newCharCount(self,text):
-        textLength = len(text)
-        textCount = self.countTexts(text)
+        textLength = len(self.replaceNonAscii(text))
+        textCount = self.countTexts(self.replaceNonAscii(text))
         if textCount == 2:
             return (textLength-self.maxLength)
         elif not textCount == 1:
             prefixLength = int(math.log10(textCount-1))*2+4
             return (textLength-(self.maxLength-prefixLength)*(textCount-1))
-
-    #Metodi privati, sono qui solo per evitare duplicazione di codice
-    def doNothing(self, args):
-        """Funzione-parametro per pycurl, scarta la pagina richiesta."""
-        pass

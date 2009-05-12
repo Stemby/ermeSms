@@ -31,22 +31,18 @@ class Aimon(Sender):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
         """
-
         try:
-
             #Costruisco un nuovo oggetto Curl e lo inizializzo
             c = self.connectionManager.getCurl()            
             
             if number[0] != "+": number = '39' + number
-            else: number = number[1:]
+            else: number = number[1:]   
 
             #Assegna le variabili standard
             username = dati['Nome utente']
             password = dati['Password']            
 
             #Invio di un sms
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             testo = MIMEText(text,'utf8','utf8').get_payload()[:-1]
             postFields = {}
@@ -58,14 +54,15 @@ class Aimon(Sender):
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, 'https://secure.apisms.it/http/send_sms')
-            self.perform(self.stop)
+            saver = StringIO()            
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
             
             if (re.search("SMS Queued", saver.getvalue()) is None):
                 raise SenderError(self.__class__.__name__)
            
-        except pycurl.errora as e:
+        except pycurl.error as e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
 

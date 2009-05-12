@@ -123,7 +123,7 @@ class SendMessage(threading.Thread):
                 done = True                  
                 hadError = u"L'ultimo SMS non è stato" +\
                            u" inviato a causa di un errore."
-                self.mf.emit(SIGNAL('criticalError'), e.__str__())
+                self.mf.emit(SIGNAL('criticalError'), e.__str__()) 
             except:
                 done = True
                 hadError = u"L'ultimo SMS non è stato" +\

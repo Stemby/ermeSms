@@ -12,6 +12,7 @@ from PyQt4.QtCore import *
 from moio.plugins.Book import Book
 from moio.plugins.uis.PreferenceDialog import PreferenceDialog
 from moio.plugins.uis.Icons import getOkData, getErrorData, getIconData
+from moio.plugins.uis.AddressBookDialog import AddressBookDialog
 from moio.plugins.uis.SenderChoicesDialog import SenderChoicesDialog
 from moio.plugins.uis.OfflineSendDialog import OfflineSendDialog
 from moio.plugins.uis.LogViewerDialog import LogViewerDialog
@@ -62,14 +63,23 @@ class MainFrame(QFrame):
         self.book = Book.getPlugins()[self.pm.getBook()]
 
     def __init__(self):
-        self.flag = Qt.WindowFlags(Qt.Window)
-        QFrame.__init__(self, None, self.flag)
-        self.setWindowState(Qt.WindowActive)
+        try:
+            flag = Qt.WindowFlags(Qt.CustomizeWindowHint |
+                                  Qt.WindowSystemMenuHint |
+                                  Qt.WindowMinimizeButtonHint |
+                                  Qt.WindowCloseButtonHint)
+            self.defaultFlag = Qt.WindowFlags(Qt.CustomizeWindowHint |
+                                              Qt.WindowTitleHint |
+                                              Qt.WindowSystemMenuHint |
+                                              Qt.WindowCloseButtonHint)
+        except:
+            flag = Qt.WindowFlags()
+            self.defaultFlag = Qt.WindowFlags()
 
-        self.defaultFlag = Qt.WindowFlags(Qt.CustomizeWindowHint |
-                                          Qt.WindowTitleHint |
-                                          Qt.WindowSystemMenuHint )
-		#inizializza il book
+        QFrame.__init__(self, None , flag)
+        self.setWindowState(Qt.WindowActive)
+		
+        #inizializza il book
         self.__init_book()
 
         #Icona della titlebar
@@ -85,19 +95,15 @@ class MainFrame(QFrame):
         self.destinationComboBox.setEditable(True)
         self.destinationComboBox.completer().setCaseSensitivity(
             Qt.CaseSensitive)
-        try:
-            contatti = self.book.getContacts().keys()
-            contatti.sort()
-        except BookError, be:
-            QMessageBox.critical(self, u"Errore", be.__str__())
-        self.destinationComboBox.addItems(contatti)
+        self.fillContacts()
         self.deleteButton = QPushButton("Cancella")
         self.addButton = QPushButton("Metti in rubrica")
         self.label.setMinimumHeight(self.addButton.minimumSizeHint().height())
+
         self.messageTextCtrl = QTextEdit("Inserisci il tuo messaggio qui.")
-        self.messageTextCtrl.setMinimumHeight(70)
         self.messageTextCtrl.setTabChangesFocus(True)
-        if self.pm.isSenderListAvailable(Sender.getPlugins().keys()) == False:
+        self.messageTextCtrl.setMinimumHeight(70)
+        if not self.pm.isSenderListAvailable(Sender.getPlugins().keys()):
             scd=SenderChoicesDialog(self)
             result = scd.exec_()
             if result == 0:
@@ -129,6 +135,12 @@ class MainFrame(QFrame):
         self.bitmap.setMinimumSize(32,32)
         self.bitmap.resize(self.bitmap.sizeHint())
 
+        #########
+        self.addressButton = QPushButton("Rubrica")
+        self.connect(self.addressButton, SIGNAL('clicked(bool)'),
+                     self.addressButtonEventHandler)
+        #########
+
         self.__set_properties()
         self.__do_layout()
 
@@ -145,25 +157,23 @@ class MainFrame(QFrame):
         if self.tray.supportsMessages():
             self.traymessage = self.tray.showMessage
         if self.tray.isSystemTrayAvailable():
-            #imposto il menu contestuale
-            self.menu = QMenu("MoioSMS", self)
-            self.mostra = self.menu.addAction('Nascondi MoioSMS',
-                                              self.systemTrayEventHandler)
-            self.preferenze = self.menu.addAction('Preferenze',
-                                                  self.prefButtonEventHandler)
-            self.menu.addSeparator()
-            log = self.menu.addAction('Mostra Log',
-                                      self.logButtonEventHandler)
-            self.menu.addSeparator()
-            esci = self.menu.addAction('Esci', self.closeEvent)
-
-            self.tray.setContextMenu(self.menu)
             self.tray.show()
             self.connect(self.tray,
                      SIGNAL('activated(QSystemTrayIcon::ActivationReason)'),
                      self.systemTrayEventHandler)
-        else: 
-            self.tray = None
+        else: self.tray = None
+
+        #imposto il menu contestuale
+        self.menu = QMenu("MoioSMS", self)
+        self.menu.addAction('Nascondi MoioSMS', self.systemTrayEventHandler)
+        self.menu.addSeparator()
+        self.menu.addAction('Preferenze', self.prefButtonEventHandler)
+        self.menu.addAction('Mostra Log', self.logButtonEventHandler)
+        self.menu.addSeparator()
+        self.debugMode = self.menu.addAction('Set Debug Mode On',
+                                             self.debugMenuHandler)
+        self.menu.addSeparator()
+        self.menu.addAction('Esci', self.closeEvent)
 
         #Evento: il testo nella combobox cambia
         #PRIMA viene richiamato destinationComboBoxEventHandler
@@ -221,14 +231,14 @@ class MainFrame(QFrame):
 
         #Se specificato da linea di comando, inserisco i parametri
         if (len(sys.argv) in [3,4]) and sys.argv[1]=="-gui":
-            self.destinationComboBox.setEditText(sys.argv[2])
             if (len(sys.argv) == 4):
-                self.messageTextCtrl.setText(sys.argv[3])
+                self.destinationComboBox.setCurrentIndex(self.destinationComboBox.findText(sys.argv[2]))
         else:
             #altrimenti gli ultimi settaggi usati
             if self.pm.isLastUsedAvailable("destination"):
-                self.destinationComboBox.setEditText(
-                    self.pm.getLastUsed("destination"))
+                self.destinationComboBox.setCurrentIndex(
+                    self.destinationComboBox.findText(
+                    self.pm.getLastUsed("destination")))
 
         #se il messaggio precedente non è stato inviato
         if self.pm.isLastUsedAvailable("message"):
@@ -249,7 +259,7 @@ class MainFrame(QFrame):
 
         #sposto al centro la Main
         posx = (QDesktopWidget().width()-self.width())/2
-        posy = ((QDesktopWidget().height()/3*2)-self.height())
+        posy = ((QDesktopWidget().height()/3*2)-self.height())/2
         self.move(posx,posy)
 
         #Per evitare di riscrivere codice di inizializzazione già presente
@@ -290,6 +300,7 @@ class MainFrame(QFrame):
         hbox_1.addWidget(self.destinationComboBox, 1)
         hbox_1.addWidget(self.deleteButton, 0)
         hbox_1.addWidget(self.addButton, 0)
+        hbox_1.addWidget(self.addressButton, 0)        
         grid.addLayout(hbox_1, 0, 0)
 
         hbox_2.addWidget(self.bitmap)
@@ -337,6 +348,12 @@ class MainFrame(QFrame):
             self.bitmap.setPixmap(pixmap)
         else: self.bitmap.setText(' ')
 
+    def fillContacts(self):
+        self.destinationComboBox.clear()
+        contatti = self.book.getContacts().keys()
+        contatti.sort()
+        self.destinationComboBox.addItems(contatti)
+
     def insertDestinationComboBox(self, name):
         """Inserisci il nome indicato in ordine alfabetico"""
         i = 0
@@ -347,7 +364,7 @@ class MainFrame(QFrame):
                 k = i
                 i = self.destinationComboBox.count()
             i += 1
-        self.destinationComboBox.insertItem(k,name)
+        self.destinationComboBox.insertItem(k,name)        
 
     def getSender(self):
         """Restituisce il sender selezionato in valore unicode"""
@@ -372,7 +389,8 @@ class MainFrame(QFrame):
                     #1-E' un numero in rubrica. Sostituisco col nome,
                     #propongo di cancellarlo
                     destString = self.book.lookupNumber(destString)
-                    self.destinationComboBox.setEditText(destString)
+                    self.destinationComboBox.setCurrentIndex(
+                        self.destinationComboBox.findText(destString))
                     showDeleteButton = True
                 else:
                     #2-E' un numero valido non in rubrica.
@@ -395,7 +413,7 @@ class MainFrame(QFrame):
         self.addButton.setVisible(showAddButton)
         self.deleteButton.setVisible(showDeleteButton)
 
-        self.update()
+        #self.update()
 
     def updateLabel(self, event=None):
         """Aggiorna la barra dei messaggi segnalando all'utente eventuali
@@ -446,7 +464,7 @@ class MainFrame(QFrame):
                                " caratteri a riempire il messaggio"
                 if textCount > 1 and not newCharCount == sender.maxLength:
                     message += "\ne togli "+str(newCharCount)+" caratteri pe"+\
-                               "r scrivere un messaggio in meno."                    
+                               "r scrivere un messaggio in meno."
             else:
                 #2.2- L'utente ha appena scritto un carattere del destinatario
                 if self.book.isInContacts(destString):
@@ -466,7 +484,7 @@ class MainFrame(QFrame):
         else:
             self.setIcon(getErrorData())
         self.sendButton.setEnabled(canSend)
-        self.update()
+        #self.update()
 
     def isValid(self, number):
         """Ritorna True se il numero è valido."""
@@ -553,9 +571,11 @@ class MainFrame(QFrame):
                         valid = True
                         try:
                             self.book.addContact(name, text)
+                            self.fillContacts()
+                            self.destinationComboBox.setCurrentIndex(
+                                self.destinationComboBox.findText(name))
                         except BookError, be:
                             QMessageBox.critical(self, u"Errore", be.__str__())
-                        self.insertDestinationComboBox(name)
                         self.messageTextCtrl.setFocus()
         else:
             #L'utente ha immesso un nome, chiedo il numero
@@ -580,9 +600,11 @@ class MainFrame(QFrame):
                         valid = True
                         try:
                             self.book.addContact(text, number)
+                            self.fillContacts()
+                            self.destinationComboBox.setCurrentIndex(
+                            self.destinationComboBox.findText(text))
                         except BookError, be:
                             QMessageBox.critical(self, u"Errore", be.__str__())
-                        self.insertDestinationComboBox(text)
                         self.messageTextCtrl.setFocus()
 
         self.destinationComboBoxEventHandler(event)
@@ -623,10 +645,10 @@ class MainFrame(QFrame):
             self.stopButton.show()
             self.stopButton.setDefault(True)
 
-            self.update()
+            #self.update()
 
             info = {}
-            info['offline'] = None
+            info['offline'] = False
             info['sender'] = self.getSender()
             info['dest'] = unicode(self.destinationComboBox.currentText())
             info['text'] = unicode(self.messageTextCtrl.toPlainText())
@@ -706,7 +728,7 @@ class MainFrame(QFrame):
         self.updateSentMessages()
         self.setCursor(self.normalcursor)
 
-        self.update()
+        #self.update()
         #Pronti per un altro messaggio
 
     def passRequestEventHandler(self, data):
@@ -775,7 +797,7 @@ class MainFrame(QFrame):
             if value < 0: value = self.gauge.value() - int(1000/(-value))
             else: value = self.gauge.value() + int(1000/value)
         self.gauge.setValue(value)
-        self.update()
+        #self.update()
 
     def criticalSenderErrorHandler(self, message):
         """Finestra di errore di invio messaggio"""
@@ -800,12 +822,10 @@ class MainFrame(QFrame):
                 self.setWindowState(self.windowState() & ~Qt.WindowActive |
                                     Qt.WindowMinimized)
                 self.hide()
-                self.mostra.setText("Mostra MoioSMS")
             else:
                 self.setWindowState(self.windowState() & ~Qt.WindowMinimized |
                                     Qt.WindowActive)
                 self.show()
-                self.mostra.setText("Nascondi MoioSMS")
                 self.raise_()
                 self.activateWindow()
         elif event == Qt.WindowActive:
@@ -825,6 +845,17 @@ class MainFrame(QFrame):
         y = event.globalY()-self.menu.sizeHint().height()
         self.menu.popup(QPoint(x,y))
 
+    def debugMenuHandler(self):
+        if Sender.connectionManager.debug == None:
+            Sender.connectionManager.debug = 'On'
+            self.debugMode.setText('Set Debug Mode Off')
+            self.setWindowTitle("MoioSMS "+self.pm.getVersion()+\
+                                " (DEBUG MODE)")
+        else:
+            Sender.connectionManager.debug = None
+            self.debugMode.setText('Set Debug Mode On')
+            self.setWindowTitle("MoioSMS "+self.pm.getVersion())
+
     def closeEvent(self, event = None):
         """Salva il file di configurazione e termina il programma."""
         if self.offlineSend:
@@ -836,7 +867,7 @@ class MainFrame(QFrame):
                 'Si','No')
                 if result == 1:
                     event.ignore()
-                    return        
+                    return
         self.tray.hide()
         senderName = self.getSender()
         self.pm.setLastUsed("sender", senderName)
@@ -874,3 +905,7 @@ class MainFrame(QFrame):
                 self.pm.getConfigFileName() + "\n" + \
                 u"MoioSMS terminerà ora e nessun dato è stato salvato.")
         sys.exit(0)
+
+    def addressButtonEventHandler(self):      
+        ab = AddressBookDialog(self)  
+        ab.exec_()

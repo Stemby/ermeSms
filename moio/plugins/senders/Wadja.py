@@ -32,9 +32,7 @@ class Wadja(Sender):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
         """
-
         try:
-
             #Costruisco un nuovo oggetto Curl e lo inizializzo
             c = self.connectionManager.getCurl()
             
@@ -45,10 +43,9 @@ class Wadja(Sender):
             password = dati['Password']                        
         
             #visito la pagina del login
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
+            saver = StringIO()            
             c.setopt(pycurl.URL, "http://m.wadja.com/login/default.aspx?url=%2fDefault.aspx")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             try:
                 view = re.search('(?<=(name="__VIEWSTATE" id="__VIEWSTATE" value="))[^"]+', saver.getvalue()).group(0)          
@@ -60,8 +57,7 @@ class Wadja(Sender):
             #se non sono gia' loggato, eseguo il login
             if (re.search("Sign out", saver.getvalue()) is None) and \
                (re.search("Esci", saver.getvalue()) is None) : 
-                saver = StringIO()
-                c.setopt(pycurl.WRITEFUNCTION, saver.write)
+                saver = StringIO()                
                 c.setopt(pycurl.URL, "http://m.wadja.com/login/default.aspx?url=%2fdefault.aspx")
                 postFields = {}
                 postFields["__VIEWSTATE"] = view
@@ -70,7 +66,7 @@ class Wadja(Sender):
                 postFields["ctl00$cntBody$btnLogin"] = 'Sign In'
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
-                self.perform(self.stop)
+                self.perform(self.stop, saver)
 
                 self.checkForErrors(saver.getvalue())
                 if (re.search("Sign out", saver.getvalue()) is None) and \
@@ -80,10 +76,9 @@ class Wadja(Sender):
             if ui: ui.gaugeIncrement(self.incValue)
 
             #visito la pagina degli sms
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
+            saver = StringIO()            
             c.setopt(pycurl.URL, "http://m.wadja.com/compose/sms.aspx")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             try:
                 view = re.search('(?<=(name="__VIEWSTATE" id="__VIEWSTATE" value="))[^"]+', saver.getvalue()).group(0)
@@ -97,8 +92,7 @@ class Wadja(Sender):
             if ui: ui.gaugeIncrement(self.incValue)      
 
             #invio il messaggio
-            saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
+            saver = StringIO()            
             c.setopt(pycurl.URL, "http://m.wadja.com/compose/sms.aspx")
             postFields = {}
             postFields["__VIEWSTATE"] = view
@@ -108,7 +102,7 @@ class Wadja(Sender):
             postFields["ctl00$cntBody$cmpsSMS$btnSend"] = 'Send'
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
             
@@ -127,3 +121,7 @@ class Wadja(Sender):
             raise SiteCustomError(self.__class__.__name__, u"Numero di telefono non valido")
         if(re.search("no message written", page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Non hai inserito il messaggio")
+        if(re.search("Daily limit reached to the numbers outside wadja.", page) is not None):
+            raise SiteCustomError(self.__class__.__name__, u"Limite di messaggi inviati per oggi.")
+        if(re.search("Daily limit reached to the same number outside wadja.", page) is not None):
+            raise SiteCustomError(self.__class__.__name__, u"Limite di messaggi inviati oggi allo stesso numero")        

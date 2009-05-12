@@ -72,7 +72,6 @@ class SenderChoicesDialog(QDialog):
                 senderList.append(i)
         if not senderList:
             return self.senderList
-        else: 
-            return senderList
+        else: return senderList
 
 
