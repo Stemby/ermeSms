@@ -231,8 +231,9 @@ class MainFrame(QFrame):
 
         #Se specificato da linea di comando, inserisco i parametri
         if (len(sys.argv) in [3,4]) and sys.argv[1]=="-gui":
+            self.destinationComboBox.setEditText(sys.argv[2])
             if (len(sys.argv) == 4):
-                self.destinationComboBox.setCurrentIndex(self.destinationComboBox.findText(sys.argv[2]))
+                self.messageTextCtrl.setText(sys.argv[3])
         else:
             #altrimenti gli ultimi settaggi usati
             if self.pm.isLastUsedAvailable("destination"):
@@ -687,8 +688,8 @@ class MainFrame(QFrame):
                                      "error")
                 n.show()
             except ImportError:
-                if self.traymessage: self.traymessage(u"Messaggio NON inviato",
-                                 u"Messaggio NON inviato utilizzando " +\
+                if self.traymessage: self.traymessage(u"Messaggio non inviato",
+                                 u"Messaggio non inviato utilizzando " +\
                                  self.getSender()+u" a "+\
                                  unicode(self.destinationComboBox.currentText()),
                                  QSystemTrayIcon.Warning, 2000)
@@ -698,15 +699,15 @@ class MainFrame(QFrame):
             try:
                 import pynotify
                 pynotify.init ("MoioSMS")
-                n = pynotify.Notification ("MoioSMS",
-                    u"Messaggio inviato correttamente tramite " +\
-                             self.getSender()+u" a "+\
-                             unicode(self.destinationComboBox.currentText()), 
-                                     "MoioSMS")
+                n = pynotify.Notification("MoioSMS", 
+                        u"Messaggio inviato tramite " +\
+                        self.getSender()+u" a "+\
+                        unicode(self.destinationComboBox.currentText()),
+                        "MoioSMS")
                 n.show()
             except ImportError:
                 if self.traymessage: self.traymessage(u"Messaggio inviato",
-                                 u"Messaggio inviato correttamente tramite " +\
+                                 u"Messaggio inviato tramite " +\
                                  self.getSender()+u" a "+\
                                  unicode(self.destinationComboBox.currentText()))
             #cancella il messaggio salvato

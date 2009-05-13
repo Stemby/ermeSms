@@ -20,6 +20,6 @@
 __all__ = [
     'BuiltInBook',
     'EvolutionBook',
-    'ReadVcard'
+    'vCardBook'
     ]
 
