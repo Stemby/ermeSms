@@ -273,6 +273,7 @@ class OfflineSendDialog(QDialog):
         self.destText.setText('')
         self.senderText.setText('')
         self.messageText.setText('')
+        self.hide()
 
     def removeButtonEventHandler(self, event):
         """Toglie dalla lista dei messaggi quello selezionato"""
