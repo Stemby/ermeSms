@@ -123,6 +123,7 @@ class MainFrame(QFrame):
         self.sendButton = QPushButton("Invia!")
         self.stopButton = QPushButton("Annulla invio...")
         self.messageLabel = QLabel("Non in rubrica")
+        self.messageLabel.setTextInteractionFlags(Qt.TextSelectableByMouse)
         self.gauge = QProgressBar()
         self.gauge.setRange(0,1000)
         self.gauge.setMinimumHeight(32)
