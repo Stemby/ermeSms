@@ -535,6 +535,11 @@ class MainFrame(QFrame):
         destString = unicode(self.destinationComboBox.currentText())
         destIndex = self.destinationComboBox.findText(
                                 self.destinationComboBox.currentText())
+        result = QMessageBox.question(self,
+            u"Attenzione!",
+            u"Cancellare veramente il contatto?\n", 'Si','No')
+        if result == 1:
+            return
         try:
             self.book.deleteContact(destString)
         except BookError, be:

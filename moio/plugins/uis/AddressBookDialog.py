@@ -19,7 +19,12 @@ class AddressBookDialog(QDialog):
         self.removeButton = QPushButton("Cancella")
         self.addButton = QPushButton("Aggiungi")
         self.editButton = QPushButton("Modifica")
-        self.saveButton = QPushButton("Salva")        
+        self.saveButton = QPushButton("Salva")
+        self.importButton = QPushButton("Importa...")
+        self.menu = QMenu('importa', self)
+        self.menu.addAction('...da file ini',  self.importaDaFileEventHandler)
+        self.menu.addAction('...da file vCard',  self.importaDaVCardEventHandler)
+        self.importButton.setMenu(self.menu)
         self.closeButton = QPushButton("Chiudi")       
 
         self.mf = mf
@@ -32,6 +37,7 @@ class AddressBookDialog(QDialog):
         self.addButton.setToolTip("Aggiungi un nome alla rubrica")
         self.editButton.setToolTip("Modifica il nome selezionato")
         self.saveButton.setToolTip("Salva le modifiche")
+        self.importButton.setToolTip("Importa rubrica")
         self.closeButton.setToolTip("Chiudi e senza salvare le modifiche")      
 
         self.connect(self.removeButton, SIGNAL('clicked(bool)'),
@@ -76,6 +82,7 @@ class AddressBookDialog(QDialog):
         hbox_2.addWidget(self.addButton, 0)
         hbox_2.addWidget(self.editButton, 0)
         hbox_2.addWidget(self.saveButton, 0)        
+        hbox_2.addWidget(self.importButton, 0)
         hbox_2.addWidget(self.closeButton, 0)
         vbox.addLayout(hbox_2)
 
@@ -106,6 +113,11 @@ class AddressBookDialog(QDialog):
         self.editButton.setEnabled(True)
 
     def removeButtonEventHandler(self, event):
+        result = QMessageBox.question(self,
+            u"Attenzione!",
+            u"Cancellare veramente il contatto?\n", 'Si','No')
+        if result == 1:
+            return
         self.addressBox.removeRow(self.addressBox.currentRow())
         self.edited = True
         self.saveButton.setEnabled(self.edited)
@@ -145,6 +157,12 @@ class AddressBookDialog(QDialog):
             'Si','No')
             if result == 1:
                 event.ignore()        
+                
+    def importaDaFileEventHandler(self):
+        pass
+        
+    def importaDaVCardEventHandler(self):
+        pass
 
 class AddressBookEditDialog(QDialog):
     def __init__(self, ab, mf, new):
@@ -234,7 +252,7 @@ class AddressBookEditDialog(QDialog):
 
     def cancelButtonEventHandler(self):
         self.done(1)
-
+        
     def setName(self, name):
         self.nameText.setText(name)
 
