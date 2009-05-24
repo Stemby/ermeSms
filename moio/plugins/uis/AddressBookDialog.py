@@ -159,10 +159,20 @@ class AddressBookDialog(QDialog):
                 event.ignore()        
                 
     def importaDaFileEventHandler(self):
-        pass
+        '''
+        #TODO: chiama Importer che legge i contatti
+        effettua un filtraggio in base ai numeri di telefono
+        duplicati
+        '''
+        QMessageBox.information(self, "Mi dispiace", "funzione non implementata")
         
     def importaDaVCardEventHandler(self):
-        pass
+        '''
+        #TODO: chiama Importer che legge i contatti
+        effettua un filtraggio in base ai numeri di telefono
+        duplicati
+        '''
+        QMessageBox.information(self, "Mi dispiace", "funzione non implementata")
 
 class AddressBookEditDialog(QDialog):
     def __init__(self, ab, mf, new):

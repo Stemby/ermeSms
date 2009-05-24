@@ -23,7 +23,6 @@ class LogViewerDialog(QDialog):
         self.countText = QLabel('0 messaggi')
         self.selectedCountText = QLabel('0 messaggi selezionati')        
         self.findString = QLineEdit("Inserisci il testo da ricercare")
-        self.saveButton = QPushButton("Salva")
         self.reloadButton = QPushButton("Ricarica")        
         self.closeButton = QPushButton("Chiudi")
         self.clearButton = QPushButton("Svuota")
@@ -62,8 +61,6 @@ class LogViewerDialog(QDialog):
         self.connect(self.menu, SIGNAL('aboutToHide()'), self.restoreColor)        
         
         self.closeButton.setToolTip("Chiude il registro (senza salvare)")
-        self.saveButton.setToolTip("Salva le modifiche apportate al "+\
-                                   "registro")
         self.reloadButton.setToolTip("Ricarica i messaggi salvati nel file "+\
                                      "del registro")
         self.clearButton.setToolTip("Svuota il registro")
@@ -78,8 +75,6 @@ class LogViewerDialog(QDialog):
 
         self.connect(self.findString, SIGNAL('textChanged(const QString&)'),
                  self.findTextHandler)
-        self.connect(self.saveButton, SIGNAL('clicked(bool)'),
-                 self.saveButtonHandler)
         self.connect(self.clearButton, SIGNAL('clicked(bool)'),
                  self.clearButtonHandler)
         self.connect(self.reloadButton, SIGNAL('clicked(bool)'),
@@ -145,8 +140,6 @@ class LogViewerDialog(QDialog):
         hbox_4.addStretch(1)
         hbox_4.addWidget(self.reloadButton, 0)        
         hbox_4.addStretch(1)        
-        hbox_4.addWidget(self.saveButton, 0)
-        hbox_4.addStretch(1)
         hbox_4.addWidget(self.closeButton, 0)
         vbox.addLayout(hbox_4, 0)        
 
@@ -404,10 +397,17 @@ class LogViewerDialog(QDialog):
 
     def clearButtonHandler(self):
         """Evento di gestione della cancellazione del registro"""
-        self.edited = True
-        self.logTree.clear()
-        self.messages = {}
-        self.countText.setText('0 Messaggi')
+        result = QMessageBox.question(self,  u"Attenzione!",  
+                                      u"Svuotare il registro dei messaggi inviati?", 
+                                      'Si', 'No')
+        if result == 1:
+            return
+        elif result == 0:
+            self.edited = True
+            self.logTree.clear()
+            self.messages = {}
+            self.countText.setText('0 Messaggi')
+            self.saveButtonHandler()
 
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
