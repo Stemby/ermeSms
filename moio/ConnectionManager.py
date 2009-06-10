@@ -28,7 +28,6 @@ class ConnectionManager(Singleton):
         self.curl.setopt(pycurl.SSL_VERIFYPEER, 0)# non verifica il certificato SSL
         self.curl.setopt(pycurl.SSL_VERIFYHOST, 0)
         self.curl.setopt(pycurl.TIMEOUT, 30)
-        #self.curl.setopt(pycurl.VERBOSE, 1)
         self.__setcurl__()
 
     def __setcurl__(self):
@@ -70,7 +69,7 @@ class ConnectionManager(Singleton):
 
     def setCurlProxy(self, proxy):
         """Imposta il proxy del curl"""
-        self.curl.setopt(pycurl.PROXY, proxy)
+        self.curl.setopt(pycurl.PROXY, str(proxy))
 
     def doNothing(self, args):
         """Funzione-parametro per pycurl, scarta la pagina richiesta."""

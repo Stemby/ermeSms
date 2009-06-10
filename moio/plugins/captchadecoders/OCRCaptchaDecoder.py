@@ -180,7 +180,7 @@ class OCRCaptchaDecoder(CaptchaDecoder):
                     maxP=currentP
                     bestMethodIndex=methodIndex
             guess += guesses[bestMethodIndex][charIndex]
-#            self.usedDict[bestMethodIndex]+=1
+            #self.usedDict[bestMethodIndex]+=1
         return guess
 
     #Metodi ***esclusivamente*** per lo sviluppo e il testing

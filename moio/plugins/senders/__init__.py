@@ -3,16 +3,17 @@
 """Package dei plugin per l'invio di SMS."""
 
 __all__ = [
-    'Aimon',    
-    'AimonFree',
-    'Enel',
-    'Mjoy',
-    'Rossoalice',
-    'Tim',
-    'TimNEW',
     'Tin',
+    'Rossoalice',
+    'Enel',    
+    'AimonFree',
+    'Aimon',
+    'CremonaWeb',    
+    'Mjoy',
+    'Tim',
     'Vodafone',
-    'VodafoneMail',
-    'VodafoneMMS',    
-    'Wadja'
+    'VodafoneMail',    
+    'VodafoneMMS',
+    'Wadja',
+    'Vodafonee',
     ]

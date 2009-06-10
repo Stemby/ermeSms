@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 """Un programma per mandare SMS via Internet.
 
 Con questo piccolo programma a base di pycurl ed espressioni regolari sarete
@@ -12,22 +11,8 @@ Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
 Distribuito in licenza GNU GPL.
 """
 
-#controlla che il programma non sia già avviato
 import os
 import sys
-count = 0
-try:
-    import psutil
-except: pass
-else:
-    thispid = os.getpid()
-    this = psutil.Process(thispid)
-
-    for i in psutil.get_process_list():
-        try:
-            if i.cmdline == this.cmdline: count +=1
-        except: pass
-
 
 #carico i moduli e avvio il programma
 from moio.plugins.UI import UI
@@ -39,15 +24,32 @@ from moio.plugins.uis import *
 from moio.plugins.captchadecoders import *
 from moio.plugins.books import *
 
-#Ricerca la migliore interfaccia utilizzabile (interfaccia disponibile
-#a priorità massima)
-bestUI = UI.getBestPlugin()
+if __name__ == "__main__":
+    #controlla che il programma non sia già avviato
+    count = 0
+    try:
+        import psutil
+    except: pass
+    else:
+        thispid = os.getpid()
+        this = psutil.Process(thispid)
 
-#Inizializza il gestore delle eccezioni fatali
-FatalExceptionHandler(bestUI)
+        for i in psutil.get_process_list():
+            try:
+                if i.cmdline == this.cmdline: count +=1
+            except: pass
 
-#Manda in esecuzione l'interfaccia oppure termina
-if count > 1:
-    sys.exit(0)
-else: 
-    bestUI.run()
+    #Ricerca la migliore interfaccia utilizzabile (interfaccia disponibile
+    #a priorità massima)
+    bestUI = UI.getBestPlugin()
+
+    #Inizializza il gestore delle eccezioni fatali
+    FatalExceptionHandler(bestUI)
+
+    #Manda in esecuzione l'interfaccia oppure termina
+    if count > 1:
+        sys.exit(0)
+    else: 
+        bestUI.run()
+
+

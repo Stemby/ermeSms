@@ -12,8 +12,6 @@ from moio.errors.SiteConnectionError import SiteConnectionError
 from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
 
-from email.MIMEText import MIMEText
-
 class Aimon(Sender):
     """Permette di spedire SMS acquistati dal sito Aimon.it"""
    
@@ -44,7 +42,7 @@ class Aimon(Sender):
 
             #Invio di un sms
             c.setopt(pycurl.POST, True)
-            testo = MIMEText(text,'utf8','utf8').get_payload()[:-1]
+            testo = self.codingManager.quoteBase64(text)[:-1]
             postFields = {}
             postFields["authlogin"] = username + '@aimon.it'
             postFields["authpasswd"] = password

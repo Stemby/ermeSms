@@ -55,6 +55,7 @@ class vCardBook(Book):
             return False
 
     def lookup(self, name):
+        #name = name)
         """Cerca un nome nella rubrica."""
         try:
 	        return self.contatti[name]
@@ -81,6 +82,7 @@ class vCardBook(Book):
     
     def isInContacts(self, name):
         """Ritorna True se un contatto è presente in rubrica."""
+        #name = unicode(name)
         try:
             self.lookup(name)
             return True
@@ -106,6 +108,7 @@ class vCardBook(Book):
 
     def getContacts(self):
         import vobject
+        #TODO: try: except: I/O operation        
         f = open(self.bookFileName, 'r')
         stream = f.read()
         for vobj in vobject.readComponents(stream):
@@ -121,6 +124,7 @@ class vCardBook(Book):
                         else:
                             self.contatti[name + ' ('+str(i)+')'] = number
                         i += 1
+        f.close()
         return self.contatti
 
     def addContact(self, name, number):

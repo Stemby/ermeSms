@@ -21,7 +21,7 @@ class Vodafone(Sender):
     maxLength = 160
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
 
-    requiresRegistration = ['Nome utente','Password','SIM']
+    requiresRegistration = ['Nome_utente','Password','SIM']
     """Cosa richiede questo plugin?"""
 
     incValue = 7
@@ -41,7 +41,7 @@ class Vodafone(Sender):
             c = self.connectionManager.getCurl()
 
             #Assegna le variabili standard
-            username = dati['Nome utente']
+            username = dati['Nome_utente']
             password = dati['Password']
             sim = str(dati['SIM'])
 
@@ -57,7 +57,7 @@ class Vodafone(Sender):
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
 
-            if "http://lavori.vodafone.it/Courtesy.html" == c.getinfo(pycurl.EFFECTIVE_URL):
+            if "courtesy" in c.getinfo(pycurl.EFFECTIVE_URL):
                 raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -198,4 +198,7 @@ class Vodafone(Sender):
         """Solleva un'eccezione se la pagina contiene una segnalazione d'errore dal sito."""
         if(re.search("numero massimo di accessi", page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Ci sono troppi utenti sul sito, riprova più tardi.")
+        if(re.search("a causa di attivit&agrave; di manutezione sul sito", page) is not None):
+            raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")        
+        
 
