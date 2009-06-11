@@ -316,7 +316,7 @@ class MainFrame(QFrame):
 
         x = 0
         y = 0
-        for i in self.senderBoxes:
+        for i in sorted(self.senderBoxes.keys()):
             grid_2.addWidget(self.senderBoxes[i], y, x)
             x += 1
             if x == 4:
@@ -415,8 +415,6 @@ class MainFrame(QFrame):
         self.addButton.setVisible(showAddButton)
         self.deleteButton.setVisible(showDeleteButton)
 
-        #self.update()
-
     def updateLabel(self, event=None):
         """Aggiorna la barra dei messaggi segnalando all'utente eventuali
         problemi. Se vengono rilevati problemi, disabilita il bottone Invia"""
@@ -449,6 +447,7 @@ class MainFrame(QFrame):
             if not event or event==True:
                 #2.1- L'utente ha appena scritto un carattere del mesaggio
                 #     o ha selezionato un nuovo sender
+                #FIXME: selezionando l'unico sender disponibile, il checkbox viene disattivato e sender==None
                 sender = Sender.getPlugins()[self.getSender()]
                 texts = sender.splitText(sender.replaceNonAscii(text))
                 textCount = len(texts)
@@ -486,7 +485,6 @@ class MainFrame(QFrame):
         else:
             self.setIcon(getErrorData())
         self.sendButton.setEnabled(canSend)
-        #self.update()
 
     def isValid(self, number):
         """Ritorna True se il numero è valido."""
@@ -533,13 +531,14 @@ class MainFrame(QFrame):
     def deleteButtonEventHandler(self, event):
         """Cancella un contatto dalla rubrica e aggiorna la visualizzazione."""
         destString = unicode(self.destinationComboBox.currentText())
+        result = QMessageBox.question(self,
+                u"Conferma",
+                u"Vuoi veramente cancellare "+destString+"?\n",
+                'Si','No')
+        if result == 1: return
+        destString = unicode(self.destinationComboBox.currentText())
         destIndex = self.destinationComboBox.findText(
                                 self.destinationComboBox.currentText())
-        result = QMessageBox.question(self,
-            u"Attenzione!",
-            u"Cancellare veramente il contatto?\n", 'Si','No')
-        if result == 1:
-            return
         try:
             self.book.deleteContact(destString)
         except BookError, be:
@@ -652,8 +651,6 @@ class MainFrame(QFrame):
             self.stopButton.show()
             self.stopButton.setDefault(True)
 
-            #self.update()
-
             info = {}
             info['offline'] = False
             info['sender'] = self.getSender()
@@ -735,7 +732,6 @@ class MainFrame(QFrame):
         self.updateSentMessages()
         self.setCursor(self.normalcursor)
 
-        #self.update()
         #Pronti per un altro messaggio
 
     def passRequestEventHandler(self, data):
@@ -747,6 +743,7 @@ class MainFrame(QFrame):
             md.prepare(i)
             if data.has_key(i): md.setTextValue(i,data[i])
         md.do_layout()
+        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##        
         result = md.exec_()
         if result == 0:
             self.qReq.put(False)
@@ -765,6 +762,7 @@ class MainFrame(QFrame):
         proxy = ""
         if self.pm.isProxyEnabled():
             proxy = self.pm.getProxy()
+        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##
         proxy, md  = QInputDialog.getText(self, u"Errore di connessione",
                         "Internet funziona? Se usi un proxy immetti " +\
                         "l'indirizzo qui.\nFormato: http://nomeutente:" +\
@@ -804,7 +802,6 @@ class MainFrame(QFrame):
             if value < 0: value = self.gauge.value() - int(1000/(-value))
             else: value = self.gauge.value() + int(1000/value)
         self.gauge.setValue(value)
-        #self.update()
 
     def criticalSenderErrorHandler(self, message):
         """Finestra di errore di invio messaggio"""
@@ -813,6 +810,7 @@ class MainFrame(QFrame):
     def userDecodeCaptchaHandler(self, stream):
         """Gestore di richiesta di decodifica del captcha dell'utente"""
         cd = CaptchaDialog(self)
+        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##
         try:
             cd.setImage(stream)
         except: decoded = None
@@ -821,6 +819,11 @@ class MainFrame(QFrame):
             if result == 1: decoded = cd.getUserInput()
             else: decoded = ''
         self.qCaptcha.put(decoded)
+
+    def addressButtonEventHandler(self):
+        """Richiama l'editor di rubrica avanzato"""
+        ab = AddressBookDialog(self)  
+        ab.exec_()        
 
     def systemTrayEventHandler(self, event = QSystemTrayIcon.Trigger):
         """Gestore degli eventi sulla tray icon"""
@@ -850,7 +853,7 @@ class MainFrame(QFrame):
         """Mostra in menu constestuale"""
         x = event.globalX()-self.menu.sizeHint().width()
         y = event.globalY()-self.menu.sizeHint().height()
-        self.menu.popup(QPoint(x,y))
+        self.menu.popup(QPoint(x,y))        
 
     def debugMenuHandler(self):
         if Sender.connectionManager.debug == None:
@@ -912,7 +915,3 @@ class MainFrame(QFrame):
                 self.pm.getConfigFileName() + "\n" + \
                 u"MoioSMS terminerà ora e nessun dato è stato salvato.")
         sys.exit(0)
-
-    def addressButtonEventHandler(self):      
-        ab = AddressBookDialog(self)  
-        ab.exec_()

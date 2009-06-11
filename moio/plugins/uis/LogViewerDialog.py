@@ -453,10 +453,13 @@ class LogViewerDialog(QDialog):
         while iterator.value():
             item = iterator.value()
             if not item.text(2):
-                if item.parent().childCount() == 1:
-                    self.logTree.takeTopLevelItem(
-                        self.logTree.indexOfTopLevelItem(item.parent()))
-                else: item.parent().removeChild(item)
+                if item.parent():
+                    if item.parent().childCount() == 1:
+                        self.logTree.takeTopLevelItem(
+                            self.logTree.indexOfTopLevelItem(item.parent()))
+                    else: item.parent().removeChild(item)
+                else: self.logTree.takeTopLevelItem(
+                            self.logTree.indexOfTopLevelItem(item))
             iterator.__iadd__(1)   
 
     def countVisible(self):
