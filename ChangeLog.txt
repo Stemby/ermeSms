@@ -1,0 +1,49 @@
+ToDo:
+-Gestori modulari esterni al programma
+
+MoioSMS 2.19 BuNbUrY Beta3
+-Aggiunta la richiesta di conferma eliminazione voce in rubrica
+-Aggiunto il gestore E-CremonaWeb
+-Rimosso vecchio gestore Tim (ormai non + funzionante)
+-Nomi gestori ordinati alfabeticamente
+-Highlight della finestra per l'inserimento di informazioni
+-Sistemato il bug relativo alla lettura manuale del captcha
+-Sistemato un bug nel registro dei messaggi inviati
+-Sistemato un bug nella connessione con proxy
+
+
+MoioSMS 2.19 BuNbUrY Beta2
+-Aggiunta la possibilità di passare al debugMode (con il tasto destro)(utile per la creazione dei gestori)
+-Aggiunto un "manager" della rubrica
+-Sistemato il gestore Tim per la nuova pagina di invio (per adesso non funziona l'auto-decodifica del captcha)
+-Sistemato un bug sul conteggio dei caratteri disponibili
+-Sistemato il problema di salvataggio e caricamento della Master Password
+-Sistemato un problema di freeze su MacOSX
+-Rimosso il gestore Jaxtr
+-Comportamento del TAB nella TextEdit
+-Minor fixes
+
+
+MoioSMS 2.19 BuNbUrY Beta1
+-Riscritta totalmente l'interfaccia grafica per le librerie Qt
+-Aggiunta la tray icon per nascondere l'interfaccia e mantere avviato MoioSMS
+-Aggiunti gli avvisi sulla tray bar
+-Aggiunto il logging dei messaggi con relativo visualizzatore
+-Divisione in threads del programma dell'invio tramite interfaccia grafica
+-Aggiunta la possibilità di bloccare l'invio del messaggio
+-Aggiunta la piena funzionalità della barra del progresso
+-Aggiunta la possibilità di invio posticipato
+-Aggiunta la possibilità di invio a una determinata ora
+-Aggiunto il conto dei messaggi giornalieri inviati
+-Aggiunto il salvataggio dell'ultimo gestore usato (per destinatario)
+-Aggiunto il salvataggio dei messaggi non inviati (nel lastused)
+-Aggiunta la possibilità di dati di invio personalizzati per gestore
+-Migliorata la lettura captcha di Vodafone
+-Migliorata la lettura captcha di Tim
+-Aggiunti numerosi gestori
+-Aggiunta la possibilità di scegliere al primo avvio quali gestori mostrare
+-Migliorato il gestore VodafoneMMS (ora usabile senza registrazione)
+-Aggiunto un controllo per evitare avvii multipli
+-Aggiornato ocrad alla versione 0.18pre4
+-Modificata la scritta di informazioni sui messaggi scritti
+-Numerosi minor changes per adattare il funzionamento alle nuove funzionalità

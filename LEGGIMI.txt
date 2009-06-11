@@ -1,6 +1,6 @@
 Questo è il file LEGGIMI di MoioSMS
-by Silvio Moioli 2008 (silvio@moioli.net)
-edited by Donatello Volonghi 2009 (bunbury86@gmail.com)
+by Donatello Volonghi 2009 (bunbury86@gmail.com)
+(dall'orginale by Silvio Moioli 2008 (silvio@moioli.net))
 Vedi file LICENSE per la licenza d'uso.
 
 PREFAZIONE
@@ -14,21 +14,30 @@ A differenza della versione originale, questa ha delle dipendenze differenti:
 
 Oltre ai 3 programmi per la lettura dei captcha (ocrad, gocr, gm)
 
-I dati salvati con il vecchio formato (e a maggior ragione quelle della versione 2.14 e precedenti) non sono compatibili (non vengono riconosciuti i dati di accesso ai gestori e vanno reinseriti)
+I dati salvati con il vecchio formato (e a maggior ragione quelle della 
+versione 2.14 e precedenti) non sono compatibili (non vengono riconosciuti 
+i dati di accesso ai gestori e vanno reinseriti).
 
-Infine la versione compilata con py2exe necessita dei "Microsoft Visual C++ 2008 Redistributable Package (x86)"
-se il programma non dovesse avviarsi, provare a scaricare e installare dal sito Microsoft il programma suddetto.
+Infine la versione compilata necessita dei "Microsoft Visual C++ 2008 
+Redistributable Package (x86)". Se il programma non dovesse avviarsi, 
+provare a scaricare e installare dal sito Microsoft il programma suddetto.
 ( http://www.microsoft.com/downloads/details.aspx?displaylang=it&FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf )
 
 Su MacOSX per avere i messaggi "sulla traybar" è necessario installare Growl.
 
 Known Issues:
 
-1) A cuasa di un problema con le PyQt e py2exe, l'eseguibile compilato con py2exe non mostra l'immagine per la lettura manuale del captcha.
-2) Su MacOSX può comparire un errore "OSError 4" causato dalle librerie subprocess non EINTR-safe.
+1) Su MacOSX può comparire un errore "OSError 4" causato dalle librerie subprocess non EINTR-safe. (Alcune volte compare, altre no. Riavvia il programma più volte)
 
-Testato su OSX e WinVista (versione sorgente) e OSX, WinXP SP3, WinXP SP2, WinVista (versione py2app/py2exe)
-con la versione di python 2.6.1, PyQt4 (Qt 4.4.4 e 4.5), pyCurl 7.19.0 (Curl 7.19.4) e psutil 0.1.1
+Versione sorgente (source) testata su OSX e WinVista(X64) e Ubuntu 9.04.
+Versione compilata testata su WinXP SP3, WinXP SP2, WinVista(X64), OSX, 
+Ubuntu 9.04.
+
+Versioni software:
+-python 2.6.2
+-PyQt4 (Qt 4.4.4 e Qt 4.5.1) (versiona stable)
+-pyCurl 7.19.0 (Curl 7.19.4)
+-psutil 0.1.1
 
 Cos'è MoioSMS?
 --------------
@@ -157,7 +166,7 @@ Istruzioni per sistemi Windows:
        completo del file MoioSMS.exe. Se non lo conosci, puoi leggerlo dalla
        scheda Proprietà che si ottiene cliccando con il pulsante destro del
        mouse sul file stesso e scegliendo "Proprietà...";
-    4) dai il comando: sms numero "testo da inviare" sito (nota che il testo
+    4) dai il comando: MoioSMS numero "testo da inviare" sito (nota che il testo
        da inviare *E'* tra virgolette);
     5) Fatto! Il tuo messaggio sarà inviato senza ulteriori richieste!
 
