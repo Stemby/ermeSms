@@ -64,9 +64,6 @@ class vCardBook(Book):
 
     def lookupNumber(self, number):
         """Cerca un numero nella rubrica."""
-        #number = self.cm.quoteUnicode(number)
-        #Decisamente non il modo migliore, ma funziona.
-        #contacts = self.contatti #self.getContacts()
         inverseContacts = dict([[v, k] for k, v in self.contatti.items()])
         try:
             return inverseContacts[number]
@@ -116,7 +113,7 @@ class vCardBook(Book):
                 if 'tel' in vobj.contents:
                     tels = vobj.contents['tel']
                     i = 0
-                    name = vobj.fn.value
+                    name = self.__replaceNonAscii(vobj.fn.value)
                     for tel in tels:
                         number = tel.value
                         if i == 0: 
@@ -126,6 +123,17 @@ class vCardBook(Book):
                         i += 1
         f.close()
         return self.contatti
+
+    def __replaceNonAscii(self, text):
+        """Modifica alcuni caratteri non-ASCII dalla stringa."""
+        #Brutto, ma funziona.
+        text = text.replace(u"à", "a_")
+        text = text.replace(u"è", "e_")
+        text = text.replace(u"é", "e_")
+        text = text.replace(u"ì", "i_")
+        text = text.replace(u"ò", "o_")
+        text = text.replace(u"ù", "u_")
+        return text
 
     def addContact(self, name, number):
         """Aggiunge un contatto alla rubrica."""
