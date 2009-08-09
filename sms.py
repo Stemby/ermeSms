@@ -7,7 +7,8 @@ in grado di inviare dei Brevi Messaggi di Testo (SMS) in modo semplice e
 veloce, attraverso uno dei siti che permettono di inviarli.
 Login manager e rubrica telefonica sono inclusi.
 
-Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
+Creato da Silvio Moioli (silvio@moioli.net), www.moioli.net
+Modificato da Francesco Marella (francesco.marella@gmail.com)
 Distribuito in licenza GNU GPL.
 """
 
