@@ -266,7 +266,7 @@ class OfflineSendDialog(QDialog):
             u"non inviati andranno persi. Chiudere ugualmente?",
             'Si','No')
             if result == 1:
-                event.ignore()
+                if event: event.ignore()
                 return
         self.stopTimer()
         self.listBox.clear()
