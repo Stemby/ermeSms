@@ -1,0 +1,18 @@
+import Utils
+
+bld.env["MOIOSMS"] = Utils.subst_vars("${BINDIR}/moiosms", bld.env)
+
+bld.install_files("${DATADIR}/icons/hicolor/128x128/apps", "moiosms.png")
+
+# subst executable location into and
+bld.new_task_gen(
+	"subst",
+	source = "moiosms.desktop.in",
+	target = "moiosms.desktop",
+	install_path = "${DATADIR}/applications",
+	chmod = 0755,
+	dict = {"MOIOSMS": bld.env["MOIOSMS"]}
+)
+
+bld.add_group()
+
