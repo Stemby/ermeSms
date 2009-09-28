@@ -706,7 +706,7 @@ class MainFrame(QFrame):
                         u"Messaggio inviato tramite " +\
                         self.getSender()+u" a "+\
                         unicode(self.destinationComboBox.currentText()),
-                        "MoioSMS")
+                        "moiosms")
                 n.show()
             except ImportError:
                 if self.traymessage: self.traymessage(u"Messaggio inviato",
