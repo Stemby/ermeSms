@@ -15,5 +15,4 @@ __all__ = [
     'VodafoneMail',    
     'VodafoneMMS',
     'Wadja',
-    'Vodafonee',
     ]
