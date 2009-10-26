@@ -15,7 +15,7 @@ from moio.errors.SiteConnectionError import SiteConnectionError
 from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
 
-class Vodafone(Sender):
+class VodafoneSim2(Sender):
     """Permette di spedire SMS dal sito 190.it"""
 
     maxLength = 160
@@ -155,7 +155,7 @@ class Vodafone(Sender):
 
                         self.checkForErrors(saver.getvalue())
                         self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
-                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__)
+                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, 'Vodafone')
                         c.setopt(pycurl.POST, True)
                     except CaptchaError:
                         raise SenderError(self.__class__.__name__)

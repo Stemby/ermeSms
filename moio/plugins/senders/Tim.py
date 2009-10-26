@@ -20,7 +20,7 @@ from moio.errors.SenderError import SenderError
 class Tim(Sender):
     """Permette di spedire SMS dal sito di tim.it"""
 
-    maxLength = 160
+    maxLength = 640
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
 
     requiresRegistration = ['Nome utente','Password']
@@ -159,8 +159,8 @@ class Tim(Sender):
            (re.search(u'Il servizio &egrave; momentaneamente non disponibile', page) is not None) or \
            (re.search(u'Siamo spiacenti, la pagina che hai richiesto al momento non &egrave; disponibile.', page) is not None) or \
            (re.search(u'Internal Server Error', page) is not None):
-            raise SiteCustomError(self.__class__.__name__, u"Il servizio non è al momento disponibile.")
-        if (re.search(u'SMS non inviato, il numero non &egrave; TIM', page) is not None):
+            raise SiteCustomError(self.__class__.__name__, u"Il servizio non \W?\W? al momento disponibile.")
+        if (re.search(u'SMS non inviato, il numero non \W?\W? TIM', page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Il destinatario non e' un numero Tim.")
         if (re.search(u'numero massimo di SMS', page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Hai raggiunto il limite di SMS per oggi.")

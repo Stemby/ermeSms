@@ -44,13 +44,11 @@ class Tin(Sender):
             
             #Inizia la raccolta dei cookie...
             c.setopt(pycurl.URL, "http://tin.alice.it")
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)            
             self.perform(self.stop)
             
             if ui: ui.gaugeIncrement(self.incValue)               
             
             #Faccio il login
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["USER"] = username[:username.find("@")]
@@ -61,11 +59,9 @@ class Tin(Sender):
             c.setopt(pycurl.URL, "http://communicator.virgilio.it/asp/a3login.asp")
             self.perform(self.stop)
             
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/a3login.asp")
             self.perform(self.stop)
             
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             postFields = {}
             postFields["a3l"]=username
             postFields["a3p"]=password
@@ -85,25 +81,21 @@ class Tin(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)            
             
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode({}))
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/menu.asp?dest=WP")
             self.perform(self.stop)
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/loadWP.asp")
             self.perform(self.stop)
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/preview_WEBMAIL.asp")
-            self.perform(self.stop)
-
-            if ui: ui.gaugeIncrement(self.incValue)            
+            self.perform(self.stop, saver)
             
             if (re.search(u"Ciao", saver.getvalue()) is None):
                 raise SiteAuthError(self.__class__.__name__)
+
+            if ui: ui.gaugeIncrement(self.incValue)            
             
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             c.setopt(pycurl.URL,
                 "http://communicator.alice.it/asp/dframeset.asp?dxserv=SMS")
             self.perform(self.stop)
@@ -114,7 +106,6 @@ class Tin(Sender):
             self.perform(self.stop)
             
             #Altro cookie...
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             getFields = {}
             getFields["username"]=username
             c.setopt(pycurl.URL,
@@ -127,7 +118,6 @@ class Tin(Sender):
             if number[0] != "+":
                 number = "+39" + number
             
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)
             postFields = {}
             postFields["lista_operatori"] = "x"
             postFields["numero"] = ""
@@ -149,14 +139,13 @@ class Tin(Sender):
             # conferma
             #Altro cookie...
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             getFields = {}
             getFields["username"]=username
             getFields["action"]="sendsms"
             c.setopt(pycurl.URL,
                 "http://gsmailmdumail.alice.it:8080/supermail/controller?" +
                 self.codingManager.urlEncode(getFields))
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
 
             if (re.search("Messaggio inviato correttamente al server", saver.getvalue()) is None):
                 raise SenderError(self.__class__.__name__)

@@ -46,7 +46,6 @@ class Enel(Sender):
                 u"Questo sito permette di inviare SMS solo verso cellulari italiani.")
             
             #Visito la pagina iniziale
-            c.setopt(pycurl.WRITEFUNCTION, self.doNothing)            
             c.setopt(pycurl.URL, "http://www.enel.it")
             self.perform(self.stop)
 
@@ -54,7 +53,6 @@ class Enel(Sender):
 
             #Faccio il login
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["SpontaneousLogon"] = "/Index.asp"
@@ -63,7 +61,7 @@ class Enel(Sender):
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, "http://www.enel.it/AuthFiles/Login.aspx")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
             
             if (re.search("Autenticazione fallita", saver.getvalue()) != None):
                 raise SiteAuthError(self.__class__.__name__)
@@ -72,11 +70,10 @@ class Enel(Sender):
                        
             #Visito la pagina degli SMS
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, False)
             c.setopt(pycurl.REFERER, "http://www.enel.it/Index.asp")
             c.setopt(pycurl.URL, "http://servizi.enel.it/sms/")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
             
             checkCode = ""
             try:
@@ -88,7 +85,6 @@ class Enel(Sender):
             
             #Pre-invio
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["message"] = text
@@ -99,7 +95,7 @@ class Enel(Sender):
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp?SMSstartpage=http://www.enel.it/Index.asp")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
             
             if (re.search("superato il limite massimo",
                 saver.getvalue()) != None):
@@ -121,7 +117,6 @@ class Enel(Sender):
 
             #Accetto il contratto
             saver = StringIO()
-            c.setopt(pycurl.WRITEFUNCTION, saver.write)
             c.setopt(pycurl.POST, True)
             postFields = {}
             postFields["message"] = text
@@ -135,7 +130,7 @@ class Enel(Sender):
     
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
                     
             if (re.search("superato il limite massimo",
                 saver.getvalue()) != None):
