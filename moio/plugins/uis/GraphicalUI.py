@@ -34,7 +34,18 @@ class GraphicalUI(UI):
         """Avvia questa interfaccia."""
         from PyQt4 import QtGui, QtCore
         from moio.plugins.uis.MainFrame import MainFrame
+        import os
         self.QtUIApp = QtGui.QApplication(sys.argv)
+        pluginWin=os.path.join(os.getcwd(),'qt4_plugins',
+                                       'imageformats','qjpeg.dll')
+        pluginMac=os.path.join(os.getcwd(),'qt4_plugins',
+                                       'imageformats','libqjpeg.dylib')
+        pluginUnix=os.path.join(os.getcwd(),'qt4_plugins',
+                                       'imageformats','libqjpeg.so')
+        if os.path.isfile(pluginWin) or os.path.isfile(pluginMac) or \
+           os.path.isfile(pluginUnix):
+            self.QtUIApp.setLibraryPaths(
+                QtCore.QStringList(os.path.join(os.getcwd(),'qt4_plugins')))
         self.QtUIApp.setQuitOnLastWindowClosed(False)
         self.MainFrame = MainFrame()
         self.MainFrame.show()
