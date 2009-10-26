@@ -298,7 +298,7 @@ class LogViewerDialog(QDialog):
         while iterator.value():
             item = iterator.value()
             if item.text(2):
-                text = unicode(item.text(2))
+                text = unicode(item.text(2)).lower()
                 hide = False
                 for word in values:
                     if not re.search(word,text): hide = True
@@ -385,9 +385,7 @@ class LogViewerDialog(QDialog):
                 sender = self.messages[i]['sender']
                 ora = self.messages[i]['ora']
                 text = self.messages[i]['text']
-                logdata = 'data='+data+'\nora='+ora+'\nsender='+sender+\
-                          '\ndest='+dest+'\ntext='+text+'\n---\n'      
-                f.write(logdata)
+                self.mf.pm.writeLogData(f, data, ora, sender, dest, text)
             f.close()
         except exceptions.IOError:
             QMessageBox.critical(self, "Errore di salvataggio",
@@ -510,15 +508,16 @@ class LogViewerDialog(QDialog):
             elif i[:4] == 'ora=':
                 messaggio['ora']=i[4:]           
             elif i[:7] == 'sender=':
-                messaggio['sender']=i[7:]
+                messaggio['sender']=self.safeDecodeUnicode(i[7:])
             elif i[:5] == 'dest=':
                 if i[5:].isdigit():
                     if rubrica.has_key(i[5:]):
-                        messaggio['dest'] = rubrica[i[5:]]
+                        messaggio['dest'] = self.safeDecodeUnicode(
+                                                            rubrica[i[5:]])
                     else: messaggio['dest'] = '#'+ i[5:]
-                else: messaggio['dest'] = i[5:]
+                else: messaggio['dest'] = self.safeDecodeUnicode(i[5:])
             elif i[:5] == 'text=':
-                messaggio['text']=i[5:]
+                messaggio['text']=self.safeDecodeUnicode(i[5:])
             elif i == '---':
                 if messaggio.has_key('data') and \
                    messaggio.has_key('dest') and \
@@ -530,6 +529,12 @@ class LogViewerDialog(QDialog):
                 messaggio = {}
         f.close()
         self.popolaTree()
+
+    def safeDecodeUnicode(self, string):
+        try:
+            backString = string.decode('unicode_escape')
+        except: backString = u'DecodeError'
+        return backString
         
     def popolaTree(self):
         """Crea gli elementi del logTree e lo disegna"""

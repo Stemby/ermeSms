@@ -38,7 +38,7 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-    version = "2.19.15"
+    version = "2.19.17"
     """Versione del programma"""
 
     def __init__(self):
@@ -129,18 +129,25 @@ class PreferenceManager(Singleton):
         else: self.setSentSender('Reset',time.strftime('%d/%m/%y'))
 
     def logSMS(self, sender, dest, text):
-        """Salvataggio dei dati da loggare"""
+        """Prepara il salvataggio dei dati"""
         if not os.path.isfile(self.getlogFileName()):
             if not os.path.isdir(self.configDirName):
                 os.makedirs(self.configDirName)
             logfile = open(self.getlogFileName(), 'w+')
         else: logfile = open(self.getlogFileName(), 'a+')
-        logdata = 'data='+time.strftime('%y%m%d')+'\nora='+\
-                  time.strftime('%X')+'\nsender='+sender+'\ndest='+dest+\
-                  '\ntext='+text+'\n---\n'
-        logfile.write(logdata)
+        self.writeLogData(logfile, time.strftime('%y%m%d'),
+                          time.strftime('%X'), sender, dest, text)
         logfile.close()
 
+    def writeLogData(self, logfile, data, ora, sender, dest, text):#
+        '''Scrive i dati nel file di log'''
+        logdata = 'data='+data+\
+                  '\nora='+ora+\
+                  '\nsender='+self.cm.quoteUnicode(sender)+\
+                  '\ndest='+self.cm.quoteUnicode(dest)+\
+                  '\ntext='+self.cm.quoteUnicode(text)+\
+                  '\n---\n'
+        logfile.write(logdata)        
 
     def isProxyEnabled(self):
         """Ritorna True se un proxy è configurato."""
