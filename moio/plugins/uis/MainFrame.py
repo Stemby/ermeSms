@@ -137,9 +137,9 @@ class MainFrame(QFrame):
         self.bitmap.resize(self.bitmap.sizeHint())
 
         #########
-        self.addressButton = QPushButton("Rubrica")
-        self.connect(self.addressButton, SIGNAL('clicked(bool)'),
-                     self.addressButtonEventHandler)
+        #self.addressButton = QPushButton("Rubrica")
+        #self.connect(self.addressButton, SIGNAL('clicked(bool)'),
+        #             self.addressButtonEventHandler)
         #########
 
         self.__set_properties()
@@ -166,11 +166,13 @@ class MainFrame(QFrame):
 
         #imposto il menu contestuale
         self.menu = QMenu("MoioSMS", self)
-        self.menu.addAction('Nascondi MoioSMS', self.systemTrayEventHandler)
+        self.menu.addAction('Nascondi MoioSMS',
+                                          self.systemTrayEventHandler)
         self.menu.addSeparator()
+        self.menu.addAction('Rubrica', self.addressButtonEventHandler)
         self.menu.addAction('Preferenze', self.prefButtonEventHandler)
         self.menu.addAction('Mostra Log', self.logButtonEventHandler)
-        self.menu.addSeparator()
+        self.menu.addSeparator()        
         self.debugMode = self.menu.addAction('Set Debug Mode On',
                                              self.debugMenuHandler)
         self.menu.addSeparator()
@@ -302,7 +304,7 @@ class MainFrame(QFrame):
         hbox_1.addWidget(self.destinationComboBox, 1)
         hbox_1.addWidget(self.deleteButton, 0)
         hbox_1.addWidget(self.addButton, 0)
-        hbox_1.addWidget(self.addressButton, 0)        
+        #hbox_1.addWidget(self.addressButton, 0)        
         grid.addLayout(hbox_1, 0, 0)
 
         hbox_2.addWidget(self.bitmap)
