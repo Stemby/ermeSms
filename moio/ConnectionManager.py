@@ -33,7 +33,7 @@ class ConnectionManager(Singleton):
     def __setcurl__(self):
         """Imposta alcuni valori che possono essere stati modificati"""
         self.curl.setopt(pycurl.FOLLOWLOCATION, 1)
-        self.curl.setopt(pycurl.USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; it; rv:1.9.0.9) Gecko/2009040821 Firefox/3.0.10 (.NET CLR 3.5.30729)')
+        self.curl.setopt(pycurl.USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; it; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)')
         self.curl.setopt(pycurl.POST, False)
 
     def getCurl(self):
