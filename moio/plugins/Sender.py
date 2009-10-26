@@ -53,10 +53,14 @@ class Sender(Plugin):
         """Modifica alcuni caratteri non-ASCII dalla stringa."""
         #Brutto, ma funziona.
         text = text.replace(u"à", "a'")
+        text = text.replace(u"á", "a'")                
         text = text.replace(u"è", "e'")
         text = text.replace(u"é", "e'")
-        text = text.replace(u"ì", "i'")
-        text = text.replace(u"ò", "o'")
+        text = text.replace(u"í", "i'")
+        text = text.replace(u"ì", "i'")        
+        text = text.replace(u"ó", "o'")
+        text = text.replace(u"ò", "o'")        
+        text = text.replace(u"ú", "u'")        
         text = text.replace(u"ù", "u'")
         #Ancora peggio...
         text = text.replace(u"€", "Euro")
