@@ -57,7 +57,7 @@ def configure(conf):
 		#~ Utils.pprint("RED", "Python module <module name> is recommended")
 		#~ Utils.pprint("RED", "Please see README")
 		
-	opt_pymodules = "pynotify psutil".split()
+	opt_pymodules = "pynotify psutil vobject evolution".split()
 	for mod in opt_pymodules:
 		try:
 			conf.check_python_module(mod)
