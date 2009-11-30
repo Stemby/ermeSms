@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import os.path
 import hashlib
-import sys
 import time
 
 from moio.lib.rijndael import rijndael

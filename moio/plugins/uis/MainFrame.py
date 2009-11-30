@@ -683,17 +683,18 @@ class MainFrame(QFrame):
         if hadError:
             self.setIcon(getErrorData())
             self.messageLabel.setText(hadError)
-            try:
-                import pynotify
-                pynotify.init ("MoioSMS")
-                n = pynotify.Notification ("MoioSMS",
-                    u"Messaggio non inviato tramite " +\
-                             self.getSender()+u" a "+\
-                             unicode(self.destinationComboBox.currentText()), 
-                                     "error")
-                n.show()
-            except ImportError:
-                if self.traymessage: self.traymessage(u"Messaggio non inviato",
+            if self.traymessage: 
+                try:
+                    import pynotify
+                    pynotify.init ("MoioSMS")
+                    n = pynotify.Notification ("MoioSMS",
+                        u"Messaggio non inviato tramite " +\
+                                 self.getSender()+u" a "+\
+                                 unicode(self.destinationComboBox.currentText()), 
+                                         "error")
+                    n.show()
+                except ImportError:
+                    self.traymessage(u"Messaggio non inviato",
                                  u"Messaggio non inviato utilizzando " +\
                                  self.getSender()+u" a "+\
                                  unicode(self.destinationComboBox.currentText()),
