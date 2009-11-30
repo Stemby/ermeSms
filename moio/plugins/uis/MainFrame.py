@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 import exceptions
 import Queue
 import time
@@ -74,7 +73,7 @@ class MainFrame(QFrame):
                                               Qt.WindowCloseButtonHint)
         except:
             flag = Qt.WindowFlags()
-            self.defaultFlag = Qt.WindowFlags()
+            self.defaultFlag = flag
 
         QFrame.__init__(self, None , flag)
         self.setWindowState(Qt.WindowActive)
@@ -113,7 +112,7 @@ class MainFrame(QFrame):
                 self.pm.setSenderList(senderList,Sender.getPlugins().keys())
         else: senderList = self.pm.getSenderList()
         self.senderBoxes = {}
-        self.senderRadioBox = QGroupBox("Scegli il sito per l'invio")
+        self.senderRadioBox = QGroupBox("Scegli il sito per l'invio:")
         for i in senderList:
             self.senderBoxes[i] = QRadioButton(i)
         self.senderBoxes[senderList[0]].setChecked(True)
@@ -457,24 +456,30 @@ class MainFrame(QFrame):
                 remainingCharCount = sender.maxLength - lastTextCharCount
                 newCharCount = sender.newCharCount(text)
                 if textCount==1:
-                    message = "Scritto un messaggio: "
+                    message = "Scritto un sms"
                 else:
-                    message = "Scritti "+str(textCount)+" messaggi: "
-                if remainingCharCount==0:
-                    message += "messaggio riempito."
-                else:
-                    message += "mancano "+str(remainingCharCount)+\
-                               " caratteri a riempire il messaggio"
+                    message = "Scritti "+str(textCount)+" sms "
+                if remainingCharCount!=0:
+                    if remainingCharCount == 1:
+                        message += ", manca "+str(remainingCharCount)+\
+                               " caratteri"
+                    else:
+                        message += ", mancano "+str(remainingCharCount)+\
+                               " caratteri"
                 if textCount > 1 and not newCharCount == sender.maxLength:
-                    message += "\ne togli "+str(newCharCount)+" caratteri pe"+\
-                               "r scrivere un messaggio in meno."
+                    message += "\nRimuovi " + str(newCharCount)
+                    if newCharCount == 1:
+                        message += " carattere"
+                    else:
+                        message += " caratteri"
+                    message += " per scrivere un sms in meno."
             else:
                 #2.2- L'utente ha appena scritto un carattere del destinatario
                 if self.book.isInContacts(destString):
                     message = "In rubrica con il numero "+\
                               self.book.lookup(destString)
                 elif self.isValid(destString):
-                    message = "Puoi salvare questo numero in rubrica"
+                    message = "Salva il numero in rubrica"
 
         #aggiorno il label sent sender
         self.updateSentMessages()
