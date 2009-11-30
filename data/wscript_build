@@ -1,10 +1,7 @@
-import Utils
-
-bld.env["MOIOSMS"] = Utils.subst_vars("${BINDIR}/moiosms", bld.env)
-
+# install all data files
 bld.install_files("${DATADIR}/pixmaps", "moiosms.xpm")
 
-# subst executable location into and
+# subst executable location
 bld.new_task_gen(
 	"subst",
 	source = "moiosms.desktop.in",
