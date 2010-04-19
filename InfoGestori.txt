@@ -1,0 +1,51 @@
+Aimon: [
+65 sms gratis con mittente 'fixed' in totale verso tutti.
+Registrazione su www.aimon.it (richiede dati veri e numero di cellulare)
+username&password: quelli per accedere al sito (senza @aimon.it)
+]
+AimonFree: [
+3 sms gratis con mittente 'fixed' al giorno verso tutti.
+Registrazione su www.aimon.it (richiede dati veri e numero di cellulare)
+username&password: quelli per accedere al sito (senza @aimon.it)
+]
+TheCellFreak: [
+2 sms gratis con mittente cellfreak e firma in fondo al messaggio verso tutti
+Registrazione su http://www.thecellfreak.com/newuser (richiede numero di cellulare)
+username&password: quelli per accedere al sito
+mittente: Nick che compare in fondo al messaggio
+]
+Tim: [
+5 sms gratis con mittente numero TIM al giorno verso TIM.
+Registrazione su www.tim.it (richiede sim TIM)
+Richiede decodifica manuale del captcha
+username&password: quelli per accedere al sito
+]
+Vodafone: [
+10 sms gratis con mittente numero vodafone al giorno verso vodafone.
+Registrazione su www.vodafone.it (richiede sim vodafone)
+username&password: quelli per accedere al sito
+sim(opzionale): numero ti telefono dal quale inviare i messaggi (tra quelli registrati al sito)
+PS: Vodafone SIM2 serve nel caso abbiate 2 sim registrate
+]
+VodafoneMail: [
+10 sms gratis con mittente "Vodafone" al giorno verso vodafone.
+Registrazione su www.vodafone.it (richiede sim vodafone)
+username: mail con cui si è registrati al sito vodafone
+password: Nick che si vuole far comparire nel messaggio
+]
+VodafoneMMS: [
+100 mms gratis con mittente scelto al giorno verso vodafone.
+Senza registrazione
+mittente: Nick che si vuole far comparire nel messaggio
+]
+Wadja: [
+5 sms gratis con mittente nome utente o numero registrato al giorno verso tutti.
+Registrazione su www.wadja.com (richiede mail o numero di telefono)
+username&password: quelli per accedere al sito
+]
+YesMMS: [
+3 sms ogni 4 ore (1 per destinatario al giorno) verso tutti con mittente numero straniero.
+Registrazione su www.yesmms.com (richiede mail)
+username&password: quelli per accedere al sito
+]
+Enel+Rossoalice+Tin: [ Non posso dare supporto su questi non avendo l'account per questi siti ]
