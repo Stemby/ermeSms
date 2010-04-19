@@ -10,20 +10,14 @@ Login manager e rubrica telefonica sono inclusi.
 Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
 Distribuito in licenza GNU GPL.
 """
-#controlla che il programma non sia già avviato
+#controlla che il programma non sia gia'  avviato
 try:
-    import psutil, os
+    import psutil
+    from os import getpid
 except: pass
 else:
-    this = psutil.Process(os.getpid())
-    count = 0
-    for i in psutil.get_process_list():
-        try:
-            if i.cmdline == this.cmdline: count +=1
-        except: pass
-    if count > 1:
-        import sys
-        sys.exit(0)
+    this = psutil.Process(getpid())
+    quit() if (this.cmdline in [i.cmdline if i.pid != getpid() else [] for i in psutil.get_process_list()]) else None
 
 #carico i moduli e avvio il programma
 from moio.plugins.UI import UI
@@ -35,7 +29,7 @@ from moio.plugins.uis import *
 from moio.plugins.captchadecoders import *
 
 #Ricerca la migliore interfaccia utilizzabile (interfaccia disponibile
-#a priorità massima)
+#a priorita' massima)
 bestUI = UI.getBestPlugin()
 
 #Inizializza il gestore delle eccezioni fatali
