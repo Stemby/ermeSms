@@ -115,7 +115,7 @@ class SendMessage(threading.Thread):
                 hadError = u"L'ultimo SMS non è stato inviato per" + \
                            u" interruzione dell'utente."                    
             except (SiteConnectionError, SiteCustomError, SenderError,
-                    CaptchaError, NotFoundError) as e:
+                    CaptchaError, NotFoundError), e:
                 done = True                  
                 hadError = u"L'ultimo SMS non è stato" +\
                            u" inviato a causa di un errore."

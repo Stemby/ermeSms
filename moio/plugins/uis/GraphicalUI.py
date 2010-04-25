@@ -20,7 +20,7 @@ class GraphicalUI(UI):
             #deve essere installata correttamente wxpython
             from PyQt4 import QtGui, QtCore
             from moio.plugins.uis.MainFrame import MainFrame
-        except ImportError as e:
+        except ImportError, e:
             result = False
             print e
         return result
