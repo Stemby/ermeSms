@@ -1,4 +1,5 @@
 * convert all files to UTF-8
+* import contacts from MoioSMS 2
 * i18n
 * add a menu with "Preferences"
 * neoPhysis integration
