@@ -4,15 +4,15 @@
 
 from os import getenv
 from ConfigParser import ConfigParser, NoSectionError
+from moio.PreferenceManager import PreferenceManager
 
 question = "Do you want to import MoioSMS 2 contacts? (Y/n) --> "
 answer = raw_input(question)
 if answer.lower() in ('', 'y'):
 
-    home = getenv('HOME') # TODO: probably to generalize
-    MoioSMSfile = home + '/.moiosms/config.ini' # TODO: probably to generalize
-    pyMoioSMSfile = home + '/.pymoiosms/config.ini' # TODO: probably to generalize
-    
+    pyMoioSMSfile = PreferenceManager.getConfigFileName(PreferenceManager.getInstance())
+    MoioSMSfile = pyMoioSMSfile.strip("py")
+
     # Read MoioSMS contacts if MoioSMSfile exists
     try: file(MoioSMSfile)
     except IOError: quit("The '%s' file doesn't exist" % MoioSMSfile)
