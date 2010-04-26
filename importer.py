@@ -1,32 +1,40 @@
 #!/usr/bin/env python
 
-# TODO -- capital letters become small letters: why???
 # TODO -- integrate the importer in pyMoioSMS
 
-import os
-from ConfigParser import ConfigParser
+from os import getenv
+from ConfigParser import ConfigParser, NoSectionError
 
 question = "Do you want to import MoioSMS 2 contacts? (Y/n) --> "
 answer = raw_input(question)
-if answer == 'Y' or answer == 'y' or answer == '':
-    home = os.getenv('HOME') # TODO: probably to generalize
+if answer.lower() in ('', 'y'):
 
+    home = getenv('HOME') # TODO: probably to generalize
     MoioSMSfile = home + '/.moiosms/config.ini' # TODO: probably to generalize
     pyMoioSMSfile = home + '/.pymoiosms/config.ini' # TODO: probably to generalize
     
-    # Read MoioSMS contacts
+    # Read MoioSMS contacts if MoioSMSfile exists
+    try: file(MoioSMSfile)
+    except IOError: quit("The '%s' file doesn't exist" % MoioSMSfile)
     MoioSMSconfig = ConfigParser()
+    MoioSMSconfig.optionxform = str
     MoioSMSconfig.read(MoioSMSfile)
-    contacts = MoioSMSconfig.items('contacts')
+    try: contacts = MoioSMSconfig.items('contacts')
+    except NoSectionError: quit("The is no such contact stored in your MoioSMS2 file!")
 
     # Write contacts into pyMoioSMS configuration file
+    try: file(pyMoioSMSfile)
+    except IOError: quit("The '%s' file doesn't exist" % pyMoioSMSfile)
     pyMoioSMSconfig = ConfigParser()
+    pyMoioSMSconfig.optionxform = str
     pyMoioSMSconfig.read(pyMoioSMSfile)
-    for couple in contacts:
-        pyMoioSMSconfig.set('contacts', couple[0], couple[1])
-    pyMoioSMSconfig.write(open(pyMoioSMSfile, 'r+'))
+    pyMoioSMSconfig.add_section('contacts') if not pyMoioSMSconfig.has_section('contacts') else None
+    for key, value in contacts:
+        pyMoioSMSconfig.set('contacts', key, value)
+    pyMoioSMSconfig.write(open(pyMoioSMSfile, "w"))
+    print "OK! I've successfully imported %s contacts :)" % len(contacts)
 
-elif answer == 'n':
+elif answer.lower() == 'n':
     pass
 else:
-    print 'Not valid command. Quit'
+    quit('Not valid command. Quit')
