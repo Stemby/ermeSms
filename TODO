@@ -1,4 +1,5 @@
 -import contacts from MoioSMS 2
+-verify GPL compliance: http://www.gnu.org/licenses/gpl-howto.html
 -i18n
 -add a menu with "Preferences"
 -neoPhysis integration (via D-Bus?)
