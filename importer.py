@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # TODO -- capital letters become small letters: why???
+# TODO -- integrate the importer in pyMoioSMS
 
 import os
 from ConfigParser import ConfigParser
@@ -22,8 +23,6 @@ if answer == 'Y' or answer == 'y' or answer == '':
     pyMoioSMSconfig = ConfigParser()
     pyMoioSMSconfig.read(pyMoioSMSfile)
     for couple in contacts:
-        print couple[0],
-        print couple[1]
         pyMoioSMSconfig.set('contacts', couple[0], couple[1])
     pyMoioSMSconfig.write(open(pyMoioSMSfile, 'r+'))
 
@@ -31,5 +30,3 @@ elif answer == 'n':
     pass
 else:
     print 'Not valid command. Quit'
-
-
