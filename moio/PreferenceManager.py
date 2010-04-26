@@ -38,7 +38,7 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-    version = "2.19 BuNbUrY Beta4"
+    version = "0.0 Alpha 0"
     """Versione del programma"""
 
     def __init__(self):

@@ -1,10 +1,8 @@
-ToDoList:
--Gestori modulari esterni al programma
--Remaining e sent
--Sistema di news
--Ordinare a scelta
--Cancella il proxy
--Preferences con enable log, view log, edit proxy, enable/disable autodecode
+pyMoioSMS 0.0
+-Fork from MoioSMS 2.19 BuNbUrY
+-Fixed bug related to the Tin sender plugin
+-Python 2.5 compatibility
+-Minor changes
 
 MoioSMS 2.19 BuNbUrY Beta4/friNET SMS 0.1:
 -Modifiche minori ai gestori

@@ -5,3 +5,11 @@
 * neoPhysis integration
 ** use the same phonebook
 ** GUI integration with nP dialer
+
+#### Taken from the pre-import ChangeLog ####
+-Gestori modulari esterni al programma
+-Remaining e sent
+-Sistema di news
+-Ordinare a scelta
+-Cancella il proxy
+-Preferences con enable log, view log, edit proxy, enable/disable autodecode

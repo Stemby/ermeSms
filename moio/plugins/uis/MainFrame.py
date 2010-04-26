@@ -147,8 +147,8 @@ class MainFrame(QFrame):
         else: self.tray = None
 
         #imposto il menu contestuale
-        self.menu = QMenu("MoioSMS", self)
-        self.menu.addAction('Nascondi MoioSMS',
+        self.menu = QMenu("pyMoioSMS", self)
+        self.menu.addAction('Nascondi pyMoioSMS',
                                           self.systemTrayEventHandler)
         self.menu.addSeparator()
         self.menu.addAction('Mostra Log', self.logButtonEventHandler)
@@ -250,7 +250,7 @@ class MainFrame(QFrame):
         self.updateSentMessages()
 
     def __set_properties(self):
-        self.setWindowTitle("MoioSMS " + self.pm.getVersion())
+        self.setWindowTitle("pyMoioSMS " + self.pm.getVersion())
         self.destinationComboBox.setFocus()
         self.deleteButton.hide()
         self.stopButton.hide()
@@ -636,7 +636,7 @@ class MainFrame(QFrame):
                 self.pm.writeConfigFile()
             except exceptions.IOError:
                 QMessageBox.critical(self, "Errore di salvataggio",
-                    u"MoioSMS non può salvare i tuoi dati su disco. \n" +\
+                    u"pyMoioSMS non può salvare i tuoi dati su disco. \n" +\
                     u"Controlla di poter scrivere sul file:\n" + \
                     self.pm.getConfigFileName())
             #fine salvataggio
@@ -730,7 +730,7 @@ class MainFrame(QFrame):
             self.pm.logSMS(senderName, dest, text)
         except exceptions.IOError:
             QMessageBox.critical(self, "Errore di salvataggio",
-                u"MoioSMS non può salvare i messaggi inviati " +\
+                u"pyMoioSMS non può salvare i messaggi inviati " +\
                 u"sul disco.\nControlla di poter scrivere sul file:\n" + \
                 self.pm.getlogFileName())
 
@@ -807,12 +807,12 @@ class MainFrame(QFrame):
         if Sender.connectionManager.debug == None:
             Sender.connectionManager.debug = 'On'
             self.debugMode.setText('Set Debug Mode Off')
-            self.setWindowTitle("MoioSMS "+self.pm.getVersion()+\
+            self.setWindowTitle("pyMoioSMS "+self.pm.getVersion()+\
                                 " (DEBUG MODE)")
         else:
             Sender.connectionManager.debug = None
             self.debugMode.setText('Set Debug Mode On')
-            self.setWindowTitle("MoioSMS "+self.pm.getVersion())
+            self.setWindowTitle("pyMoioSMS "+self.pm.getVersion())
 
     def closeEvent(self, event = None):
         """Salva il file di configurazione e termina il programma."""
@@ -835,19 +835,19 @@ class MainFrame(QFrame):
         if self.pm.isEncryptionSpecified() == False:
             result = QMessageBox.question(self,
                 u"Vuoi crittare i tuoi dati sensibili?",
-                u"MoioSMS sta per salvare i tuoi dati su disco.\n" +
+                u"pyMoioSMS sta per salvare i tuoi dati su disco.\n" +
                 u"E' possibile salvare i tuoi dati di accesso ai siti in" +
                 u"forma crittata (protetta),\nrendendo più difficile a terzi" +
                 u" il loro utilizzo non autorizzato.\n" +
                 u"Salvare i dati in forma crittata, però, rende necessario" +
                 u"l'inserimento di una Master Password\n ad ogni uso di"+
-                u"MoioSMS.\nVuoi salvare salvare in forma crittata" +
+                u"pyMoioSMS.\nVuoi salvare salvare in forma crittata" +
                 u" tramite Master Password (non sarà possibile cambiare " +
                 u"questa scelta)?\n", 'Si','No')
             if result==0:
                 pd, result = QInputDialog.getText(self, "Master Password",
                         u"Inserisci la Master Password"+\
-                        u" (ti verrà richiesta ad ogni uso di MoioSMS)",
+                        u" (ti verrà richiesta ad ogni uso di pyMoioSMS)",
                         QLineEdit.Password)
                 pd = unicode(pd)
                 self.pm.enableEncryption(pd)
@@ -857,8 +857,8 @@ class MainFrame(QFrame):
             self.pm.writeConfigFile()
         except exceptions.IOError:
             QMessageBox.critical(self, "Errore di salvataggio",
-                u"MoioSMS non può salvare i tuoi dati su disco. \n" +\
+                u"pyMoioSMS non può salvare i tuoi dati su disco. \n" +\
                 u"Controlla di poter scrivere sul file:\n" + \
                 self.pm.getConfigFileName() + "\n" + \
-                u"MoioSMS terminerà ora e nessun dato è stato salvato.")
+                u"pyMoioSMS terminerà ora e nessun dato è stato salvato.")
         sys.exit(0)
