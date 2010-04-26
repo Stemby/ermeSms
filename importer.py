@@ -11,7 +11,7 @@ answer = raw_input(question)
 if answer.lower() in ('', 'y'):
 
     pyMoioSMSfile = PreferenceManager.getConfigFileName(PreferenceManager.getInstance())
-    MoioSMSfile = pyMoioSMSfile.strip("py")
+    MoioSMSfile = pyMoioSMSfile.replace("py", "")
 
     # Read MoioSMS contacts if MoioSMSfile exists
     try: file(MoioSMSfile)
