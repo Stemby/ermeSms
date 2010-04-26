@@ -6,6 +6,8 @@
 -neoPhysis integration (via D-Bus?)
 --use the same phonebook
 --GUI integration with nP dialer
+-API documentation
+-man page
 
 #### Taken from the pre-import ChangeLog ####
 -Gestori modulari esterni al programma
