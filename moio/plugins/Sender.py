@@ -51,19 +51,8 @@ class Sender(Plugin):
 
     def replaceNonAscii(sender, text):
         """Modifica alcuni caratteri non-ASCII dalla stringa."""
-        #Brutto, ma funziona.
-        text = text.replace(u"à", "a'")
-        text = text.replace(u"á", "a'")                
-        text = text.replace(u"è", "e'")
-        text = text.replace(u"é", "e'")
-        text = text.replace(u"í", "i'")
-        text = text.replace(u"ì", "i'")        
-        text = text.replace(u"ó", "o'")
-        text = text.replace(u"ò", "o'")        
-        text = text.replace(u"ú", "u'")        
-        text = text.replace(u"ù", "u'")
-        #Ancora peggio...
-        text = text.replace(u"€", "Euro")
+        replace_map = ((u"à", "a'"), (u"á", "a'"), (u"è", "e'"), (u"é", "e'"), (u"í", "i'"), (u"ì", "i'"), (u"ó", "o'"), (u"ò", "o'"), (u"ú", "u'"), (u"ù", "u'"), (u"À", "A'"), (u"È", "E'"), (u"É", "E'"), (u"Ì", "I'"), (u"Ò", "O'"), (u"Ù", "U'"), (u"ç", "c"), (u"[", "("), (u"]", ")"), (u"{", "("), (u"}", ")"), (u"^", ""), (u"£", "L."), (u"\\", ""), (u"§", ""), (u"°", ""), (u"€", "Euro"))
+        for old, new in replace_map: text = text.replace(old, new)
         return text
 
     def splitText(self, text):
