@@ -30,9 +30,16 @@ if answer.lower() in ('', 'y'):
     pyMoioSMSconfig.read(pyMoioSMSfile)
     pyMoioSMSconfig.add_section('contacts') if not pyMoioSMSconfig.has_section('contacts') else None
     for key, value in contacts:
-        pyMoioSMSconfig.set('contacts', key, value)
+        if pyMoioSMSconfig.has_option('contacts', key):
+            if value == pyMoioSMSconfig.get('contacts', key): print "[!] Skipping '%s' (it already exists here..)" % key
+            else:
+                print "[!] An option called '%s' already exists but having a different number." % key
+                new_key = raw_input("Do you want to add it using a different name? Enter it here now or leave this field empty to skip this contact\n")
+                if new_key: pyMoioSMSconfig.set('contacts', new_key, value)
+                else: print "[!] Skipping '%s'" % key
+        else: pyMoioSMSconfig.set('contacts', key, value)
     pyMoioSMSconfig.write(open(pyMoioSMSfile, "w"))
-    print "OK! I've successfully imported %s contacts :)" % len(contacts)
+    print "OK! I've successfully parsed %s contacts :)" % len(contacts)
 
 elif answer.lower() == 'n':
     pass
