@@ -2,7 +2,6 @@
 
 # TODO -- integrate the importer in pyMoioSMS
 
-from os import getenv
 from ConfigParser import ConfigParser, NoSectionError
 from moio.PreferenceManager import PreferenceManager
 
