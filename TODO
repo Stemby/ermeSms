@@ -10,9 +10,9 @@
 -man page
 
 #### Taken from the pre-import ChangeLog ####
--Gestori modulari esterni al programma
--Remaining e sent
--Sistema di news
--Ordinare a scelta
--Cancella il proxy
--Preferences con enable log, view log, edit proxy, enable/disable autodecode
+-Gestori modulari esterni al programma: richiede MOLTO lavoro e occorre ripensare al sistema dei gestori
+-Remaining e sent: sistemare e inserire un sistema che prevede, per i siti che lo permettono, l'aggiornamento degli sms inviati e residui presi dai siti
+-Sistema di news: un qualche sistema per avvisare gli utenti del funzionamento o meno di vari servizi o della possibilita' di aggiornare
+-Ordinare a scelta: non solo tra i 3 modi offerti ora
+-Possibilità di eliminare il proxy impostato. Succede che se sei in un luogo che richiede il proxy (es. uni) e poi torni a casa e non lo devi usare, di fallisce sempre l'invio e non lo puoi eliminare. Bisogna aggiungere un tasto per poterlo eliminare (magari in una finestra di preferenze come sotto)
+-Preferences con enable log, view log, edit proxy, enable/disable autodecode: inserire una finestra di preferenze dove mettere le cose scritte (e magari altre, tipo l'eliminazione della master password (o magari la sua modifica))
