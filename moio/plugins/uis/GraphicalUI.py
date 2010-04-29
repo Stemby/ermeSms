@@ -17,7 +17,7 @@ class GraphicalUI(UI):
         #non ci devono essere parametri se -gui non è specificato
         result = (len(sys.argv) == 1) or ("-gui" in sys.argv)
         try:
-            #deve essere installata correttamente wxpython
+            #PyQt4 has to be correctly installed
             from PyQt4 import QtGui, QtCore
             from moio.plugins.uis.MainFrame import MainFrame
         except ImportError, e:
