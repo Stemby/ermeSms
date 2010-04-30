@@ -57,8 +57,8 @@ class Sender(Plugin):
                 (u"ú", "u'"), (u"ù", "u'"), (u"À", "A'"), (u"È", "E'"),
                 (u"É", "E'"), (u"Ì", "I'"), (u"Ò", "O'"), (u"Ù", "U'"),
                 (u"ç", "c"), (u"[", "("), (u"]", ")"), (u"{", "("),
-                (u"}", ")"), (u"^", ""), (u"£", "L."), (u"\\", "/"),
-                (u"|", "/"), (u"§", "Par."), (u"°", "o"), (u"€", "EUR"),
+                (u"}", ")"), (u"^", ""), (u"£", "L."), (u"\\", "BkSlash"),
+                (u"|", "Pipe"), (u"§", "Par."), (u"°", "o"), (u"€", "EUR"),
                 (u"~", "Tilde"), (u"`", "'"))
         for old, new in replace_map: text = text.replace(old, new)
         return text
