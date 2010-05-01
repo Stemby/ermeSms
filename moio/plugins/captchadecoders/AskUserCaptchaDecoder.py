@@ -19,11 +19,10 @@ class AskUserCaptchaDecoder(CaptchaDecoder):
     def decodeCaptcha(self, stream, sender):
         """Questo metodo ritorna la stringa corrispondente all'immagine
         leggibile dallo stream specificato."""
-        print "mmmmmmh"
         GraphicalUI.getInstance().MainFrame.userDecodeCaptchaRequest(stream)
-        print "wtfo?"
         result = GraphicalUI.getInstance().MainFrame.qCaptcha.get()
-        print "ah ma è quello della Lola!"
-        if result == None: raise CaptchaError()
+        if result == None:
+            print "azzz"
+            raise CaptchaError()
         else:
             return result
