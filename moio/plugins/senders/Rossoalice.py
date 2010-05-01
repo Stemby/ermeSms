@@ -64,7 +64,7 @@ class Rossoalice(Sender):
                (re.search(u"utenza inserita al momento non ", saver.getvalue()) is not None) or
                (re.search(u"Riprova pi&ugrave; tardi ad accedere ad Alice Mail e servizi.", saver.getvalue()) is not None)):
                 raise SiteAuthError(self.__class__.__name__)
-
+            print "------------(-1)----------------\n", saver.getvalue()
             if ui: ui.gaugeIncrement(self.incValue)            
             
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
