@@ -14,6 +14,7 @@ from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
 #from moio.plugins.captchadecoders.AskUserCaptchaDecoder import AskUserCaptchaDecoder
 from moio.plugins.CaptchaDecoder import CaptchaDecoder
+from moio.errors.CaptchaError import CaptchaError
 
 class Rossoalice(Sender):
     """Permette di spedire SMS dal sito rossoalice.it"""
@@ -120,7 +121,9 @@ class Rossoalice(Sender):
             postFields["SHORT_MESSAGE2"] = text
             postFields["SHORT_MESSAGE"] = text
             postFields["INVIA_SUBITO"] = "true"
-            postFields["captchafield"]=CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__) #AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
+            try:
+                postFields["captchafield"]=CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__) #AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
+            except CaptchaError: print "Errore captcha :("
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))
