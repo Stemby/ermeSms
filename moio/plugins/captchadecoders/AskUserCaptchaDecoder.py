@@ -22,7 +22,6 @@ class AskUserCaptchaDecoder(CaptchaDecoder):
         GraphicalUI.getInstance().MainFrame.userDecodeCaptchaRequest(stream)
         result = GraphicalUI.getInstance().MainFrame.qCaptcha.get()
         if result == None:
-            print "azzz"
             raise CaptchaError()
         else:
             return result

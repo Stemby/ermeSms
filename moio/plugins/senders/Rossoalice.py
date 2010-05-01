@@ -94,7 +94,8 @@ class Rossoalice(Sender):
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/CheckDest.jsp")
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
+            print "->", saver.getvalue(), "<-"
 
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/inviaSms.jsp")
             c.setopt(pycurl.POSTFIELDS,
