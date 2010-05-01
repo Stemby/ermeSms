@@ -68,7 +68,8 @@ class Rossoalice(Sender):
             if ui: ui.gaugeIncrement(self.incValue)            
             
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
+            print "-------------0-----------------\n", saver.getvalue()
 
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
             self.perform(self.stop)
@@ -91,7 +92,7 @@ class Rossoalice(Sender):
             postFields["SHORT_MESSAGE2"] = text
             postFields["SHORT_MESSAGE"] = text
             postFields["INVIA_SUBITO"] = "true"
- 
+            
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/CheckDest.jsp")
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
