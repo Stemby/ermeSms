@@ -12,8 +12,7 @@ from moio.errors.SiteCustomError import SiteCustomError
 from moio.errors.SiteConnectionError import SiteConnectionError
 from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
-#from moio.plugins.captchadecoders.AskUserCaptchaDecoder import AskUserCaptchaDecoder
-from moio.plugins.CaptchaDecoder import CaptchaDecoder
+from moio.plugins.captchadecoders.AskUserCaptchaDecoder import AskUserCaptchaDecoder
 from moio.errors.CaptchaError import CaptchaError
 
 class Rossoalice(Sender):
@@ -30,8 +29,7 @@ class Rossoalice(Sender):
     
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
-        #return AskUserCaptchaDecoder.getInstance().isAvailable()
-        return CaptchaDecoder.getBestPlugin() is not None
+        return AskUserCaptchaDecoder.getInstance().isAvailable()
 
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
@@ -122,8 +120,8 @@ class Rossoalice(Sender):
             postFields["SHORT_MESSAGE"] = text
             postFields["INVIA_SUBITO"] = "true"
             try:
-                postFields["captchafield"]=CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__) #AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
-            except CaptchaError: print "Errore captcha :("
+                postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
+            except CaptchaError: print "Errore captcha :( [", saver, "-", saver.getvalue(),"]"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))
