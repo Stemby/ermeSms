@@ -72,7 +72,8 @@ class Rossoalice(Sender):
             print "-------------0-----------------\n", saver.getvalue()
 
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
-            self.perform(self.stop)
+            self.perform(self.stop, saver)
+            print "-------------0-----------------\n", saver.getvalue()
 
             saver = StringIO()
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/composer.jsp?ID_Field=0&ID_Value=0&id_clickto=0&dummy=dummy")
