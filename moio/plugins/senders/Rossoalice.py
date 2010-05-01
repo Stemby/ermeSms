@@ -83,6 +83,7 @@ class Rossoalice(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)            
             
+            print "-------------1-----------------\n", saver.getvalue()
             #Spedisco l'SMS
             postFields = {}
             postFields["DEST"] = number
@@ -95,7 +96,7 @@ class Rossoalice(Sender):
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             self.perform(self.stop, saver)
-            print "->", saver.getvalue(), "<-"
+            print "-------------2-----------------\n", saver.getvalue()
 
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/inviaSms.jsp")
             c.setopt(pycurl.POSTFIELDS,
@@ -122,7 +123,7 @@ class Rossoalice(Sender):
             postFields["INVIA_SUBITO"] = "true"
             try:
                 postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
-            except CaptchaError: print "Errore captcha :( [", saver, "-", saver.getvalue(),"]"
+            except CaptchaError:  print "-------------3-----------------\n", saver.getvalue()
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))
