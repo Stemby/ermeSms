@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: '--version' or '-V' case
+
 import os
 import sys
 import traceback
@@ -22,6 +24,7 @@ class CommandLineUI(UI):
     def isAvailable(self):
         """Ritorna true se quest'interfaccia è utilizzabile."""
         return len(sys.argv) > 1 and (("-u" in sys.argv) == False)
+        # FIXME: what is "-u" ???
 
     def getPriority(self):
         """Ritorna un codice di priorità. In caso più interfacce siano
@@ -36,15 +39,22 @@ class CommandLineUI(UI):
         cm = CodingManager.getInstance()
         try:
             if (na == 1):
-                #Un solo argomento, lista rubrica o help
+                # Only 1 argument: show phone book or help
                 arg1 = cm.unicodeArgv(sys.argv[1])
-                if (arg1 == "-m" or arg1 == "--mostra"):
+                if arg1 in ('-s', '--show'):
                     for name, number in p.getContacts().iteritems():
-                        print cm.encodeStdout(name)+": "+cm.encodeStdout(number)
+                        print '%s: %s' % (cm.encodeStdout(name),
+                                cm.encodeStdout(number))
+                elif arg1 in ('-h', '--help'):
+                    HelpUI.getInstance().run() # TODO: to update
                 else:
-                    HelpUI.getInstance().run()
+                    if len(arg1) == 2 and arg1[0] == '-' and arg1[1] != '-':
+                        print "pymoiosms: invalid option -- '%s'" % arg1[1]
+                    else:
+                        print "pymoiosms:  unrecognized option '%s'" % arg1
+                    print "Try `pymoiosms --help' for more information."
             elif (na == 2):
-                #Due argomenti, numero e testo
+                # 2 arguments: phone number and text
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 self.sendSMS(arg1, arg2, Sender.getPlugins().keys()[0])
@@ -54,9 +64,9 @@ class CommandLineUI(UI):
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 arg3 = cm.unicodeArgv(sys.argv[3])
-                if (arg1 == "-a" or arg1 == "--add"):
+                if arg1 in ('-a', '--add'):
                     p.addContact(arg2, arg3)
-                    print "Aggiunto!"
+                    print "Added %s's phone number: %s." % (arg2, arg3)
                 else:
                     if p.isProxyEnabled() == True:
                         os.environ["http_proxy"] = p.getProxy()

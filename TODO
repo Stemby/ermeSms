@@ -4,10 +4,11 @@
 -i18n
 -add a menu with "Preferences"
 -neoPhysis integration (via D-Bus?)
---use the same phonebook
+--use the same phone book
 --GUI integration with nP dialer
 -API documentation
 -man page
+-improve CLI reactivity
 
 #### Taken from the pre-import ChangeLog ####
 -Gestori modulari esterni al programma: richiede MOLTO lavoro e occorre ripensare al sistema dei gestori
