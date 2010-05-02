@@ -19,9 +19,9 @@ A differenza della versione di Donatello Volonghi e di Silvio Moioli in questa:
   * reimpostazione della sender list (abilitare sender eventualmente nascosti)
   * impostazione della password se assente o 
     rimozione della stessa se presente
-  * configurazione, build e installazione con `waf`: http://code.google.com/p/waf/
-  * notifiche con pynotify
-  * altri bugs :)
+ - configurazione, build e installazione con `waf`: http://code.google.com/p/waf/
+ - notifiche con pynotify
+ - altri bugs :)
 
 A differenza della versione originale, questa ha delle dipendenze differenti:
 
