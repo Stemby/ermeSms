@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO: '--version' or '-V' case
-
 import os
 import sys
 import traceback
@@ -39,7 +37,10 @@ class CommandLineUI(UI):
         cm = CodingManager.getInstance()
         try:
             if (na == 1):
-                # Only 1 argument: show phone book or help
+                # Only 1 argument: 3 cases
+                # 1) '-s' or '--show'
+                # 2) '-h' or '--help'
+                # 3) '-V' or '--version'
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 if arg1 in ('-s', '--show'):
                     for name, number in p.getContacts().iteritems():
@@ -47,6 +48,8 @@ class CommandLineUI(UI):
                                 cm.encodeStdout(number))
                 elif arg1 in ('-h', '--help'):
                     HelpUI.getInstance().run() # TODO: to update
+                elif arg1 in ('-V', '--version'):
+                    print 'pyMoioSMS %s' % p.getVersion()
                 else:
                     if len(arg1) == 2 and arg1[0] == '-' and arg1[1] != '-':
                         print "pymoiosms: invalid option -- '%s'" % arg1[1]
@@ -54,13 +57,14 @@ class CommandLineUI(UI):
                         print "pymoiosms:  unrecognized option '%s'" % arg1
                     print "Try `pymoiosms --help' for more information."
             elif (na == 2):
-                # 2 arguments: phone number and text
+                # 2 arguments: phone_number -- text
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 self.sendSMS(arg1, arg2, Sender.getPlugins().keys()[0])
             elif (na == 3):
-                #Tre argomenti. Tre casi: "-a nome numero"
-                #oppure "numero testo sender"
+                # 3 arguments: 2 cases
+                # 1) '-a' -- name -- phone_number
+                # 2) phone_number -- text -- sender
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 arg3 = cm.unicodeArgv(sys.argv[3])
