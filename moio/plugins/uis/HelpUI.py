@@ -28,16 +28,17 @@ class HelpUI(UI):
         print "USO:"
         print "MODALITA' INTERATTIVA: pymoiosms\n"
         print "MODALITA' A LINEA DI COMANDO: "
-        print 'pymoiosms number "text" (send a SMS to a phone number)'
-        print 'pymoiosms name "text" (send a SMS to a phone number present into the phone book)'
+        print 'pymoiosms number "text" (send a message to a phone number)'
+        print 'pymoiosms name "text" (send a message to a phone number present into the phone book)'
         print "pymoiosms -a name number (add a phone number into the phone book)"
         print "pymoiosms -s (display the phone book)\n"
-        print "Per usare un sito in particolare, aggiungere uno dei parametri"
-        print "seguenti:"
+        print "Per usare un sito in particolare, aggiungere uno dei parametri seguenti:"
         for i in Sender.getPlugins():
             print i
-        print "\nPer usare un proxy, aggiungere -p indirizzo:porta in coda"
+        print
+        print "Per usare un proxy, aggiungere -p indirizzo:porta in coda"
         print "(usare -p no per disabilitare)"
+        print
         print "Rubrica, password e settaggi sono nel file .pymoiosms/config.ini."
         print "Commenti/Suggerimenti/Bug: sylar@anche.no"
 
