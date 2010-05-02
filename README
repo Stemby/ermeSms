@@ -9,6 +9,20 @@ Vedi file LICENSE per la licenza d'uso.
 PREFAZIONE
 ----------
 Attenzione!!
+A differenza della versione di Donatello Volonghi e di Silvio Moioli in questa:
+
+ - la rubrica è gestita con plugins (backends: vcard, evolution,
+   compatibile con il formato di moiosms) 
+ - aggiunge una finestra preferenze con:
+  * selezione sorgente dati (plugin) per la rubrica
+  * modifica proxy
+  * reimpostazione della sender list (abilitare sender eventualmente nascosti)
+  * impostazione della password se assente o 
+    rimozione della stessa se presente
+  * configurazione, build e installazione con `waf`: http://code.google.com/p/waf/
+  * notifiche con pynotify
+  * altri bugs :)
+
 A differenza della versione originale, questa ha delle dipendenze differenti:
 
 -pyCurl (come l'originale)
