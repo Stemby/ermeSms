@@ -40,7 +40,7 @@ class CommandLineUI(UI):
                 # Only 1 argument: 3 cases
                 # 1) '-s' or '--show'
                 # 2) '-h' or '--help'
-                # 3) '-V' or '--version'
+                # 3) '-v' or '--version'
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 if arg1 in ('-s', '--show'):
                     for name, number in p.getContacts().iteritems():
@@ -48,7 +48,7 @@ class CommandLineUI(UI):
                                 cm.encodeStdout(number))
                 elif arg1 in ('-h', '--help'):
                     HelpUI.getInstance().run() # TODO: to update
-                elif arg1 in ('-V', '--version'):
+                elif arg1 in ('-v', '--version'):
                     print 'pyMoioSMS %s' % p.getVersion()
                 else:
                     if len(arg1) == 2 and arg1[0] == '-' and arg1[1] != '-':
