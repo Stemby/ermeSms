@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # -*- coding: UTF-8 -*-
 
 import threading
