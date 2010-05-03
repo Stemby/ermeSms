@@ -132,7 +132,6 @@ class CommandLineUI(UI):
                     keyValid = p.checkEncryptionKey(masterKey)
         #Se necessario, cerco il nome in rubrica
         #Inizializzo il sender e mando il messaggio
-        senderName = senderName.title()
         if number.isdigit() == False:
             number = p.lookup(number)
         if Sender.getPlugins().has_key(senderName) == False:
@@ -151,7 +150,7 @@ class CommandLineUI(UI):
                                      senderName, masterKey)
                     for i in s.requiresRegistration:
                         reg[i] = p.getAccount(senderName, i, masterKey)
-            s.send(number, text, reg)
+            s.sendOne(number, text, reg)
             print "Spedito!"
 
     def showFatalException(self, message):
