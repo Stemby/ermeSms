@@ -92,7 +92,7 @@ class TheCellFreak(Sender):
                 self.checkForErrors(saver.getvalue())
                 raise SenderError(self.__class__.__name__)
         
-        except pycurl.error as e:
+        except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
 

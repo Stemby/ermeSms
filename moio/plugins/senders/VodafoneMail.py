@@ -45,6 +45,6 @@ class VodafoneMail(Sender):
             sms.helo()
             sms.sendmail(mail_from, mail_to, mail_message)            
            
-        except smtplib.SMTPException as e:
+        except smtplib.SMTPException, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))

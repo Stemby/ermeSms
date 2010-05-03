@@ -133,6 +133,6 @@ class YesMMS(Sender):
                     raise SiteCustomError(self.__class__.__name__, u"Limite orario di sms raggiunto, riprova piu' tardi")                
                 else: raise SenderError(self.__class__.__name__)
         
-        except pycurl.error as e:
+        except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))

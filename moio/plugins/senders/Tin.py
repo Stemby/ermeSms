@@ -51,9 +51,9 @@ class Tin(Sender):
             #Faccio il login
             c.setopt(pycurl.POST, True)
             postFields = {}
-            postFields["USER"] = username[:username.find("@")]
-            postFields["DOMAIN"] = username[username.find("@")+1:]
-            postFields["PASS"] = password
+            postFields["usernameDisplay"] = username[:username.find("@")]
+            postFields["dominio"] = username[username.find("@")+1:]
+            postFields["password"] = password
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, "http://communicator.virgilio.it/asp/a3login.asp")

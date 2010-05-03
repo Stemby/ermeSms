@@ -24,7 +24,7 @@ class PreferenceManager(Singleton):
     """ Info x logger """
     configBaseFileName = "config.ini"
     """Path completo e nome del file di configurazione."""
-    configDirBaseName = ".moiosms"
+    configDirBaseName = ".pymoiosms"
     """Nome della cartella contenente i file di configurazione."""
     configDirName = ""
     """Path completo della cartella con i file di configurazione."""
@@ -36,8 +36,7 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-
-    version = "2.19.17"
+    version = "0.0 Alpha 0"
     """Versione del programma"""
 
     def __init__(self):

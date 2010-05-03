@@ -111,22 +111,22 @@ class CommandLineUI(UI):
                     HelpUI.getInstance().run()
             else:
                 HelpUI.getInstance().run()
-        except NotFoundError as e:
+        except NotFoundError, e:
             print cm.encodeStdout(e.__str__())
             exitCode = 1
-        except SenderError as e:
+        except SenderError, e:
             print cm.encodeStdout(e.__str__())
             exitCode = 2
         except KeyboardInterrupt:
             print "Interrotto!"
             exitCode = 3
-        except ConnectionError as e:
+        except ConnectionError, e:
             print cm.encodeStdout(e.__str__())
             exitCode = 5
-        except SiteConnectionError as e:
+        except SiteConnectionError, e:
             print cm.encodeStdout(e.__str__())
             exitCode = 6
-        except PreferenceManagerError as e:
+        except PreferenceManagerError, e:
             print cm.encodeStdout(e.__str__())
             exitCode = 7
         p.writeConfigFile()
@@ -147,7 +147,6 @@ class CommandLineUI(UI):
                     keyValid = p.checkEncryptionKey(masterKey)
         #Se necessario, cerco il nome in rubrica
         #Inizializzo il sender e mando il messaggio
-        senderName = senderName.title()
         if number.isdigit() == False:
             book = Book.getPlugins()[p.getBook()]
             number = book.lookup(number)
@@ -167,7 +166,7 @@ class CommandLineUI(UI):
                                      senderName, masterKey)
                     for i in s.requiresRegistration:
                         reg[i] = p.getAccount(senderName, i, masterKey)
-            s.send(number, text, reg)
+            s.sendOne(number, text, reg)
             print "Spedito!"
 
     def showFatalException(self, message):

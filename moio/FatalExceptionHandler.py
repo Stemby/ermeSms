@@ -24,7 +24,7 @@ class FatalExceptionHandler(object):
             msg += i
         msg += "Argomenti dalla linea di comando: " + str(sys.argv) + "\n"+\
             "\nL'indirizzo mail al quale scrivere e':\n"+\
-            "francesco.marella@gmail.com"
+            "sylar@anche.no"
 
         #Visualizza l'errore
         self.ui.showFatalException(msg)

@@ -13,6 +13,7 @@ from moio.errors.SiteConnectionError import SiteConnectionError
 from moio.errors.SiteAuthError import SiteAuthError
 from moio.errors.SenderError import SenderError
 from moio.plugins.captchadecoders.AskUserCaptchaDecoder import AskUserCaptchaDecoder
+from moio.errors.CaptchaError import CaptchaError
 
 class Rossoalice(Sender):
     """Permette di spedire SMS dal sito rossoalice.it"""
@@ -63,7 +64,6 @@ class Rossoalice(Sender):
                (re.search(u"utenza inserita al momento non ", saver.getvalue()) is not None) or
                (re.search(u"Riprova pi&ugrave; tardi ad accedere ad Alice Mail e servizi.", saver.getvalue()) is not None)):
                 raise SiteAuthError(self.__class__.__name__)
-
             if ui: ui.gaugeIncrement(self.incValue)            
             
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
@@ -89,7 +89,7 @@ class Rossoalice(Sender):
             postFields["SHORT_MESSAGE2"] = text
             postFields["SHORT_MESSAGE"] = text
             postFields["INVIA_SUBITO"] = "true"
- 
+            
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/CheckDest.jsp")
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
@@ -118,7 +118,9 @@ class Rossoalice(Sender):
             postFields["SHORT_MESSAGE2"] = text
             postFields["SHORT_MESSAGE"] = text
             postFields["INVIA_SUBITO"] = "true"
-            postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
+            try:
+                postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
+            except CaptchaError:  print "An error occurred while trying to decode captcha"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))

@@ -21,6 +21,7 @@ class AskUserCaptchaDecoder(CaptchaDecoder):
         leggibile dallo stream specificato."""
         GraphicalUI.getInstance().MainFrame.userDecodeCaptchaRequest(stream)
         result = GraphicalUI.getInstance().MainFrame.qCaptcha.get()
-        if result == None: raise CaptchaError()
+        if result == None:
+            raise CaptchaError()
         else:
             return result
