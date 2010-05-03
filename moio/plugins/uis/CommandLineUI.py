@@ -76,12 +76,12 @@ class CommandLineUI(UI):
                         os.environ["http_proxy"] = p.getProxy()
                     self.sendSMS(arg1, arg2, arg3)
             elif (na == 4):
-                #numero testo -p proxy
+                # 4 arguments: phone_number -- text -- '-p' -- proxy
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 arg3 = cm.unicodeArgv(sys.argv[3])
                 arg4 = cm.unicodeArgv(sys.argv[4])
-                if (arg3=="-p" or arg3=="--proxy"):
+                if arg3 in ('-p', '--proxy'):
                     if arg4 != "no":
                         p.setProxy(arg4)
                     else:
@@ -92,13 +92,13 @@ class CommandLineUI(UI):
                 else:
                     HelpUI.getInstance().run()
             elif (na == 5):
-                #numero testo sender -p proxy
+                # 5 arguments: phone_number -- text -- sender -- '-p' -- proxy
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 arg3 = cm.unicodeArgv(sys.argv[3])
                 arg4 = cm.unicodeArgv(sys.argv[4])
                 arg5 = cm.unicodeArgv(sys.argv[5])
-                if (arg4=="-p" or arg4=="--proxy"):
+                if arg4 in ('-p', '--proxy'):
                     if arg5 != "no":
                         p.setProxy(arg5)
                     else:
