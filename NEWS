@@ -13,7 +13,7 @@ MoioSMS 2.19 BuNbUrY Beta3
 
 
 MoioSMS 2.19 BuNbUrY Beta2
--Aggiunta la possibilit‡ di passare al debugMode (con il tasto destro)(utile per la creazione dei gestori)
+-Aggiunta la possibilit√† di passare al debugMode (con il tasto destro)(utile per la creazione dei gestori)
 -Aggiunto un "manager" della rubrica
 -Sistemato il gestore Tim per la nuova pagina di invio (per adesso non funziona l'auto-decodifica del captcha)
 -Sistemato un bug sul conteggio dei caratteri disponibili
@@ -30,20 +30,20 @@ MoioSMS 2.19 BuNbUrY Beta1
 -Aggiunti gli avvisi sulla tray bar
 -Aggiunto il logging dei messaggi con relativo visualizzatore
 -Divisione in threads del programma dell'invio tramite interfaccia grafica
--Aggiunta la possibilit‡ di bloccare l'invio del messaggio
--Aggiunta la piena funzionalit‡ della barra del progresso
--Aggiunta la possibilit‡ di invio posticipato
--Aggiunta la possibilit‡ di invio a una determinata ora
+-Aggiunta la possibilit√† di bloccare l'invio del messaggio
+-Aggiunta la piena funzionalit√† della barra del progresso
+-Aggiunta la possibilit√† di invio posticipato
+-Aggiunta la possibilit√† di invio a una determinata ora
 -Aggiunto il conto dei messaggi giornalieri inviati
 -Aggiunto il salvataggio dell'ultimo gestore usato (per destinatario)
 -Aggiunto il salvataggio dei messaggi non inviati (nel lastused)
--Aggiunta la possibilit‡ di dati di invio personalizzati per gestore
+-Aggiunta la possibilit√† di dati di invio personalizzati per gestore
 -Migliorata la lettura captcha di Vodafone
 -Migliorata la lettura captcha di Tim
 -Aggiunti numerosi gestori
--Aggiunta la possibilit‡ di scegliere al primo avvio quali gestori mostrare
+-Aggiunta la possibilit√† di scegliere al primo avvio quali gestori mostrare
 -Migliorato il gestore VodafoneMMS (ora usabile senza registrazione)
 -Aggiunto un controllo per evitare avvii multipli
 -Aggiornato ocrad alla versione 0.18pre4
 -Modificata la scritta di informazioni sui messaggi scritti
--Numerosi minor changes per adattare il funzionamento alle nuove funzionalit‡
+-Numerosi minor changes per adattare il funzionamento alle nuove funzionalit√†
