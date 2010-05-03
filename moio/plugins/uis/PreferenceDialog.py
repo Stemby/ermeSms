@@ -56,7 +56,8 @@ class PreferenceDialog(QDialog):
         self.__do_layout()
 
         self.mf = mf
-        self.connect(self.applyButton, SIGNAL('clicked(bool)'),
+
+        self.connect(self.applyButton, SIGNAL('clicked(bool)'),
                  self.applyButtonEventHandler)
         self.connect(self.resetSenderListButton, SIGNAL('clicked(bool)'),
                  self.resetSenderListHandler)
