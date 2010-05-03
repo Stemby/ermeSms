@@ -64,16 +64,13 @@ class Rossoalice(Sender):
                (re.search(u"utenza inserita al momento non ", saver.getvalue()) is not None) or
                (re.search(u"Riprova pi&ugrave; tardi ad accedere ad Alice Mail e servizi.", saver.getvalue()) is not None)):
                 raise SiteAuthError(self.__class__.__name__)
-            print "------------(-1)----------------\n", saver.getvalue()
             if ui: ui.gaugeIncrement(self.incValue)            
             
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
-            self.perform(self.stop, saver)
-            print "-------------0-----------------\n", saver.getvalue()
+            self.perform(self.stop)
 
             c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
-            self.perform(self.stop, saver)
-            print "-------------0-----------------\n", saver.getvalue()
+            self.perform(self.stop)
 
             saver = StringIO()
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/composer.jsp?ID_Field=0&ID_Value=0&id_clickto=0&dummy=dummy")
@@ -85,7 +82,6 @@ class Rossoalice(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)            
             
-            print "-------------1-----------------\n", saver.getvalue()
             #Spedisco l'SMS
             postFields = {}
             postFields["DEST"] = number
@@ -97,8 +93,7 @@ class Rossoalice(Sender):
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/CheckDest.jsp")
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
-            self.perform(self.stop, saver)
-            print "-------------2-----------------\n", saver.getvalue()
+            self.perform(self.stop)
 
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/inviaSms.jsp")
             c.setopt(pycurl.POSTFIELDS,
@@ -125,7 +120,7 @@ class Rossoalice(Sender):
             postFields["INVIA_SUBITO"] = "true"
             try:
                 postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
-            except CaptchaError:  print "-------------3-----------------\n", saver.getvalue()
+            except CaptchaError:  print "An error occurred while trying to decode captcha"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))
