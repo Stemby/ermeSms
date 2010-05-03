@@ -23,7 +23,6 @@ class LogViewerDialog(QDialog):
         self.countText = QLabel('0 messaggi')
         self.selectedCountText = QLabel('0 messaggi selezionati')        
         self.findString = QLineEdit("Inserisci il testo da ricercare")
-        self.saveButton = QPushButton("Salva")
         self.reloadButton = QPushButton("Ricarica")        
         self.closeButton = QPushButton("Chiudi")
         self.clearButton = QPushButton("Svuota")
@@ -62,8 +61,6 @@ class LogViewerDialog(QDialog):
         self.connect(self.menu, SIGNAL('aboutToHide()'), self.restoreColor)        
         
         self.closeButton.setToolTip("Chiude il registro (senza salvare)")
-        self.saveButton.setToolTip("Salva le modifiche apportate al "+\
-                                   "registro")
         self.reloadButton.setToolTip("Ricarica i messaggi salvati nel file "+\
                                      "del registro")
         self.clearButton.setToolTip("Svuota il registro")
@@ -78,8 +75,6 @@ class LogViewerDialog(QDialog):
 
         self.connect(self.findString, SIGNAL('textChanged(const QString&)'),
                  self.findTextHandler)
-        self.connect(self.saveButton, SIGNAL('clicked(bool)'),
-                 self.saveButtonHandler)
         self.connect(self.clearButton, SIGNAL('clicked(bool)'),
                  self.clearButtonHandler)
         self.connect(self.reloadButton, SIGNAL('clicked(bool)'),
@@ -109,7 +104,6 @@ class LogViewerDialog(QDialog):
     def __set_properties(self):
         self.setWindowTitle("Lista degli SMS inviati")
         self.findString.setFocus()
-        self.saveButton.setEnabled(False)
         self.closeButton.setDefault(True)
 
     def __do_layout(self):
@@ -146,8 +140,6 @@ class LogViewerDialog(QDialog):
         hbox_4.addStretch(1)
         hbox_4.addWidget(self.reloadButton, 0)        
         hbox_4.addStretch(1)        
-        hbox_4.addWidget(self.saveButton, 0)
-        hbox_4.addStretch(1)
         hbox_4.addWidget(self.closeButton, 0)
         vbox.addLayout(hbox_4, 0)        
 
@@ -193,8 +185,7 @@ class LogViewerDialog(QDialog):
 
     def deleteItem(self):
         """Cancella gli oggetti selezionati nel logTree"""
-        self.edited = True
-        self.saveButton.setEnabled(self.edited)
+        self.edited = True        
         for item in self.logTree.selectedItems():
             if item.parent():
                 #se è subsubprimary
@@ -379,7 +370,7 @@ class LogViewerDialog(QDialog):
     def saveButtonHandler(self):
         """Evento di gestione del salvataggio del registro"""
         self.edited = False
-        rubrica = self.mf.pm.getContacts()        
+        rubrica = self.mf.book.getContacts()        
         try:        
             f = open(self.mf.pm.getlogFileName(),'w')
             n=0
@@ -396,7 +387,6 @@ class LogViewerDialog(QDialog):
                 text = self.messages[i]['text']
                 self.mf.pm.writeLogData(f, data, ora, sender, dest, text)
             f.close()
-            self.saveButton.setEnabled(self.edited)
         except exceptions.IOError:
             QMessageBox.critical(self, "Errore di salvataggio",
                 u"MoioSMS non può salvare i messaggi inviati " +\
@@ -405,11 +395,17 @@ class LogViewerDialog(QDialog):
 
     def clearButtonHandler(self):
         """Evento di gestione della cancellazione del registro"""
-        self.edited = True
-        self.saveButton.setEnabled(self.edited)
-        self.logTree.clear()
-        self.messages = {}
-        self.countText.setText('0 Messaggi')
+        result = QMessageBox.question(self,  u"Attenzione!",  
+                                      u"Svuotare il registro dei messaggi inviati?", 
+                                      'Si', 'No')
+        if result == 1:
+            return
+        elif result == 0:
+            self.edited = True
+            self.logTree.clear()
+            self.messages = {}
+            self.countText.setText('0 Messaggi')
+            self.saveButtonHandler()
 
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
@@ -476,8 +472,7 @@ class LogViewerDialog(QDialog):
 
     def reloadButtonHandler(self):
         """Evento di gestione del ricaricamento dal file di log"""
-        self.edited = False
-        self.saveButton.setEnabled(self.edited)
+        self.edited = False        
         self.findString.setText("Inserisci il testo da ricercare")
         if not os.path.isfile(self.mf.pm.getlogFileName()):
             try:
@@ -497,7 +492,7 @@ class LogViewerDialog(QDialog):
 
     def loadMessages(self):
         """Carica i dati dal file di log al programma"""
-        oldrubrica = self.mf.pm.getContacts()
+        oldrubrica = self.mf.book.getContacts()
         rubrica = {}
         for i in oldrubrica.items():
             rubrica[i[1]] = i[0]            

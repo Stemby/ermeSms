@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import os.path
 import hashlib
-import sys
 import time
 
 from moio.lib.rijndael import rijndael
@@ -38,7 +36,8 @@ class PreferenceManager(Singleton):
     paddingChar = "\n"
     """Carattere utilizzato per rendere la lunghezza dei valori crittati
     multipla di 8."""
-    version = "2.19 BuNbUrY Beta4"
+
+    version = "2.19.17"
     """Versione del programma"""
 
     def __init__(self):
@@ -81,17 +80,6 @@ class PreferenceManager(Singleton):
         for sender, state in items:
             if state == 'True': senderList.append(sender)
         return senderList
-
-    def getContacts(self):
-        """Ritorna un dizionario con tutti i contatti in rubrica."""
-        result = {}
-        if self.c.has_section("contacts") == True:
-            items = self.c.items("contacts")
-            for name, number in items:
-                name = self.cm.unQuoteUnicode(name)
-                number = self.cm.unQuoteUnicode(number)
-                result[name] = number
-        return result
 
     def isLastUsedAvailable(self, key):
         """Ritorna True se esiste una chiave LRU."""
@@ -160,56 +148,6 @@ class PreferenceManager(Singleton):
                   '\n---\n'
         logfile.write(logdata)        
 
-    def lookup(self, name):
-        """Cerca un nome nella rubrica."""
-        try:
-            return self.getField("contacts", name)
-        except (NoSectionError, NoOptionError, PreferenceManagerError):
-            raise NotFoundError(name)
-
-    def lookupNumber(self, number):
-        """Cerca un numero nella rubrica."""
-        number = self.cm.quoteUnicode(number)
-        #Decisamente non il modo migliore, ma funziona.
-        contacts = self.getContacts()
-        inverseContacts = dict([[v, k] for k, v in contacts.items()])
-        try:
-            return inverseContacts[number]
-        except KeyError:
-            if number[:3]=="+39":
-                number = number[3:]
-            else:
-                number = "+39"+number
-            try:
-                return inverseContacts[number]
-            except KeyError:
-                raise NotFoundError(number)
-
-    def isInContacts(self, name):
-        """Ritorna True se un contatto è presente in rubrica."""
-        try:
-            self.lookup(name)
-            return True
-        except NotFoundError:
-            return False
-
-    def isNumberInContacts(self, number):
-        """Ritorna True se il numero di un contatto è presente in rubrica."""
-        try:
-            self.lookupNumber(number)
-            return True
-        except NotFoundError:
-            #ricerca alternativa
-            if number[:3]=="+39":
-                number = number[3:]
-            else:
-                number = "+39"+number
-            try:
-                self.lookupNumber(number)
-                return True
-            except NotFoundError:
-                return False
-
     def isProxyEnabled(self):
         """Ritorna True se un proxy è configurato."""
         return self.hasField("proxy", "url")
@@ -229,10 +167,6 @@ class PreferenceManager(Singleton):
     def clearAccount(self,sender):
         if self.c.has_section("login"+sender):
             self.c.remove_section("login"+sender)
-
-    def clearContacts(self):
-        if self.c.has_section("contacts"):
-            self.c.remove_section("contacts")
 
     def enableEncryption(self, key):
         """Abilita la cifratura di nomi utenti e password e cifra quelli esistenti."""
@@ -399,3 +333,16 @@ class PreferenceManager(Singleton):
         if os.path.isdir(self.configDirName) == False:
             os.makedirs(self.configDirName)
         self.c.write(file(self.configFileName,"w"))
+
+    def getBook(self):
+        """Ritorna il book preferito."""
+        return self.getField("books", "preferito")
+    
+    def setBook(self, book):
+        """Setta il book preferito."""
+        self.setField("books", "preferito", book) 
+
+    def isBookSet(self):
+        """Ritorna True se un book è configurato."""
+        return self.hasField("books", "preferito")
+

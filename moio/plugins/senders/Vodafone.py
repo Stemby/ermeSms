@@ -21,7 +21,7 @@ class Vodafone(Sender):
     maxLength = 160
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
 
-    requiresRegistration = ['Nome utente','Password','SIM']
+    requiresRegistration = ['Nome_utente','Password','SIM']
     """Cosa richiede questo plugin?"""
 
     incValue = 7
@@ -41,7 +41,7 @@ class Vodafone(Sender):
             c = self.connectionManager.getCurl()
 
             #Assegna le variabili standard
-            username = dati['Nome utente']
+            username = dati['Nome_utente']
             password = dati['Password']
             sim = str(dati['SIM'])
 

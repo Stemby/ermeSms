@@ -4,6 +4,7 @@ import os
 import sys
 import traceback
 
+from moio.plugins.Book import Book
 from moio.plugins.UI import UI
 from moio.plugins.Sender import Sender
 from moio.plugins.uis.HelpUI import HelpUI
@@ -34,20 +35,34 @@ class CommandLineUI(UI):
         exitCode = 0
         p = PreferenceManager.getInstance()
         cm = CodingManager.getInstance()
+
+        # se è impostato ed è tra i plugins correntemente supportati
+        if p.isBookSet() and (p.getBook() in Book.getPlugins().keys()):
+            book = Book.getPlugins()[p.getBook()]
+        else:
+            p.setBook("BuiltInBook")
+            book = Book.getPlugins()[p.getBook()]
         try:
             if (na == 1):
                 #Un solo argomento, lista rubrica o help
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 if (arg1 == "-m" or arg1 == "--mostra"):
-                    for name, number in p.getContacts().iteritems():
+                    for name, number in book.getContacts().iteritems():
                         print cm.encodeStdout(name)+": "+cm.encodeStdout(number)
+                elif arg1 in ("-b", "--book"):
+                    for b in Book.getPlugins().keys():
+                        print b
                 else:
                     HelpUI.getInstance().run()
             elif (na == 2):
                 #Due argomenti, numero e testo
                 arg1 = cm.unicodeArgv(sys.argv[1])
                 arg2 = cm.unicodeArgv(sys.argv[2])
-                self.sendSMS(arg1, arg2, Sender.getPlugins().keys()[0])
+                if arg1 in ("-b", "--book"):
+                    if arg2 in Book.getPlugins().keys():
+                        p.setBook(arg2)
+                else:
+                    self.sendSMS(arg1, arg2, Sender.getPlugins().keys()[0])
             elif (na == 3):
                 #Tre argomenti. Tre casi: "-a nome numero"
                 #oppure "numero testo sender"
@@ -55,7 +70,7 @@ class CommandLineUI(UI):
                 arg2 = cm.unicodeArgv(sys.argv[2])
                 arg3 = cm.unicodeArgv(sys.argv[3])
                 if (arg1 == "-a" or arg1 == "--add"):
-                    p.addContact(arg2, arg3)
+                    book.addContact(arg2, arg3)
                     print "Aggiunto!"
                 else:
                     if p.isProxyEnabled() == True:
@@ -134,7 +149,8 @@ class CommandLineUI(UI):
         #Inizializzo il sender e mando il messaggio
         senderName = senderName.title()
         if number.isdigit() == False:
-            number = p.lookup(number)
+            book = Book.getPlugins()[p.getBook()]
+            number = book.lookup(number)
         if Sender.getPlugins().has_key(senderName) == False:
             print "Sito "+senderName+" non riconosciuto."
         else:

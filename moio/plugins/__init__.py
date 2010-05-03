@@ -6,4 +6,5 @@ __all__ = [
     'Sender',
     'UI',
     'CaptchaDecoder'
+    'Book'
     ]

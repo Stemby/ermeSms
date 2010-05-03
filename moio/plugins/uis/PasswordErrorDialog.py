@@ -15,11 +15,14 @@ class PasswordErrorDialog(QDialog):
         self.messageLabel = QLabel("Dati inseriti non validi, reimmetterli" +\
                                    "(sito XXXXXXXXXXXXXXXX)")
         self.okButton = QPushButton("OK")
-
+        self.closeButton = QPushButton("Chiudi")
+        
         self.__set_properties()
 
         self.connect(self.okButton, SIGNAL('clicked(bool)'),
                      self.okButtonEventHandler)
+        self.connect(self.closeButton, SIGNAL('clicked(bool)'),
+                     self, SLOT('close()'))
 
     def __set_properties(self):
         self.setWindowTitle("Inserisci i dati richiesti")
@@ -40,6 +43,7 @@ class PasswordErrorDialog(QDialog):
         hbox_2 = QHBoxLayout()
         hbox_2.addStretch(1)
         hbox_2.addWidget(self.okButton, 0)
+        hbox_2.addWidget(self.closeButton, 0)
         hbox_2.addStretch(1)
         vbox.addLayout(hbox_2)
 

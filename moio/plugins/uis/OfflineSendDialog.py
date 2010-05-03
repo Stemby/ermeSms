@@ -40,6 +40,7 @@ class OfflineSendDialog(QDialog):
         self.delayedSend.setCheckable(True)
         self.delayedSend.setChecked(False)
         self.delayedButton = QPushButton("Start Timer")
+        self.closeButton = QPushButton("Chiudi")
         self.sendTime = QDateTimeEdit(QTime.currentTime())
         self.setMinimumWidth(sizex)
         self.__set_properties()
@@ -78,7 +79,9 @@ class OfflineSendDialog(QDialog):
                      self.updateDelayedButtonText)
         self.connect(self.sendTimer, SIGNAL('timeout()'),
                      self.sendTimerTimeout)          
-        
+        self.connect(self.closeButton, SIGNAL('clicked(bool)'),
+                     self.closeEvent)
+
         self.move(posx,posy)
 
     def __set_properties(self):
@@ -112,6 +115,8 @@ class OfflineSendDialog(QDialog):
         hbox_4 = QHBoxLayout()
         hbox_4.addStretch(1)
         hbox_4.addWidget(self.sendButton, 0)
+        hbox_4.addStretch(1)
+        hbox_4.addWidget(self.closeButton, 0)
         hbox_4.addStretch(1)
         delayedBox = QHBoxLayout()
         delayedBox.addWidget(self.sendTime, 1)
@@ -261,13 +266,14 @@ class OfflineSendDialog(QDialog):
             u"non inviati andranno persi. Chiudere ugualmente?",
             'Si','No')
             if result == 1:
-                event.ignore()
+                if event: event.ignore()
                 return
         self.stopTimer()
         self.listBox.clear()
         self.destText.setText('')
         self.senderText.setText('')
         self.messageText.setText('')
+        self.hide()
 
     def removeButtonEventHandler(self, event):
         """Toglie dalla lista dei messaggi quello selezionato"""

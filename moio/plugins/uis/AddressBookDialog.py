@@ -19,7 +19,12 @@ class AddressBookDialog(QDialog):
         self.removeButton = QPushButton("Cancella")
         self.addButton = QPushButton("Aggiungi")
         self.editButton = QPushButton("Modifica")
-        self.saveButton = QPushButton("Salva")        
+        self.saveButton = QPushButton("Salva")
+        self.importButton = QPushButton("Importa...")
+        self.menu = QMenu('importa', self)
+        self.menu.addAction('...da file ini',  self.importaDaFileEventHandler)
+        self.menu.addAction('...da file vCard',  self.importaDaVCardEventHandler)
+        self.importButton.setMenu(self.menu)
         self.closeButton = QPushButton("Chiudi")       
 
         self.mf = mf
@@ -32,6 +37,7 @@ class AddressBookDialog(QDialog):
         self.addButton.setToolTip("Aggiungi un nome alla rubrica")
         self.editButton.setToolTip("Modifica il nome selezionato")
         self.saveButton.setToolTip("Salva le modifiche")
+        self.importButton.setToolTip("Importa rubrica")
         self.closeButton.setToolTip("Chiudi e senza salvare le modifiche")      
 
         self.connect(self.removeButton, SIGNAL('clicked(bool)'),
@@ -76,6 +82,7 @@ class AddressBookDialog(QDialog):
         hbox_2.addWidget(self.addButton, 0)
         hbox_2.addWidget(self.editButton, 0)
         hbox_2.addWidget(self.saveButton, 0)        
+        hbox_2.addWidget(self.importButton, 0)
         hbox_2.addWidget(self.closeButton, 0)
         vbox.addLayout(hbox_2)
 
@@ -85,7 +92,10 @@ class AddressBookDialog(QDialog):
     def popolaAddress(self):
         self.addressBox.clear()
         self.addressBox.setColumnCount(2)
-        rubrica = self.mf.pm.getContacts()
+        if self.mf.pm.getBook() == "vCardBook":
+            rubrica = self.mf.book.getAllContacts()
+        else:
+            rubrica = self.mf.book.getContacts()
         for i,name in enumerate(rubrica.keys()):
             self.addressBox.insertRow(i)
             self.addressBox.setRowHeight(i,20)            
@@ -106,9 +116,15 @@ class AddressBookDialog(QDialog):
         self.editButton.setEnabled(True)
 
     def removeButtonEventHandler(self, event):
+        result = QMessageBox.question(self,
+            u"Attenzione!",
+            u"Cancellare veramente il contatto?\n", 'Si','No')
+        if result == 1:
+            return
         self.addressBox.removeRow(self.addressBox.currentRow())
-        self.edited = True
-        self.saveButton.setEnabled(self.edited)
+        #TODO: remove using book plugin
+        #self.edited = True
+        #self.saveButton.setEnabled(self.edited)
         self.removeButton.setEnabled(False)
         self.editButton.setEnabled(False)
         
@@ -123,28 +139,45 @@ class AddressBookDialog(QDialog):
         ade.exec_()
             
     def saveButtonEventHandler(self, event):
-        if self.edited:
-            self.mf.pm.clearContacts()
-            i = 0
-            while i < self.addressBox.rowCount():
-                name = unicode(self.addressBox.item(i,0).text())
-                number = unicode(self.addressBox.item(i,1).text())
-                self.mf.pm.addContact(name,number)
-                i +=1
-        self.edited = False
-        self.saveButton.setEnabled(self.edited)        
+#        if self.edited:
+#            self.mf.book.clearContacts()
+#            i = 0
+#            while i < self.addressBox.rowCount():
+#                name = unicode(self.addressBox.item(i,0).text())
+#                number = unicode(self.addressBox.item(i,1).text())
+#                self.mf.book.addContact(name,number)
+#                i +=1
+#        self.edited = False
+#        self.saveButton.setEnabled(self.edited)        
+        pass
        
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
         self.mf.fillContacts()        
-        if self.edited:
-            result = QMessageBox.question(self,
-            u"Vuoi chiudere?",
-            u"Attenzione, le modifiche apportate non sono\n" +
-            u"state salvate. Chiudere ugualmente?",
-            'Si','No')
-            if result == 1:
-                event.ignore()        
+#        if self.edited:
+#            result = QMessageBox.question(self,
+#            u"Vuoi chiudere?",
+#            u"Attenzione, le modifiche apportate non sono\n" +
+#            u"state salvate. Chiudere ugualmente?",
+#            'Si','No')
+#            if result == 1:
+#                event.ignore()        
+                
+    def importaDaFileEventHandler(self):
+        '''
+        #TODO: chiama Importer che legge i contatti
+        effettua un filtraggio in base ai numeri di telefono
+        duplicati
+        '''
+        QMessageBox.information(self, "Mi dispiace", "funzione non implementata")
+        
+    def importaDaVCardEventHandler(self):
+        '''
+        #TODO: chiama Importer che legge i contatti
+        effettua un filtraggio in base ai numeri di telefono
+        duplicati
+        '''
+        QMessageBox.information(self, "Mi dispiace", "funzione non implementata")
 
 class AddressBookEditDialog(QDialog):
     def __init__(self, ab, mf, new):
@@ -234,7 +267,7 @@ class AddressBookEditDialog(QDialog):
 
     def cancelButtonEventHandler(self):
         self.done(1)
-
+        
     def setName(self, name):
         self.nameText.setText(name)
 

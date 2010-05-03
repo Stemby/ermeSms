@@ -14,6 +14,8 @@ from moio.errors.SenderError import SenderError
 from moio.errors.ConnectionError import ConnectionError
 from moio.errors.SiteConnectionError import SiteConnectionError
 
+#TODO: add bits of code to use books plugins
+
 class TextualUI(UI):
     """Gestore dell'interfaccia utente, versione testuale."""
 

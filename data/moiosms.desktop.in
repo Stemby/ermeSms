@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=MoioSMS
+Comment=Invia SMS via Internet
+Exec=@MOIOSMS@
+Icon=moiosms
+Terminal=false
+Type=Application
+Categories=Network;
+StartupNotify=true
+Name[it_IT]=MoioSMS
