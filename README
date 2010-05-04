@@ -25,7 +25,7 @@ A differenza della versione di Donatello Volonghi e di Silvio Moioli in questa:
 
 A differenza della versione originale, questa ha delle dipendenze differenti:
 
--pyCurl
+-pyCurl (come l'originale)
 -PyQt4
 -psutil (opzionale)
 
