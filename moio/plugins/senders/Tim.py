@@ -53,7 +53,7 @@ class Tim(Sender):
             username = dati['Nome utente']
             password = dati['Password']
 
-            c.setopt(pycurl.URL, "http://www.tim.it")            
+            c.setopt(pycurl.URL, "http://www.tim.it")
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -71,13 +71,13 @@ class Tim(Sender):
             c.setopt(pycurl.URL,
                 "https://www.tim.it/authfe/login.do")
             self.perform(self.stop, saver)
-            self.checkForErrors(saver.getvalue())            
+            self.checkForErrors(saver.getvalue())
 
             if ui: ui.gaugeIncrement(self.incValue)
 
             c.setopt(pycurl.URL,
                 "https://smsweb.tim.it/sms-web/adddispatch?start=new")
-            saver = StringIO()            
+            saver = StringIO()
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
 
@@ -103,7 +103,7 @@ class Tim(Sender):
                        urllib.urlencode({"t:formdata":formdata1})
             c.setopt(pycurl.POSTFIELDS, postdata )
             c.setopt(pycurl.POST, True)
-            url = "https://smsweb.tim.it/sms-web/adddispatch.adddispatchform"                      
+            url = "https://smsweb.tim.it/sms-web/adddispatch.adddispatchform"
             if jsession: url += ";jsessionid="+jsession
             c.setopt(pycurl.URL, url )
             saver = StringIO()
@@ -117,7 +117,7 @@ class Tim(Sender):
 
             captchaBroken = False
             while captchaBroken == False:
-                postFields = {}                
+                postFields = {}
                 try:
                     saver = StringIO()
                     c.setopt(pycurl.POST, False)
@@ -127,15 +127,15 @@ class Tim(Sender):
                     postFields["verificationCode"] = AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
                 except CaptchaError:
                     raise SenderError(self.__class__.__name__)
-                
+
                 if not postFields["verificationCode"]:
                     raise SiteCustomError(self.__class__.__name__,
-                                    u"Captcha non inserito. Invio interrotto.")                
-                
+                                    u"Captcha non inserito. Invio interrotto.")
+
                 postFields["t:formdata"] = formdata
                 postFields["t:ac"] = "Dispatch"
                 c.setopt(pycurl.POSTFIELDS,
-                    self.codingManager.urlEncode(postFields))                
+                    self.codingManager.urlEncode(postFields))
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.URL, "https://smsweb.tim.it/sms-web/validatecaptcha.validatecaptchaform" )
                 saver = StringIO()

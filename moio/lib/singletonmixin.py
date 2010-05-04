@@ -230,5 +230,3 @@ if __name__ == '__main__':
             assert b.__class__.__name__ == 'B'
 
     unittest.main()
-
-

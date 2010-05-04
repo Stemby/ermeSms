@@ -158,7 +158,7 @@ class PreferenceManager(Singleton):
                   '\ndest='+self.cm.quoteUnicode(dest)+\
                   '\ntext='+self.cm.quoteUnicode(text)+\
                   '\n---\n'
-        logfile.write(logdata)        
+        logfile.write(logdata)
 
     def lookup(self, name):
         """Cerca un nome nella rubrica."""

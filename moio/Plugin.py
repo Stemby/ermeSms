@@ -28,4 +28,3 @@ class Plugin(Singleton):
                 result[i.__name__] = obj
         return result
     getPlugins = classmethod(getPlugins)
-

@@ -132,4 +132,3 @@ premi INVIO: ")
         sys.stdout.write('\a')#Beep
         sys.stdout.flush()
         print CodingManager.getInstance().encodeStdout(message)
-

@@ -56,7 +56,7 @@ class VodafoneSim2(Sender):
             c.setopt(pycurl.URL, "http://www.vodafone.it/190/trilogy/jsp/home.do")
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
-            self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))            
+            self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
 
             if ui: ui.gaugeIncrement(self.incValue)
 
@@ -208,5 +208,3 @@ class VodafoneSim2(Sender):
     def checkManteinance(self, url):
         if "courtesy" in url:
             raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
-        
-

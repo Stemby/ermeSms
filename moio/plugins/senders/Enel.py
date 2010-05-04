@@ -14,20 +14,20 @@ from moio.errors.SenderError import SenderError
 
 class Enel(Sender):
     """Permette di spedire SMS dal sito Enel.it"""
-    
+
     maxLength = 110
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
-    
+
     requiresRegistration = ['Nome utente','Password']
     """Cosa richiede questo plugin?"""
 
     incValue = 5
     """Incremento della gauge per pagina."""
-    
+
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
         return True
-       
+
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
@@ -37,19 +37,19 @@ class Enel(Sender):
 
             #Assegna le variabili standard
             username = dati['Nome utente']
-            password = dati['Password']              
-            
+            password = dati['Password']
+
             if number[:3] == "+39":
                 number = number[3:]
             elif number[0]=="+":
                 raise SiteCustomError(self.__class__.__name__,
                 u"Questo sito permette di inviare SMS solo verso cellulari italiani.")
-            
+
             #Visito la pagina iniziale
             c.setopt(pycurl.URL, "http://www.enel.it")
             self.perform(self.stop)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
+            if ui: ui.gaugeIncrement(self.incValue)
 
             #Faccio il login
             saver = StringIO()
@@ -62,27 +62,27 @@ class Enel(Sender):
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, "http://www.enel.it/AuthFiles/Login.aspx")
             self.perform(self.stop, saver)
-            
+
             if (re.search("Autenticazione fallita", saver.getvalue()) != None):
                 raise SiteAuthError(self.__class__.__name__)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
-                       
+            if ui: ui.gaugeIncrement(self.incValue)
+
             #Visito la pagina degli SMS
             saver = StringIO()
             c.setopt(pycurl.POST, False)
             c.setopt(pycurl.REFERER, "http://www.enel.it/Index.asp")
             c.setopt(pycurl.URL, "http://servizi.enel.it/sms/")
             self.perform(self.stop, saver)
-            
+
             checkCode = ""
             try:
                 checkCode = re.search('<input type="hidden" name="cksmsenel" value="([A-Z0-9]+)"',saver.getvalue()).group(1)
             except AttributeError:
                 raise SenderError(self.__class__.__name__)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
-            
+            if ui: ui.gaugeIncrement(self.incValue)
+
             #Pre-invio
             saver = StringIO()
             c.setopt(pycurl.POST, True)
@@ -96,12 +96,12 @@ class Enel(Sender):
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp?SMSstartpage=http://www.enel.it/Index.asp")
             self.perform(self.stop, saver)
-            
+
             if (re.search("superato il limite massimo",
                 saver.getvalue()) != None):
                 raise SiteCustomError(self.__class__.__name__,
                     u"Sono esauriti gli SMS gratuiti di oggi.")
-            
+
             checkCode = ""
             xFieldKey = ""
             xFieldValue = ""
@@ -113,7 +113,7 @@ class Enel(Sender):
             except AttributeError:
                 raise SenderError(self.__class__.__name__)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
+            if ui: ui.gaugeIncrement(self.incValue)
 
             #Accetto il contratto
             saver = StringIO()
@@ -127,11 +127,11 @@ class Enel(Sender):
             postFields["cksmsenel"] = checkCode
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode(postFields))
-    
+
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp")
             self.perform(self.stop, saver)
-                    
+
             if (re.search("superato il limite massimo",
                 saver.getvalue()) != None):
                 raise SiteCustomError(self.__class__.__name__,
