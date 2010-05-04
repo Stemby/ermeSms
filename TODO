@@ -9,6 +9,9 @@
 -API documentation
 -man page
 
+#### Taken from old NEWS by Francesco ####
+-Gestori modulari esterni al programma
+
 #### Taken from the pre-import ChangeLog ####
 -Gestori modulari esterni al programma: richiede MOLTO lavoro e occorre ripensare al sistema dei gestori
 -Remaining e sent: sistemare e inserire un sistema che prevede, per i siti che lo permettono, l'aggiornamento degli sms inviati e residui presi dai siti
