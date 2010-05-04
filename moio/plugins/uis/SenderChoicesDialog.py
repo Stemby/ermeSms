@@ -73,5 +73,3 @@ class SenderChoicesDialog(QDialog):
         if not senderList:
             return self.senderList
         else: return senderList
-
-

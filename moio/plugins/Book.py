@@ -20,7 +20,7 @@ from moio.Plugin import Plugin
 
 class Book(Plugin):
     """Classe base dei plugin per le rubriche."""
-    
+
     def lookup(self, name):
         """Cerca un nome nella rubrica."""
         raise NotImplementedError()
@@ -28,7 +28,7 @@ class Book(Plugin):
     def lookupNumber(self, number):
         """Cerca un numero nella rubrica."""
         raise NotImplementedError()
-        
+
     def isInContacts(self, name):
         """Ritorna True se un contatto è presente in rubrica."""
         raise NotImplementedError()
@@ -55,7 +55,7 @@ class Book(Plugin):
     def saveBook(self):
         """Salva le impostazioni."""
         raise NotImplementedError()
-    
+
     def showFatalException(self, message):
         """Questo metodo viene richiamato nel caso in cui venga catturata
         un'eccezione non gestita nel programma principale."""

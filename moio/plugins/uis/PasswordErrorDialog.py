@@ -16,7 +16,7 @@ class PasswordErrorDialog(QDialog):
                                    "(sito XXXXXXXXXXXXXXXX)")
         self.okButton = QPushButton("OK")
         self.closeButton = QPushButton("Chiudi")
-        
+
         self.__set_properties()
 
         self.connect(self.okButton, SIGNAL('clicked(bool)'),
@@ -71,4 +71,3 @@ class PasswordErrorDialog(QDialog):
 
     def getValue(self,i):
         return unicode(self.textCtrl[i].text())
-

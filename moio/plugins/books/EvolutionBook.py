@@ -42,10 +42,10 @@ class EvolutionBook(Book):
     """Dizionario che contiene nome => uid"""
     contatti = {}
     """Dizionario che contiene nome => numero"""
-    
+
     cm = CodingManager.getInstance()
     """Gestore della codifica dei caratteri."""
-    
+
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
         if platform.system() in ("Windows", "Darwin", "Microsoft"):
@@ -81,7 +81,7 @@ class EvolutionBook(Book):
                 return inverseContacts[number]
             except KeyError:
                 raise NotFoundError(number)
-    
+
     def isInContacts(self, name):
         """Ritorna True se un contatto è presente in rubrica."""
         try:
@@ -160,4 +160,3 @@ class EvolutionBook(Book):
         sys.stdout.write('\a')#Beep
         sys.stdout.flush()
         print CodingManager.getInstance().encodeStdout(message)
-   

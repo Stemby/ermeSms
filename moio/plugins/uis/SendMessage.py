@@ -32,13 +32,13 @@ class SendMessage(threading.Thread):
         self.masterKey = self.mf.masterKey
         self.book = self.mf.book
 
-           
+
     def run(self):
         """Spedisce un messaggio e aggiorna la grafica."""
         #imposta senderName e identifica l'invio offline
         senderName = self.senderName
         sender = Sender.getPlugins()[senderName]
-                                   
+
         done = False
         hadError = False
         while done == False:
@@ -57,7 +57,7 @@ class SendMessage(threading.Thread):
                     proxy = ''
 
                 #resetta la gauge
-                self.mf.gaugeIncrement(0)					 
+                self.mf.gaugeIncrement(0)
                 sender.send(proxy, dn, self.text, reg, self.mf)
 
                 #log
@@ -72,9 +72,9 @@ class SendMessage(threading.Thread):
                             textCount
                 else: sentmessage = textCount
                 self.pm.setSentSender(senderName,str(sentmessage))
-                
+
                 done = True
-                
+
             except PreferenceManagerError:
                 data = {'message' : "Immetti dei dati validi per accedere " + \
                         "al sito " + senderName }
@@ -84,7 +84,7 @@ class SendMessage(threading.Thread):
                 if not data:
                     done = True
                     hadError = u"L'ultimo SMS non è stato" +\
-                            u" inviato a causa di un errore."				   
+                            u" inviato a causa di un errore."
                 else:
                     for i in sender.requiresRegistration:
                         self.pm.addAccount(i,data[i],senderName,self.masterKey)
@@ -99,12 +99,12 @@ class SendMessage(threading.Thread):
                 if not data:
                     done = True
                     hadError = u"L'ultimo SMS non è stato" +\
-                            u" inviato a causa di un errore."				   
+                            u" inviato a causa di un errore."
                 else:
                     self.pm.clearAccount(senderName)
                     for i in sender.requiresRegistration:
                         self.pm.addAccount(i,data[i],senderName,self.masterKey)
-            except ConnectionError:		
+            except ConnectionError:
                 self.mf.emit(SIGNAL('proxyRequest'))
                 data = self.mf.qReq.get(True)
                 if not data:
@@ -117,10 +117,10 @@ class SendMessage(threading.Thread):
                         u" interruzione dell'utente."
             except (SiteConnectionError, SiteCustomError, SenderError,
                     CaptchaError, NotFoundError), e:
-                done = True				  
+                done = True
                 hadError = u"L'ultimo SMS non è stato" +\
                         u" inviato a causa di un errore."
-                self.mf.emit(SIGNAL('criticalError'), e.__str__()) 
+                self.mf.emit(SIGNAL('criticalError'), e.__str__())
             except:
                 done = True
                 hadError = u"L'ultimo SMS non è stato" +\
@@ -133,7 +133,7 @@ class SendMessage(threading.Thread):
 
         #se invio offline, comunico l'esito
         if self.offline: self.mf.qRes.put(hadError)
-        #se invio direttamente aggiorno tutto				
+        #se invio direttamente aggiorno tutto
         else: self.mf.emit(SIGNAL('sentMessageUpdate'), hadError)
 
 
@@ -143,7 +143,7 @@ class SendDelayed(threading.Thread):
         threading.Thread.__init__(self)
         self.mf = mf
         self.data = data
-            
+
     def run(self):
         #invio gli sms in un altro thread
         result = []

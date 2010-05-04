@@ -145,7 +145,7 @@ class PreferenceManager(Singleton):
                   '\ndest='+self.cm.quoteUnicode(dest)+\
                   '\ntext='+self.cm.quoteUnicode(text)+\
                   '\n---\n'
-        logfile.write(logdata)        
+        logfile.write(logdata)
 
     def isProxyEnabled(self):
         """Ritorna True se un proxy è configurato."""
@@ -336,12 +336,11 @@ class PreferenceManager(Singleton):
     def getBook(self):
         """Ritorna il book preferito."""
         return self.getField("books", "preferito")
-    
+
     def setBook(self, book):
         """Setta il book preferito."""
-        self.setField("books", "preferito", book) 
+        self.setField("books", "preferito", book)
 
     def isBookSet(self):
         """Ritorna True se un book è configurato."""
         return self.hasField("books", "preferito")
-

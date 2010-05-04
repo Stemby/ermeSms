@@ -4,18 +4,18 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 class AddressBookDialog(QDialog):
-   
+
     def __init__(self, mf):
         QDialog.__init__(self, mf, mf.defaultFlag)
-                
+
         self.addressBox = QTableWidget()
         self.addressBox.setMinimumHeight(300)
         self.addressBox.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.addressBox.setSelectionMode(QAbstractItemView.SingleSelection)
         self.addressBox.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.addressBox.horizontalHeader().setResizeMode(QHeaderView.Stretch)        
+        self.addressBox.horizontalHeader().setResizeMode(QHeaderView.Stretch)
         self.addressBox.setAlternatingRowColors(True)
-        
+
         self.removeButton = QPushButton("Cancella")
         self.addButton = QPushButton("Aggiungi")
         self.editButton = QPushButton("Modifica")
@@ -25,7 +25,7 @@ class AddressBookDialog(QDialog):
         self.menu.addAction('...da file ini',  self.importaDaFileEventHandler)
         self.menu.addAction('...da file vCard',  self.importaDaVCardEventHandler)
         self.importButton.setMenu(self.menu)
-        self.closeButton = QPushButton("Chiudi")       
+        self.closeButton = QPushButton("Chiudi")
 
         self.mf = mf
         self.edited = False
@@ -38,7 +38,7 @@ class AddressBookDialog(QDialog):
         self.editButton.setToolTip("Modifica il nome selezionato")
         self.saveButton.setToolTip("Salva le modifiche")
         self.importButton.setToolTip("Importa rubrica")
-        self.closeButton.setToolTip("Chiudi e senza salvare le modifiche")      
+        self.closeButton.setToolTip("Chiudi e senza salvare le modifiche")
 
         self.connect(self.removeButton, SIGNAL('clicked(bool)'),
                      self.removeButtonEventHandler)
@@ -49,14 +49,14 @@ class AddressBookDialog(QDialog):
         self.connect(self.closeButton, SIGNAL('clicked(bool)'),
                      self.close)
         self.connect(self.saveButton, SIGNAL('clicked(bool)'),
-                     self.saveButtonEventHandler)        
+                     self.saveButtonEventHandler)
         self.connect(self.addressBox, SIGNAL('clicked(const QModelIndex&)'),
                      self.activateButtonEventHandler)
         self.connect(self.addressBox, SIGNAL('itemDoubleClicked(QTableWidgetItem *)'),
                      self.editButtonEventHandler)
 
         self.popolaAddress()
-        
+
         posx = (QDesktopWidget().width()-self.width())/2
         posy = ((QDesktopWidget().height()/3*2)-self.height())/2
         self.move(posx,posy)
@@ -67,27 +67,27 @@ class AddressBookDialog(QDialog):
         self.removeButton.setEnabled(False)
         self.addButton.setEnabled(True)
         self.editButton.setEnabled(False)
-        self.saveButton.setEnabled(self.edited)        
-        self.closeButton.setEnabled(True)     
+        self.saveButton.setEnabled(self.edited)
+        self.closeButton.setEnabled(True)
 
     def __do_layout(self):
         vbox = QVBoxLayout()
-        
+
         hbox_1 = QHBoxLayout()
         hbox_1.addWidget(self.addressBox, 1)
-        vbox.addLayout(hbox_1)        
-        
+        vbox.addLayout(hbox_1)
+
         hbox_2 = QHBoxLayout()
         hbox_2.addWidget(self.removeButton, 0)
         hbox_2.addWidget(self.addButton, 0)
         hbox_2.addWidget(self.editButton, 0)
-        hbox_2.addWidget(self.saveButton, 0)        
+        hbox_2.addWidget(self.saveButton, 0)
         hbox_2.addWidget(self.importButton, 0)
         hbox_2.addWidget(self.closeButton, 0)
         vbox.addLayout(hbox_2)
 
         self.setLayout(vbox)
-        self.resize(self.minimumSizeHint())        
+        self.resize(self.minimumSizeHint())
 
     def popolaAddress(self):
         self.addressBox.clear()
@@ -98,14 +98,14 @@ class AddressBookDialog(QDialog):
             rubrica = self.mf.book.getContacts()
         for i,name in enumerate(rubrica.keys()):
             self.addressBox.insertRow(i)
-            self.addressBox.setRowHeight(i,20)            
+            self.addressBox.setRowHeight(i,20)
             self.addressBox.setItem(i,0,QTableWidgetItem(name))
             self.addressBox.setItem(i,1,QTableWidgetItem(rubrica[name]))
         self.setAddressLayout()
 
     def setAddressLayout(self):
         labels = ['']*self.addressBox.rowCount()
-        self.addressBox.setVerticalHeaderLabels(labels)        
+        self.addressBox.setVerticalHeaderLabels(labels)
         self.addressBox.sortItems(0)
         self.addressBox.setHorizontalHeaderLabels(['Nome','Numero'])
         self.addressBox.setColumnWidth(1,100)
@@ -127,17 +127,17 @@ class AddressBookDialog(QDialog):
         #self.saveButton.setEnabled(self.edited)
         self.removeButton.setEnabled(False)
         self.editButton.setEnabled(False)
-        
+
     def addButtonEventHandler(self, event):
         ade = AddressBookEditDialog(self, self.mf, True)
         ade.exec_()
-        
+
     def editButtonEventHandler(self, event):
         ade = AddressBookEditDialog(self, self.mf, False)
         ade.setName(self.addressBox.item(self.addressBox.currentRow(),0).text())
-        ade.setNumber(self.addressBox.item(self.addressBox.currentRow(),1).text())        
+        ade.setNumber(self.addressBox.item(self.addressBox.currentRow(),1).text())
         ade.exec_()
-            
+
     def saveButtonEventHandler(self, event):
 #        if self.edited:
 #            self.mf.book.clearContacts()
@@ -148,12 +148,12 @@ class AddressBookDialog(QDialog):
 #                self.mf.book.addContact(name,number)
 #                i +=1
 #        self.edited = False
-#        self.saveButton.setEnabled(self.edited)        
+#        self.saveButton.setEnabled(self.edited)
         pass
-       
+
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
-        self.mf.fillContacts()        
+        self.mf.fillContacts()
 #        if self.edited:
 #            result = QMessageBox.question(self,
 #            u"Vuoi chiudere?",
@@ -161,8 +161,8 @@ class AddressBookDialog(QDialog):
 #            u"state salvate. Chiudere ugualmente?",
 #            'Si','No')
 #            if result == 1:
-#                event.ignore()        
-                
+#                event.ignore()
+
     def importaDaFileEventHandler(self):
         '''
         #TODO: chiama Importer che legge i contatti
@@ -170,7 +170,7 @@ class AddressBookDialog(QDialog):
         duplicati
         '''
         QMessageBox.information(self, "Mi dispiace", "funzione non implementata")
-        
+
     def importaDaVCardEventHandler(self):
         '''
         #TODO: chiama Importer che legge i contatti
@@ -185,7 +185,7 @@ class AddressBookEditDialog(QDialog):
         self.messageLabel = QLabel("Inserisci il nome da visualizzare e il"+\
                                    " numero")
         self.nameText = QLineEdit("Nome")
-        self.numberText = QLineEdit("Numero")        
+        self.numberText = QLineEdit("Numero")
         self.okButton = QPushButton("OK")
         self.cancelButton = QPushButton("Chiudi")
 
@@ -199,7 +199,7 @@ class AddressBookEditDialog(QDialog):
         self.connect(self.okButton, SIGNAL('clicked(bool)'),
                      self.okButtonEventHandler)
         self.connect(self.cancelButton, SIGNAL('clicked(bool)'),
-                     self.cancelButtonEventHandler)        
+                     self.cancelButtonEventHandler)
 
     def __set_properties(self):
         self.setWindowTitle("Inserisci i dati richiesti")
@@ -215,14 +215,14 @@ class AddressBookEditDialog(QDialog):
         hbox_2 = QHBoxLayout()
         hbox_2.addWidget(self.nameText, 0)
         hbox_2.addStretch(1)
-        hbox_2.addWidget(self.numberText, 0)        
+        hbox_2.addWidget(self.numberText, 0)
         vbox.addLayout(hbox_2)
         vbox.addStretch(1)
         hbox_3 = QHBoxLayout()
         hbox_3.addStretch(1)
         hbox_3.addWidget(self.okButton, 0)
-        hbox_3.addStretch(1)        
-        hbox_3.addWidget(self.cancelButton, 0)        
+        hbox_3.addStretch(1)
+        hbox_3.addWidget(self.cancelButton, 0)
         hbox_3.addStretch(1)
         vbox.addLayout(hbox_3)
 
@@ -249,7 +249,7 @@ class AddressBookEditDialog(QDialog):
                     self.ab.addressBox.setItem(row, 0, QTableWidgetItem())
                     self.ab.addressBox.setItem(row, 1, QTableWidgetItem())
                 else:
-                    row = self.ab.addressBox.currentRow()                    
+                    row = self.ab.addressBox.currentRow()
             item = self.ab.addressBox.item(row, 0)
             self.ab.addressBox.item(row, 0).setText(self.nameText.text())
             self.ab.addressBox.item(row, 1).setText(self.numberText.text())
@@ -259,7 +259,7 @@ class AddressBookEditDialog(QDialog):
             self.ab.addressBox.selectRow(row)
             self.ab.addressBox.scrollToItem(item)
             self.ab.edited = True
-            self.ab.saveButton.setEnabled(self.ab.edited)            
+            self.ab.saveButton.setEnabled(self.ab.edited)
             self.done(1)
         else: self.messageLabel.setText("Inserisci il nome da visualizzare "+\
                                         "e il numero\n\n" +\
@@ -267,7 +267,7 @@ class AddressBookEditDialog(QDialog):
 
     def cancelButtonEventHandler(self):
         self.done(1)
-        
+
     def setName(self, name):
         self.nameText.setText(name)
 

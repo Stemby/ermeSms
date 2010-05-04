@@ -15,7 +15,7 @@ class ConnectionManager(Singleton):
 
     debug = None
     debugDataOld = None
-    """Valori utilizzati dalla debug mode"""    
+    """Valori utilizzati dalla debug mode"""
 
     curl = None
     """Istanza dell'oggetto Curl per la comunicazione con le librerie
@@ -100,10 +100,10 @@ class ConnectionManager(Singleton):
             self.curl.setopt(pycurl.VERBOSE, 1)
             self.curl.setopt(pycurl.DEBUGFUNCTION, self.debugFunction)
         else:
-            self.curl.setopt(pycurl.VERBOSE, 0)            
+            self.curl.setopt(pycurl.VERBOSE, 0)
         if not saver and self.debug == 'On':
-                saver = StringIO()
-                saverwrite = saver.write
+            saver = StringIO()
+            saverwrite = saver.write
         elif not saver and not self.debug: saverwrite = self.doNothing
         else: saverwrite = saver.write
         self.curl.setopt(pycurl.WRITEFUNCTION, saverwrite)

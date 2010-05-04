@@ -16,24 +16,24 @@ class OfflineSendDialog(QDialog):
     sendTimer = QTimer()
     remainTime = 0
     """Dati per i timer"""
-    
+
     def __init__(self, mf, posx, posy, sizex):
         QDialog.__init__(self, mf, mf.defaultFlag)
-                
+
         self.listBox = QListWidget()
         self.listBox.setMinimumHeight(70)
-        self.listBox.setSelectionMode(QAbstractItemView.SingleSelection)  
-        
+        self.listBox.setSelectionMode(QAbstractItemView.SingleSelection)
+
         self.removeButton = QPushButton("Rimuovi SMS")
         self.destLabel = QLabel("Destinatario: ")
         self.destText = QLineEdit("")
         self.destText.setReadOnly(True)
         self.senderLabel = QLabel("Sender: ")
         self.senderText = QLineEdit("")
-        self.senderText.setReadOnly(True)        
+        self.senderText.setReadOnly(True)
         self.messageLabel = QLabel("Messaggio: ")
         self.messageText = QTextEdit("")
-        self.messageText.setReadOnly(True)        
+        self.messageText.setReadOnly(True)
         self.messageText.setMinimumHeight(70)
         self.sendButton = QPushButton("Invia gli SMS in coda")
         self.delayedSend = QGroupBox("Invio a orario definito:")
@@ -54,31 +54,31 @@ class OfflineSendDialog(QDialog):
         self.senderText.setToolTip("Gestore (non modificabile)")
         self.messageText.setToolTip("Messaggio (non modificabile)")
         self.delayedButton.setToolTip("Premi per far partire il timer " +\
-                                      "dell'invio")        
+                                      "dell'invio")
 
         self.connect(self.sendButton, SIGNAL('clicked(bool)'),
                      self.sendButtonEventHandler)
         self.connect(self.removeButton, SIGNAL('clicked(bool)'),
                      self.removeButtonEventHandler)
         self.connect(self.delayedButton, SIGNAL('clicked(bool)'),
-                     self.delayedButtonEventHandler)        
+                     self.delayedButtonEventHandler)
         self.connect(self.listBox,
              SIGNAL('currentItemChanged(QListWidgetItem *,QListWidgetItem *)'),
                      self.updateEventHandler)
         self.connect(self.listBox,
                      SIGNAL('itemClicked (QListWidgetItem *)'),
-                     self.updateEventHandler)        
+                     self.updateEventHandler)
         self.connect(self.delayedSend, SIGNAL('toggled(bool)'),
-                     self.activateDelayed)        
+                     self.activateDelayed)
         self.connect(self, SIGNAL('sentOfflineUpdate'),
                      self.sentOfflineUpdateEventHandler)
         self.connect(self, SIGNAL('singleSent'),
                      self.trayBarMessageUpdate)
-        
+
         self.connect(self.updateTimer, SIGNAL('timeout()'),
                      self.updateDelayedButtonText)
         self.connect(self.sendTimer, SIGNAL('timeout()'),
-                     self.sendTimerTimeout)          
+                     self.sendTimerTimeout)
         self.connect(self.closeButton, SIGNAL('clicked(bool)'),
                      self.closeEvent)
 
@@ -94,24 +94,24 @@ class OfflineSendDialog(QDialog):
     def __do_layout(self):
 
         vbox = QVBoxLayout()
-        
+
         hbox_1 = QHBoxLayout()
         hbox_1.addWidget(self.listBox, 1)
         hbox_1.addWidget(self.removeButton, 0)
-        vbox.addLayout(hbox_1)        
-        
+        vbox.addLayout(hbox_1)
+
         hbox_2 = QHBoxLayout()
         hbox_2.addWidget(self.destLabel, 0)
         hbox_2.addWidget(self.destText, 1)
         hbox_2.addWidget(self.senderLabel, 0)
-        hbox_2.addWidget(self.senderText, 1)        
+        hbox_2.addWidget(self.senderText, 1)
         vbox.addLayout(hbox_2)
 
         hbox_3 = QHBoxLayout()
         hbox_3.addWidget(self.messageLabel, 0)
-        hbox_3.addWidget(self.messageText, 1)        
+        hbox_3.addWidget(self.messageText, 1)
         vbox.addLayout(hbox_3)
-        
+
         hbox_4 = QHBoxLayout()
         hbox_4.addStretch(1)
         hbox_4.addWidget(self.sendButton, 0)
@@ -120,7 +120,7 @@ class OfflineSendDialog(QDialog):
         hbox_4.addStretch(1)
         delayedBox = QHBoxLayout()
         delayedBox.addWidget(self.sendTime, 1)
-        delayedBox.addWidget(self.delayedButton, 0)        
+        delayedBox.addWidget(self.delayedButton, 0)
         self.delayedSend.setLayout(delayedBox)
         hbox_4.addWidget(self.delayedSend, 3)
         vbox.addLayout(hbox_4)
@@ -141,14 +141,14 @@ class OfflineSendDialog(QDialog):
         self.mf.messageTextCtrl.setEnabled(False)
         self.mf.check.setEnabled(False)
         self.mf.setCursor(self.mf.waitcursor)
-        self.mf.senderRadioBox.setEnabled(False)           
+        self.mf.senderRadioBox.setEnabled(False)
         self.mf.sendButton.setEnabled(False)
-        
+
         self.delayedSend.setEnabled(False)
         self.sendButton.setEnabled(False)
         self.removeButton.setEnabled(False)
         self.listBox.setEnabled(False)
-        
+
         i = 0
         data = []
         while i < self.listBox.count():
@@ -157,7 +157,7 @@ class OfflineSendDialog(QDialog):
                 'dest': unicode(item.data(DESTROLE).toString()),
                 'text': unicode(item.data(TEXTROLE).toString()),
                 'sender': unicode(item.data(SENDERROLE).toString())
-                }                        
+                }
             data.append((i,itemdata))
             i += 1
         t = SendDelayed(self.mf, data)
@@ -169,14 +169,14 @@ class OfflineSendDialog(QDialog):
         self.stopTimer()
 
     def startTimer(self):
-        """Avvia i Timer"""        
+        """Avvia i Timer"""
         self.remainTime = QTime.currentTime().msecsTo(self.sendTime.time())
         if self.remainTime < 0: self.remainTime += 86400000
         self.delayedButton.setText("Stop Timer")
-        self.sendTime.setEnabled(False)        
+        self.sendTime.setEnabled(False)
         self.sendTimer.start(self.remainTime)
         self.updateTimer.start(1000)
-            
+
     def stopTimer(self):
         """Blocca i Timer"""
         self.sendTimer.stop()
@@ -222,7 +222,7 @@ class OfflineSendDialog(QDialog):
         for i in remove:
             self.listBox.takeItem(i)
         if len(errors) == 0:
-            self.mf.messageLabel.setText("SMS INVIATI!")            
+            self.mf.messageLabel.setText("SMS INVIATI!")
             self.mf.setIcon(getOkData())
             QMessageBox.information(self, "Messaggi Inviati",
                                     u"Tutti i messaggi in coda sono stati\n"+\
@@ -233,13 +233,13 @@ class OfflineSendDialog(QDialog):
                       u"messaggi:\n"
             for error in errors:
                 message += error+u"\n"
-            self.mf.messageLabel.setText("Alcuni SMS non sono stati inviati.")                
+            self.mf.messageLabel.setText("Alcuni SMS non sono stati inviati.")
             self.mf.setIcon(getErrorData())
             QMessageBox.warning(self, "Errore", message)
 
         self.mf.gauge.hide()
         self.mf.bitmap.show()
-        self.mf.messageLabel.show()        
+        self.mf.messageLabel.show()
         self.mf.sendButton.setEnabled(True)
         self.mf.destinationComboBox.setEnabled(True)
         self.mf.addButton.setEnabled(True)
@@ -254,7 +254,7 @@ class OfflineSendDialog(QDialog):
         self.delayedSend.setEnabled(True)
         self.sendButton.setEnabled(not self.delayedSend.isChecked())
         self.removeButton.setEnabled(True)
-        self.listBox.setEnabled(True)        
+        self.listBox.setEnabled(True)
         if close: self.done(1)
 
     def closeEvent(self, event):
@@ -279,31 +279,31 @@ class OfflineSendDialog(QDialog):
         """Toglie dalla lista dei messaggi quello selezionato"""
         self.listBox.takeItem(self.listBox.currentRow())
         if self.listBox.currentItem():
-            self.listBox.setItemSelected(self.listBox.currentItem(),False)  
+            self.listBox.setItemSelected(self.listBox.currentItem(),False)
         self.destText.setText("")
         self.senderText.setText("")
-        self.messageText.setText("")        
+        self.messageText.setText("")
         self.removeButton.setEnabled(False)
         if self.listBox.count() == 0:
             self.sendButton.setEnabled(False)
-            self.delayedSend.setEnabled(False)            
+            self.delayedSend.setEnabled(False)
 
     def updateEventHandler(self, item, previous=None):
         """Aggiorna con il messaggio selezionato"""
         if item:
             self.destText.setText(item.data(DESTROLE).toString())
             self.messageText.setText(item.data(TEXTROLE).toString())
-            self.senderText.setText(item.data(SENDERROLE).toString())            
+            self.senderText.setText(item.data(SENDERROLE).toString())
             self.removeButton.setEnabled(True)
         else: self.removeButton.setEnabled(False)
-        
+
     def addSMS(self,title,data):
         """Aggiunge l'SMS compilato nel MainFrame alla lista da inviare"""
         item = QListWidgetItem(title)
         self.listBox.addItem(item)
         item.setData(DESTROLE, QVariant(data['dest']))
         item.setData(SENDERROLE, QVariant(data['sender']))
-        item.setData(TEXTROLE, QVariant(data['text']))         
+        item.setData(TEXTROLE, QVariant(data['text']))
         self.delayedSend.setEnabled(True)
         self.sendButton.setEnabled(not self.delayedSend.isChecked())
 
@@ -314,8 +314,8 @@ class OfflineSendDialog(QDialog):
                 self.mf.traymessage(u"Messaggio NON inviato",
                     u"Messaggio NON inviato utilizzando " +\
                     data['sender']+u"\ndiretto a "+data['dest'],
-                    QSystemTrayIcon.Warning, 2000)            
-            else:  
+                    QSystemTrayIcon.Warning, 2000)
+            else:
                 self.mf.traymessage(u"Messaggio inviato",
                     u"Messaggio inviato correttamente tramite " +\
                     data['sender']+u"\ndiretto a "+data['dest'])

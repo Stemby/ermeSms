@@ -141,10 +141,10 @@ class CommandLineUI(UI):
 
         masterKey = None
         if p.isEncryptionEnabled():
-                keyValid = False
-                while keyValid == False:
-                    masterKey = raw_input("Inserisci la Master Password:")
-                    keyValid = p.checkEncryptionKey(masterKey)
+            keyValid = False
+            while keyValid == False:
+                masterKey = raw_input("Inserisci la Master Password:")
+                keyValid = p.checkEncryptionKey(masterKey)
         #Se necessario, cerco il nome in rubrica
         #Inizializzo il sender e mando il messaggio
         if number.isdigit() == False:
@@ -175,4 +175,3 @@ class CommandLineUI(UI):
         sys.stdout.write('\a')#Beep
         sys.stdout.flush()
         print CodingManager.getInstance().encodeStdout(message)
-

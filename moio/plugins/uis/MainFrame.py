@@ -51,14 +51,14 @@ class MainFrame(QFrame):
     """Oggetti per far dialogare i Thread"""
 
     book = None
-    
+
     def __init_book(self):
         try:
-            if not (self.pm.isBookSet() and 
+            if not (self.pm.isBookSet() and
                (self.pm.getBook() in Book.getPlugins().keys())):
                 self.pm.setBook("BuiltInBook")
         except PreferenceManagerError:
-             pass
+            pass
         self.book = Book.getPlugins()[self.pm.getBook()]
 
     def __init__(self):
@@ -76,8 +76,8 @@ class MainFrame(QFrame):
             self.defaultFlag = Qt.WindowFlags()
 
         QFrame.__init__(self, None , flag)
-        self.setWindowState(Qt.WindowActive)    
-		
+        self.setWindowState(Qt.WindowActive)
+
         #inizializza il book
         self.__init_book()
 
@@ -165,7 +165,7 @@ class MainFrame(QFrame):
         self.menu.addAction('Rubrica', self.addressButtonEventHandler)
         self.menu.addAction('Preferenze', self.prefButtonEventHandler)
         self.menu.addAction('Mostra Log', self.logButtonEventHandler)
-        self.menu.addSeparator()        
+        self.menu.addSeparator()
         self.debugMode = self.menu.addAction('Set Debug Mode On',
                                              self.debugMenuHandler)
         self.menu.addSeparator()
@@ -357,7 +357,7 @@ class MainFrame(QFrame):
                 k = i
                 i = self.destinationComboBox.count()
             i += 1
-        self.destinationComboBox.insertItem(k,name)        
+        self.destinationComboBox.insertItem(k,name)
 
     def getSender(self):
         """Restituisce il sender selezionato in valore unicode"""
@@ -678,14 +678,14 @@ class MainFrame(QFrame):
         if hadError:
             self.setIcon(getErrorData())
             self.messageLabel.setText(hadError)
-            if self.traymessage: 
+            if self.traymessage:
                 try:
                     import pynotify
                     pynotify.init ("MoioSMS")
                     n = pynotify.Notification ("MoioSMS",
                         u"Messaggio non inviato tramite " +\
                                  self.getSender()+u" a "+\
-                                 unicode(self.destinationComboBox.currentText()), 
+                                 unicode(self.destinationComboBox.currentText()),
                                          "error")
                     n.show()
                 except ImportError:
@@ -700,7 +700,7 @@ class MainFrame(QFrame):
             try:
                 import pynotify
                 pynotify.init ("MoioSMS")
-                n = pynotify.Notification("MoioSMS", 
+                n = pynotify.Notification("MoioSMS",
                         u"Messaggio inviato tramite " +\
                         self.getSender()+u" a "+\
                         unicode(self.destinationComboBox.currentText()),
@@ -741,7 +741,7 @@ class MainFrame(QFrame):
             md.prepare(i)
             if data.has_key(i): md.setTextValue(i,data[i])
         md.do_layout()
-        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##        
+        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##
         result = md.exec_()
         if result == 0:
             self.qReq.put(False)
@@ -750,7 +750,7 @@ class MainFrame(QFrame):
             for i in data['request']:
                 dataR[i] = md.getValue(i)
             self.qReq.put(dataR)
-            
+
     def prefButtonEventHandler(self):
         pd = PreferenceDialog(self)
         pd.show()
@@ -820,8 +820,8 @@ class MainFrame(QFrame):
 
     def addressButtonEventHandler(self):
         """Richiama l'editor di rubrica avanzato"""
-        ab = AddressBookDialog(self)  
-        ab.exec_()        
+        ab = AddressBookDialog(self)
+        ab.exec_()
 
     def systemTrayEventHandler(self, event = QSystemTrayIcon.Trigger):
         """Gestore degli eventi sulla tray icon"""
@@ -851,7 +851,7 @@ class MainFrame(QFrame):
         """Mostra in menu constestuale"""
         x = event.globalX()-self.menu.sizeHint().width()
         y = event.globalY()-self.menu.sizeHint().height()
-        self.menu.popup(QPoint(x,y))        
+        self.menu.popup(QPoint(x,y))
 
     def debugMenuHandler(self):
         if Sender.connectionManager.debug == None:

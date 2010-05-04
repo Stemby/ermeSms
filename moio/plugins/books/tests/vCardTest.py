@@ -8,7 +8,7 @@ class vCardTest():
 
     def getContacts(self):
         import vobject
-        #TODO: try: except: I/O operation        
+        #TODO: try: except: I/O operation
         f = open(self.bookFileName, 'r')
         stream = f.read()
         for vobj in vobject.readComponents(stream):
@@ -19,7 +19,7 @@ class vCardTest():
                     name = self.__replaceNonAscii(vobj.fn.value)
                     for tel in tels:
                         number = tel.value
-                        if i == 0: 
+                        if i == 0:
                             self.contatti[name] = number
                         else:
                             self.contatti[name + ' ('+str(i)+')'] = number
@@ -104,4 +104,3 @@ vcobj.addContact("Valentinò Rossi", "3471223345")
 vcobj.deleteContact("Valentino_ Rossi")
 contatti = vcobj.getContacts()
 print contatti
-

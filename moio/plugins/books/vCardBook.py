@@ -27,25 +27,25 @@ from moio.errors.BookError import BookError
 
 
 class vCardBook(Book):
-    
+
     bookBaseFileName = "rubrica.vcf"
     """Path completo e nome del file di rubrica."""
     bookDirBaseName = ".moiosms"
     """Nome della cartella contenente i file di rubrica."""
     bookFileName = ""
     """Path completo e nome del file di rubrica."""
-    
+
     #cm = CodingManager.getInstance()
-    #"""Gestore della codifica dei caratteri."""    
-    
+    #"""Gestore della codifica dei caratteri."""
+
     pm = PreferenceManager.getInstance()
     """Riferimento al gestore delle preferenze."""
-    
+
     contatti = {}
 
     def __init__(self):
         self.bookFileName = os.path.join(self.__getSaveDir(), self.bookBaseFileName)
-    
+
     def isAvailable(self):
         try:
             import vobject
@@ -57,7 +57,7 @@ class vCardBook(Book):
         #name = name)
         """Cerca un nome nella rubrica."""
         try:
-	        return self.contatti[name]
+            return self.contatti[name]
         except:
             raise NotFoundError(name)
 
@@ -75,7 +75,7 @@ class vCardBook(Book):
                 return inverseContacts[number]
             except KeyError:
                 raise NotFoundError(number)
-    
+
     def isInContacts(self, name):
         """Ritorna True se un contatto è presente in rubrica."""
         #name = unicode(name)
@@ -104,7 +104,7 @@ class vCardBook(Book):
 
     def getContacts(self):
         import vobject
-        #TODO: try: except: I/O operation        
+        #TODO: try: except: I/O operation
         f = open(self.bookFileName, 'r')
         stream = f.read()
         f.close()
@@ -116,7 +116,7 @@ class vCardBook(Book):
                     name = self.__replaceNonAscii(vobj.fn.value)
                     for tel in tels:
                         number = tel.value
-                        if i == 0: 
+                        if i == 0:
                             self.contatti[name] = number
                         else:
                             self.contatti[name + ' ('+str(i)+')'] = number
@@ -125,7 +125,7 @@ class vCardBook(Book):
 
     def getAllContacts(self):
         import vobject
-        #TODO: try: except: I/O operation        
+        #TODO: try: except: I/O operation
         f = open(self.bookFileName, 'r')
         stream = f.read()
         f.close()
@@ -137,7 +137,7 @@ class vCardBook(Book):
                     name = self.__replaceNonAscii(vobj.fn.value)
                     for tel in tels:
                         number = tel.value
-                        if i == 0: 
+                        if i == 0:
                             self.contatti[name] = number
                         else:
                             self.contatti[name + ' ('+str(i)+')'] = number

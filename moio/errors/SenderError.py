@@ -23,5 +23,3 @@ class SenderError(Exception):
                u"http://www.moioli.net/forum/")
 
         return (msg)
-
-

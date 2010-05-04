@@ -50,7 +50,7 @@ class PreferenceDialog(QDialog):
         self.applyButton = QPushButton("Applica")
         self.closeButton = QPushButton("Chiudi")
 
-        self.setMinimumWidth(400)             
+        self.setMinimumWidth(400)
 
         self.__set_properties()
         self.__do_layout()
@@ -72,11 +72,11 @@ class PreferenceDialog(QDialog):
 
         self.connect(self.bookComboBox, SIGNAL('currentIndexChanged(int)'),
                  self.bookComboBoxHandler)
-        
+
         posx = (QDesktopWidget().width()-self.width())/2
         posy = ((QDesktopWidget().height()/3*2)-self.height())/2
-        self.move(posx,posy)           
-        
+        self.move(posx,posy)
+
     def __set_properties(self):
         self.setWindowTitle("Preferenze")
         self.applyButton.setDefault(True)
@@ -84,7 +84,7 @@ class PreferenceDialog(QDialog):
     def __do_layout(self):
 
         vbox = QVBoxLayout()
-        
+
         hbox_1 = QHBoxLayout()
         label = QLabel("Seleziona la rubrica:")
         hbox_1.addWidget(label, 1)
@@ -122,11 +122,11 @@ class PreferenceDialog(QDialog):
             else:
                 self.mf.pm.setProxy(unicode(self.proxyUrl.text()))
             if self.senderList:
-                self.mf.pm.setSenderList(self.senderList, 
+                self.mf.pm.setSenderList(self.senderList,
                     Sender.getPlugins().keys())
             self.edited = False
         if self.needRestart:
-            QMessageBox.information(self, u"Informazione", 
+            QMessageBox.information(self, u"Informazione",
                 u"Per applicare le modifiche è necessario\n riavviare MoioSMS.")
         self.close()
 
@@ -181,7 +181,7 @@ class PreferenceDialog(QDialog):
                 self.mf.pm.enableEncryption(pd)
             else:
                 return
-    
+
     def closeEvent(self, event):
         """Evento di chiusura della finestra"""
         if self.edited:

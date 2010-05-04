@@ -31,28 +31,28 @@ from moio.errors.NotFoundError import NotFoundError
 
 class BuiltInBook(Book):
     """Gestore della rubrica di MoioSMS."""
-    
+
     c = CaseSensitiveConfigParser()
     """Gestore del file di configurazione."""
-    
+
     bookBaseFileName = "rubrica.ini"
     """Path completo e nome del file di rubrica."""
     bookDirBaseName = ".moiosms"
     """Nome della cartella contenente i file di rubrica."""
     bookFileName = ""
     """Path completo e nome del file di rubrica."""
-    
+
     oldConfigBaseFileName = "config.ini"
     """Path completo e nome del file di configurazione, dalla versione 2.13."""
     oldConfigFileName = ""
     """Path completo e nome del file di configurazione, dalla versione 2.13."""
-    
+
     cm = CodingManager.getInstance()
-    """Gestore della codifica dei caratteri."""    
-    
+    """Gestore della codifica dei caratteri."""
+
     pm = PreferenceManager.getInstance()
     """Riferimento al gestore delle preferenze."""
-    
+
     def __init__(self):
         """Inizializza i campi di quest'oggetto."""
         # dalla versione 2.14 il file di rubrica è in ~/.moiosms
@@ -63,7 +63,7 @@ class BuiltInBook(Book):
         self.bookFileName = os.path.join(self.__getSaveDir(), self.bookBaseFileName)
         self.c.read([self.oldConfigFileName, self.bookFileName])
         self.__purge()
-       
+
     def __purge(self):
         for section in self.c.sections():
             if section != "contacts":
@@ -79,7 +79,7 @@ class BuiltInBook(Book):
             return self.__getField("contacts", name)
         except (NoSectionError, NoOptionError, PreferenceManagerError):
             raise NotFoundError(name)
-            
+
     def lookupNumber(self, number):
         """Cerca un numero nella rubrica."""
         number = self.cm.quoteUnicode(number)
@@ -97,7 +97,7 @@ class BuiltInBook(Book):
                 return inverseContacts[number]
             except KeyError:
                 raise NotFoundError(number)
-    
+
     def isInContacts(self, name):
         """Ritorna True se un contatto è presente in rubrica."""
         try:
@@ -155,14 +155,14 @@ class BuiltInBook(Book):
         if os.path.isdir(self.__getSaveDir()) == False:
             os.makedirs(self.bookDirName)
         self.c.write(file(self.bookFileName,"w"))
-        
+
     def showFatalException(self, message):
         """Questo metodo viene richiamato nel caso in cui venga catturata
         un'eccezione non gestita nel programma principale."""
         sys.stdout.write('\a')#Beep
         sys.stdout.flush()
         print CodingManager.getInstance().encodeStdout(message)
-    
+
     #metodi privati
     def __getField(self, section, key):
         """Ritorna il valore corrispondente a key nella sezione
@@ -188,7 +188,7 @@ class BuiltInBook(Book):
         if not self.c.has_section(section):
             self.c.add_section(section)
         self.c.set(section, key, value)
-    
+
     def __unsetField(self, section, key):
         """Rimuove una coppia chiave-valore dalla sezione
         section."""
@@ -199,7 +199,7 @@ class BuiltInBook(Book):
                 self.c.remove_option(section, key)
             if len(self.c.items(section))==0:
                 self.c.remove_section(section)
-                
+
     def __getSaveDir(self):
         """Ritorna la directory in cui salvare il file di configurazione."""
         return os.path.abspath(os.path.dirname(self.pm.getConfigFileName()))
