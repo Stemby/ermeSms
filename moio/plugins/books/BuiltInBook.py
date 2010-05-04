@@ -35,10 +35,8 @@ class BuiltInBook(Book):
     c = CaseSensitiveConfigParser()
     """Gestore del file di configurazione."""
 
-    bookBaseFileName = "rubrica.ini"
+    bookBaseFileName = "phonebook.ini"
     """Path completo e nome del file di rubrica."""
-    bookDirBaseName = ".moiosms"
-    """Nome della cartella contenente i file di rubrica."""
     bookFileName = ""
     """Path completo e nome del file di rubrica."""
 
@@ -46,13 +44,17 @@ class BuiltInBook(Book):
     """Path completo e nome del file di configurazione, dalla versione 2.13."""
     oldConfigFileName = ""
     """Path completo e nome del file di configurazione, dalla versione 2.13."""
-
+    oldConfigDirBaseName= ".moiosms"
+    
     cm = CodingManager.getInstance()
     """Gestore della codifica dei caratteri."""
 
     pm = PreferenceManager.getInstance()
     """Riferimento al gestore delle preferenze."""
 
+    bookDirBaseName = pm.configDirBaseName
+    """Nome della cartella contenente i file di rubrica."""
+    
     def __init__(self):
         """Inizializza i campi di quest'oggetto."""
         # dalla versione 2.14 il file di rubrica è in ~/.moiosms
