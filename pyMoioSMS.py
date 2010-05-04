@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Un programma per mandare SMS via Internet.
+"""A program to send SMS messages via Internet.
 
 Con questo piccolo programma a base di pycurl ed espressioni regolari sarete
 in grado di inviare dei Brevi Messaggi di Testo (SMS) in modo semplice e
 veloce, attraverso uno dei siti che permettono di inviarli.
 Login manager e rubrica telefonica sono inclusi.
 
-Creato e mantenuto da Silvio Moioli (silvio@moioli.net), www.moioli.net
-Distribuito in licenza GNU GPL.
+At present maintained by Thomas Bertani <sylar@anche.no>.
+
+Website: http://github.com/sylarpowa/pyMoioSMS
+
+Distributed under the terms of the GNU General Public License.
 """
 #controlla che il programma non sia gia'  avviato
 try:
