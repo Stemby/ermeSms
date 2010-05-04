@@ -27,6 +27,7 @@ from moio.FatalExceptionHandler import FatalExceptionHandler
 from moio.plugins.senders import *
 from moio.plugins.uis import *
 from moio.plugins.captchadecoders import *
+from moio.plugins.books import *
 
 #Ricerca la migliore interfaccia utilizzabile (interfaccia disponibile
 #a priorita' massima)
