@@ -50,8 +50,6 @@ class EvolutionBook(Book):
         """Ritorna true se questo plugin è utilizzabile."""
         if platform.system() in ("Windows", "Darwin", "Microsoft"):
             return False
-        evolutionOutput = self.__getOutput("evolution --version", StringIO())
-        evolutionPresent = re.search("GNOME evolution", evolutionOutput) is not None;
         try:
             import evolution.ebook
             import gobject
@@ -59,7 +57,7 @@ class EvolutionBook(Book):
             return False
         if evolution.ebook.__version__ < (2,2,2):
             return False
-        return evolutionPresent
+        return True
 
     def lookup(self, name):
         """Cerca un nome nella rubrica."""
@@ -163,17 +161,3 @@ class EvolutionBook(Book):
         sys.stdout.flush()
         print CodingManager.getInstance().encodeStdout(message)
    
-    def __getOutput(self, command, stream):
-        """Esegue il comando command collegando allo standard input lo 
-        stream specificato e ritornando l'output come stringa."""
-        #stdin, stdout, stderr = os.popen3(command, "b")
-        process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stream.seek(0)
-        out, err = process.communicate(stream.read())
-        #In generale ritorna quanto è scritto sullo standard output,
-        #ma se è vuoto ristorna eventuali messaggi d'errore.
-        if out != "":
-            return out
-        else:
-            return err
