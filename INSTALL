@@ -1,0 +1,26 @@
+Installing
+==========
+
+This project is configured for waf; waf is shipped in the distributable
+tarball but not in the repository.  If you need to get waf, run::
+
+    wget -O waf http://waf.googlecode.com/files/waf-1.5.16
+    chmod +x waf
+
+Installation follows the steps::
+
+    ./waf configure
+    ./waf
+
+then::
+
+    ./waf install
+
+or ::
+
+    sudo ./waf install
+
+You can use ``--prefix=$PREFIX`` when configuring to assign an
+installation spot. By default, it is installed for all users.
+Installing only for your user, the prefix ``~/.local`` is often used;
+you just have to check that: ``~/.local/bin`` is in your ``$PATH``.
