@@ -587,7 +587,7 @@ class MainFrame(QFrame):
             retried = False
             valid = False
             while (not valid) and (not cancelled):
-                message = u"Qual'è il numero di "+text+"?"
+                message = u"Qual è il numero di "+text+"?"
                 if retried:
                     message+= u" Sono ammessi solo numeri di cellulare validi."
                 number, md = QInputDialog.getText(None, u"Aggiungi in rubrica",
