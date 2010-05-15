@@ -59,6 +59,12 @@ class EvolutionBook(Book):
             return False
         return True
 
+    def to_unicode_or_bust(self, obj, encoding='utf-8'):
+        if isinstance(obj, basestring):
+            if not isinstance(obj, unicode):
+                obj = unicode(obj, encoding)
+        return obj
+
     def lookup(self, name):
         """Cerca un nome nella rubrica."""
         try:
@@ -113,7 +119,7 @@ class EvolutionBook(Book):
             import gobject
             for contatto in e.open_addressbook("default").get_all_contacts():
                 gp = contatto.get_property
-                name = self.cm.unQuoteUnicode(gp('full-name'))
+                name = self.to_unicode_or_bust(gp('full-name'))
                 if not gp('mobile-phone') == None:
                     self.contatti[name] = gp('mobile-phone')
                     self.idcontatti[name] = contatto.get_uid()
