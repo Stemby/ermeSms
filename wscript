@@ -8,8 +8,8 @@ import Options
 import Utils
 
 # the following two variables are used by the target "waf dist"
-APPNAME="MoioSMS"
-VERSION = "2.19.17"
+APPNAME="pyMoioSMS"
+VERSION = "0.0 Alpha 0"
 
 # these variables are mandatory ('/' are converted automatically)
 srcdir = '.'
@@ -40,11 +40,11 @@ def configure(conf):
     conf.check_python_version((2,5,0))
     conf.check_tool("misc gnu_dirs")
 
-    conf.env["MOIOSMS"] = Utils.subst_vars("${BINDIR}/moiosms", conf.env)
+    conf.env["MOIOSMS"] = Utils.subst_vars("${BINDIR}/pymoiosms", conf.env)
     conf.env["VERSION"] = VERSION
 
     if not Options.options.pythondir_install:
-        conf.env["PYTHONDIR"] = Utils.subst_vars("${DATADIR}/moiosms", conf.env)
+        conf.env["PYTHONDIR"] = Utils.subst_vars("${DATADIR}/pymoiosms", conf.env)
     Utils.pprint("NORMAL",
         "Installing python modules into: %(PYTHONDIR)s" % conf.env)
 
@@ -108,16 +108,16 @@ def build(bld):
     bld.env["VERSION"] = VERSION
 
     obj = bld.new_task_gen(
-        source="moiosms.py",
+        source="pyMoioSMS.py",
         install_path="${PYTHONDIR}")
 
     # modules
     _find_packages_in_directory(bld, "moio")
 
-    binary_subst_file = "moiosms-activate.sh"
+    binary_subst_file = "pyMoioSMS-run"
     bin = bld.new_task_gen("subst",
         source = binary_subst_file,
-        target = "data/moiosms",
+        target = "data/pymoiosms",
         install_path = "${BINDIR}",
         chmod = 0755,
         dict = _dict_slice(bld.env, "PYTHON PYTHONDIR".split()))
