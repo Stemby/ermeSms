@@ -9,7 +9,7 @@ __all__ = [
     'Tim',
     'Tin',
     'Rossoalice',
-    'Enel',
+    #'Enel',
     'Vodafone',
     'VodafoneSim2',
     'VodafoneMail',
