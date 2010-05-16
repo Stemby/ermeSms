@@ -11,9 +11,11 @@ __all__ = [
     'Rossoalice',
     #'Enel',
     'Vodafone',
+    'VodafoneIE',
     'VodafoneSim2',
     'VodafoneMail',
-    'VodafoneMMS',
+    'VodafoneMMS'
+    'VodafoneWidget',
     'Wadja',
     'YesMMS'
     ]
