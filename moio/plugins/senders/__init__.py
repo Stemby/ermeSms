@@ -5,16 +5,16 @@
 __all__ = [
     'AimonFree',
     'Aimon',
-    'TheCellFreak',
+#    'TheCellFreak',
     'Tim',
     'Tin',
     'Rossoalice',
-    'Enel',
+#    'Enel',
     'Vodafone',
     'VodafoneIE',
     'VodafoneSim2',
     'VodafoneMail',
-    'VodafoneMMS'
+    'VodafoneMMS',
     'VodafoneWidget',
     'Wadja',
     'YesMMS'
