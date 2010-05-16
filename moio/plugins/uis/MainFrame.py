@@ -61,7 +61,7 @@ class MainFrame(QFrame):
             self.defaultFlag = Qt.WindowFlags()
 
         QFrame.__init__(self, None , flag)
-        self.setWindowState(Qt.WindowActive)    
+        self.setWindowState(Qt.WindowActive)
 
         #Icona della titlebar
         pixmap = QPixmap()
@@ -152,7 +152,7 @@ class MainFrame(QFrame):
                                           self.systemTrayEventHandler)
         self.menu.addSeparator()
         self.menu.addAction('Mostra Log', self.logButtonEventHandler)
-        self.menu.addSeparator()        
+        self.menu.addSeparator()
         self.debugMode = self.menu.addAction('Set Debug Mode On',
                                              self.debugMenuHandler)
         self.menu.addSeparator()
@@ -281,7 +281,7 @@ class MainFrame(QFrame):
         hbox_1.addWidget(self.destinationComboBox, 1)
         hbox_1.addWidget(self.deleteButton, 0)
         hbox_1.addWidget(self.addButton, 0)
-        hbox_1.addWidget(self.addressButton, 0)        
+        hbox_1.addWidget(self.addressButton, 0)
         grid.addLayout(hbox_1, 0, 0)
 
         hbox_2.addWidget(self.bitmap)
@@ -350,7 +350,7 @@ class MainFrame(QFrame):
                 k = i
                 i = self.destinationComboBox.count()
             i += 1
-        self.destinationComboBox.insertItem(k,name)        
+        self.destinationComboBox.insertItem(k,name)
 
     def getSender(self):
         """Restituisce il sender selezionato in valore unicode"""
@@ -694,7 +694,7 @@ class MainFrame(QFrame):
             md.prepare(i)
             if data.has_key(i): md.setTextValue(i,data[i])
         md.do_layout()
-        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##        
+        if not Qt.WindowMinimized & self.windowState(): self.activateWindow()##
         result = md.exec_()
         if result == 0:
             self.qReq.put(False)
@@ -762,7 +762,7 @@ class MainFrame(QFrame):
             cd.setImage(stream)
         except: decoded = None
         else:
-            
+
             result = cd.exec_()
             if result == 1: decoded = cd.getUserInput()
             else: decoded = ''
@@ -770,8 +770,8 @@ class MainFrame(QFrame):
 
     def addressButtonEventHandler(self):
         """Richiama l'editor di rubrica avanzato"""
-        ab = AddressBookDialog(self)  
-        ab.exec_()        
+        ab = AddressBookDialog(self)
+        ab.exec_()
 
     def systemTrayEventHandler(self, event = QSystemTrayIcon.Trigger):
         """Gestore degli eventi sulla tray icon"""
@@ -801,7 +801,7 @@ class MainFrame(QFrame):
         """Mostra in menu constestuale"""
         x = event.globalX()-self.menu.sizeHint().width()
         y = event.globalY()-self.menu.sizeHint().height()
-        self.menu.popup(QPoint(x,y))        
+        self.menu.popup(QPoint(x,y))
 
     def debugMenuHandler(self):
         if Sender.connectionManager.debug == None:

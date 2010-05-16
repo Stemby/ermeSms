@@ -14,20 +14,20 @@ from moio.errors.SenderError import SenderError
 
 class Tin(Sender):
     """Permette di spedire SMS dal sito di tin.it"""
-    
+
     maxLength = 130
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
-    
+
     requiresRegistration = ['Nome utente','Password']
     """Cosa richiede questo plugin?"""
 
     incValue = 6
     """Incremento della gauge per pagina."""
-    
+
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
         return True
-    
+
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
@@ -37,17 +37,17 @@ class Tin(Sender):
 
             #Assegna le variabili standard
             username = dati['Nome utente']
-            password = dati['Password']            
-            
+            password = dati['Password']
+
             #Ammazzo i vecchi cookie
             self.connectionManager.forgetCookiesFromDomain("alice.it")
-            
+
             #Inizia la raccolta dei cookie...
             c.setopt(pycurl.URL, "http://tin.alice.it")
             self.perform(self.stop)
-            
-            if ui: ui.gaugeIncrement(self.incValue)               
-            
+
+            if ui: ui.gaugeIncrement(self.incValue)
+
             #Faccio il login
             c.setopt(pycurl.POST, True)
             postFields = {}
@@ -58,10 +58,10 @@ class Tin(Sender):
                 self.codingManager.urlEncode(postFields))
             c.setopt(pycurl.URL, "http://communicator.virgilio.it/asp/a3login.asp")
             self.perform(self.stop)
-            
+
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/a3login.asp")
             self.perform(self.stop)
-            
+
             postFields = {}
             postFields["a3l"]=username
             postFields["a3p"]=password
@@ -79,8 +79,8 @@ class Tin(Sender):
             c.setopt(pycurl.URL, "http://aaacsc.alice.it/piattaformaAAA/controller/AuthenticationServlet")
             self.perform(self.stop)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
-            
+            if ui: ui.gaugeIncrement(self.incValue)
+
             c.setopt(pycurl.POSTFIELDS,
                 self.codingManager.urlEncode({}))
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/menu.asp?dest=WP")
@@ -90,12 +90,12 @@ class Tin(Sender):
             saver = StringIO()
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/preview_WEBMAIL.asp")
             self.perform(self.stop, saver)
-            
+
             if (re.search(u"Ciao", saver.getvalue()) is None):
                 raise SiteAuthError(self.__class__.__name__)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
-            
+            if ui: ui.gaugeIncrement(self.incValue)
+
             c.setopt(pycurl.URL,
                 "http://communicator.alice.it/asp/dframeset.asp?dxserv=SMS")
             self.perform(self.stop)
@@ -104,7 +104,7 @@ class Tin(Sender):
             c.setopt(pycurl.URL,
                 "http://casa.virgilio.it/common/includes/header/css/header_4.css")
             self.perform(self.stop)
-            
+
             #Altro cookie...
             getFields = {}
             getFields["username"]=username
@@ -113,11 +113,11 @@ class Tin(Sender):
                 self.codingManager.urlEncode(getFields))
             self.perform(self.stop)
 
-            if ui: ui.gaugeIncrement(self.incValue)            
+            if ui: ui.gaugeIncrement(self.incValue)
 
             if number[0] != "+":
                 number = "+39" + number
-            
+
             postFields = {}
             postFields["lista_operatori"] = "x"
             postFields["numero"] = ""
@@ -135,7 +135,7 @@ class Tin(Sender):
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
-            
+
             # conferma
             #Altro cookie...
             saver = StringIO()

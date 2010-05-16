@@ -198,15 +198,15 @@ class OCRCaptchaDecoder(CaptchaDecoder):
         for i, f in enumerate(files):
             guess = getattr(self, method["command"])(open(f), method["gmParams"], method["ocrParams"])
             for j, c in enumerate(guess):
-               rkc[c]+=1
-               if c==oracles[i][j]:
-                   gkc[c]+=1
+                rkc[c]+=1
+                if c==oracles[i][j]:
+                    gkc[c]+=1
         result={}
         for i in self.chars:
             if rkc[i]!=0:
-               result[i]=float(gkc[i])/float(rkc[i])
+                result[i]=float(gkc[i])/float(rkc[i])
             else:
-               result[i]=0
+                result[i]=0
         return result
 
     def learn(self, senderName):

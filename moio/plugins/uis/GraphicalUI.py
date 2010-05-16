@@ -57,4 +57,3 @@ class GraphicalUI(UI):
         un'eccezione non gestita nel programma principale."""
         from PyQt4 import QtGui
         QtGui.QMessageBox.critical(self.MainFrame, "Errore", message)
-

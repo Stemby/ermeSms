@@ -67,4 +67,3 @@ class PasswordErrorDialog(QDialog):
 
     def getValue(self,i):
         return unicode(self.textCtrl[i].text())
-
