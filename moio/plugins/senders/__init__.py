@@ -14,7 +14,7 @@ __all__ = [
     'VodafoneIE',
     'VodafoneSim2',
     'VodafoneMail',
-    'VodafoneMMS'
+    'VodafoneMMS',
     'VodafoneWidget',
     'Wadja',
     'YesMMS'
