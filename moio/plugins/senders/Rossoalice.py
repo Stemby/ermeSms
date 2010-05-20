@@ -66,10 +66,7 @@ class Rossoalice(Sender):
                 raise SiteAuthError(self.__class__.__name__)
             if ui: ui.gaugeIncrement(self.incValue)
 
-            c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
-            self.perform(self.stop)
-
-            c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=ibox_inviosms")
+            c.setopt(pycurl.URL, "http://auth.rossoalice.alice.it/aap/serviceforwarder?sf_dest=click_to_send_sms&ID_Value=&ID_Field=mobilphone")
             self.perform(self.stop)
 
             saver = StringIO()
@@ -120,7 +117,7 @@ class Rossoalice(Sender):
             postFields["INVIA_SUBITO"] = "true"
             try:
                 postFields["captchafield"]=AskUserCaptchaDecoder.getInstance().decodeCaptcha(saver, self.__class__.__name__)
-            except CaptchaError:  print "An error occurred while trying to decode captcha"
+            except CaptchaError: print "An error occurred while trying to decode captcha"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
                   self.codingManager.urlEncode(postFields))
