@@ -38,7 +38,8 @@ class Sender(Plugin):
         self.connectionManager.setCurlProxy(proxy)
         if self.connectionManager.isInternetReachable() == False:
             raise ConnectionError()
-        text = self.replaceNonAscii(text)
+        if self.isUnicodeCompliant == False:
+            text = self.replaceNonAscii(text)
         length = len(text)
         if length > self.maxLength*99:#massima lunghezza 99 messaggi maxLength caratteri ognuno
             raise TooLongMessageError()
@@ -102,8 +103,12 @@ class Sender(Plugin):
             return int(math.ceil(textLength/(self.maxLength - 8.0)))
 
     def newCharCount(self,text):
-        textLength = len(self.replaceNonAscii(text))
-        textCount = self.countTexts(self.replaceNonAscii(text))
+        if self.isUnicodeCompliant == True:
+            textLength = len(text)
+            textCount = self.countTexts(text)
+        else:
+            textLength = len(self.replaceNonAscii(text))
+            textCount = self.countTexts(self.replaceNonAscii(text))
         if textCount == 2:
             return (textLength-self.maxLength)
         elif not textCount == 1:

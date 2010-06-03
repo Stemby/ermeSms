@@ -432,7 +432,10 @@ class MainFrame(QFrame):
                 #2.1- L'utente ha appena scritto un carattere del mesaggio
                 #     o ha selezionato un nuovo sender
                 sender = Sender.getPlugins()[self.getSender()]
-                texts = sender.splitText(sender.replaceNonAscii(text))
+                if sender.isUnicodeCompliant == True:
+                    texts = sender.splitText(text)
+                else:
+                    texts = sender.splitText(sender.replaceNonAscii(text))
                 textCount = len(texts)
                 lastTextCharCount = len(texts[-1])
                 remainingCharCount = sender.maxLength - lastTextCharCount

@@ -32,6 +32,11 @@ class Vodafone(Sender):
         #Deve essere disponibile un qualunque CaptchaDecoder
         return CaptchaDecoder.getBestPlugin() is not None
 
+    def isUnicodeCompliant(self):
+        """Return true if the Web service is compatible with Unicode
+        characters."""
+        return False
+
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
