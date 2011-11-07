@@ -23,16 +23,16 @@ class HelpUI(UI):
 
     def run(self):
         """Avvia questa interfaccia."""
-        print "pyMoioSMS by Thomas Bertani\n"
-        print "Website: http://github.com/sylarpowa/pyMoioSMS\n"
+        print "ermeSms by Thomas Bertani\n"
+        print "Website: http://github.com/sylarpowa/ermeSms\n"
         print "USO:"
-        print "MODALITA' INTERATTIVA: pymoiosms\n"
+        print "MODALITA' INTERATTIVA: ermesms\n"
         print "MODALITA' A LINEA DI COMANDO: "
-        print 'pymoiosms number "text" (send a message to a phone number)'
-        print 'pymoiosms name "text" (send a message to a phone number present into the phone book)'
-        print "pymoiosms -a name number (add a phone number into the phone book)"
-        print "pymoiosms -s (display the phone book)\n"
-        # TODO: pymoiosms -v
+        print 'ermesms number "text" (send a message to a phone number)'
+        print 'ermesms name "text" (send a message to a phone number present into the phone book)'
+        print "ermesms -a name number (add a phone number into the phone book)"
+        print "ermesms -s (display the phone book)\n"
+        # TODO: ermesms -v
         print "Per usare un sito in particolare, aggiungere uno dei parametri seguenti:"
         for i in Sender.getPlugins():
             print i
@@ -40,7 +40,7 @@ class HelpUI(UI):
         print "Per usare un proxy, aggiungere -p indirizzo:porta in coda"
         print "(usare -p no per disabilitare)"
         print
-        print "Rubrica, password e settaggi sono nel file .pymoiosms/config.ini."
+        print "Rubrica, password e settaggi sono nel file .ermesms/config.ini."
         print "Commenti/Suggerimenti/Bug: sylar@anche.no"
 
     def showFatalException(self, message):

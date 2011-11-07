@@ -49,13 +49,13 @@ class CommandLineUI(UI):
                 elif arg1 in ('-h', '--help'):
                     HelpUI.getInstance().run() # TODO: to update
                 elif arg1 in ('-v', '--version'):
-                    print 'pyMoioSMS %s' % p.getVersion()
+                    print 'ermeSms %s' % p.getVersion()
                 else:
                     if len(arg1) == 2 and arg1[0] == '-' and arg1[1] != '-':
-                        print "pymoiosms: invalid option -- '%s'" % arg1[1]
+                        print "ermesms: invalid option -- '%s'" % arg1[1]
                     else:
-                        print "pymoiosms:  unrecognized option '%s'" % arg1
-                    print "Try `pymoiosms --help' for more information."
+                        print "ermesms:  unrecognized option '%s'" % arg1
+                    print "Try `ermesms --help' for more information."
             elif (na == 2):
                 # 2 arguments: phone_number -- text
                 arg1 = cm.unicodeArgv(sys.argv[1])
