@@ -20,7 +20,7 @@ class HelpUI(UI):
 
     def run(self):
         """Avvia questa interfaccia."""
-        print "MoioSMS by Silvio Moioli, www.ermesmsli.net\n"
+        print "ermeSms by Thomas Bertani, https://github.com/sylarpowa/ermeSms\n"
         print "USO:"
         print "MODALITA' INTERATTIVA: MoioSMS\n"
         print "MODALITA' A LINEA DI COMANDO: "
@@ -34,8 +34,8 @@ class HelpUI(UI):
             print i
         print "\nPer usare un proxy, aggiungere -p indirizzo:porta in coda"
         print "(usare -p no per disabilitare)"
-        print "Rubrica, password e settaggi sono nel file .ermesmssms/config.ini."
-        print "Commenti/Suggerimenti/Bug: silvio@ermesmsli.net"
+        print "Address book, password and settings are into the file .ermesms/config.ini."
+        print "Comments/Suggests/Bugs: sylar@anche.no"
 
     def showFatalException(self, message):
         """Questo metodo viene richiamato nel caso in cui venga catturata

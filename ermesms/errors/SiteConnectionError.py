@@ -23,5 +23,5 @@ class SiteConnectionError(SenderError):
              u"3) sia possibile inviare SMS da " + self.site + u".\n" +
              u"Se il problema persiste ed è possibile inviare SMS \n" +
              u"dal Web, controlla che non sia uscita una nuova \n" +
-             u"versione sul sito ufficiale: www.ermesmsli.net")
+             u"versione sul sito ufficiale: https://github.com/sylarpowa/ermeSms")
         return s
