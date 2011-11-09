@@ -1,8 +1,8 @@
-This is the pyMoioSMS README file
+This is the ermeSms README file
 
-Copyright © 2010 by Thomas Bertani <sylar@anche.no>.
+Copyright © 2011 Thomas Bertani <sylar@anche.no>.
 
-pyMoioSMS is a fork of the project by Donatello Volonghi, 2009 <bunbury86@gmail.com>, based on the original MoioSMS 2 by Silvio Moioli, 2008 <silvio@moioli.net>.
+ermeSms is a fork of the project by Donatello Volonghi, 2009 <bunbury86@gmail.com>, based on the original MoioSMS 2 by Silvio Moioli, 2008 <silvio@moioli.net>.
 
 The program is distributed under the terms of the GNU General Public License; see COPYING for the full GPL text.
 
@@ -44,200 +44,15 @@ Versioni software:
 -pyCurl 7.19.0 (Curl 7.19.6)
 -psutil 0.1.2
 
-Cos'è MoioSMS?
---------------
-MoioSMS è il mio programma per mandare velocemente gli SMS via Web.
-
-Vorresti mandare SMS da un sito ma non hai voglia di:
-    autenticarti?
-    assorbirti chili di pubblicità?
-    confermare 1000 volte il tuo messaggio?
-
-Bene! Con MoioSMS bastano un paio di click e il
-messaggino sarà mandato in pochi secondi.
-
-MoioSMS è GRATUITO e LIBERO, cioè è liberamente scaricabile e modificabile.
-Se apporti cambiamenti fammelo sapere!
-
-Come lo uso?
-------------
-Il programma si avvia con un semplice doppio click. Niente installazione!
-Quando necessario, ti sarà chiesto lo stretto indispensabile e potrai mandare
-l'SMS.
-In seguito, puoi imparare a utilizzare MoioSMS da linea di comando, il modo più
-veloce ed efficiente, che è descritto più avanti.
-
-Ho un problema...
------------------
-1. Prova a leggere le risposte alle domande frequenti riportate qui sotto;
-2. Se usi Linux o Mac, dai un'occhiata al file LEGGIMI relativo;
-3. se proprio non riesci a risolvere il tuo problema, chiedi aiuto sul
-   forum: http://www.moioli.net/forum
-
-Risposte alle domande frequenti
--------------------------------
-D: Ho veramente bisogno di un nome utente/password per il sito "X"?
-R: Se "X" lo richiede, sì.
-MoioSMS non OFFRE un servizio, permette invece di UTILIZZARE il servizio di
-"X" in maniera più comoda. Se è richiesta una password, l'utente dovrà fornirla,
-come se utilizzasse un normale browser.
-Diciamo che MoioSMS è un "navigatore specializzato" per certi siti, ed in ogni
-caso utilizza il sito originale come lo faresti tu: regole, limitazioni
-ai messaggi, ecc. sono gli stessi.
-
-D: I messaggi mandati da MoioSMS sono gratuiti?
-R: Sì.
-MoioSMS permette di utilizzare solo siti che inviano messaggi GRATUITAMENTE,
-pertanto non ti verrà mai addebitato nulla.
-
-D: Perchè non fai in modo che si possano usare più account per uno stesso sito?
-Perchè non fai in modo che si possano mandare messaggi a più destinatari?
-R: Per scoraggiare l'uso illegale di MoioSMS.
-Mandare messaggi automaticamente o usare più account viola le condizioni
-d'uso della maggior parte dei siti che si possono utilizzare con MoioSMS.
-L'intento di MoioSMS è facilitare l'utilizzo di servizi e non il loro abuso:
-come soluzione di compromesso si permette l'invio di un solo SMS alla volta,
-da un unico account e verso un unico destinatario. Non sono previste aggiunte
-al programma in questo senso, anche se in alcuni casi sarebbe legale.
-
-D: Come cambio nome utente o password di un sito?
-R: Non dovresti averne bisogno.
-Se hai immesso un nome utente o una password non corretti MoioSMS se ne
-accorgerà e ti chiederà automaticamente di sostituirle.
-Se hai bisogno di modificare questi dati per usare più account, invece,
-leggi la domanda precedente.
-Nel caso particolare in cui, infine, sia necessaria la modifica dei dati
-perchè hai cambiato account puoi modificare manualmente il file config.ini,
-che si trova nella sotticartella .moiosms del tuo utente, oppure cancellarlo
-del tutto (verrà ricreato al riavvio del programma). Nota che se usi la Master
-Password la modifica non sarà possibile quindi l'unico per procedere sarà
-cancellarlo.
-
-D: Quali siti posso usare?
-R: Controlla il file SitixRegistrarsi.txt presente unitamente al programma.
-Per Enel, Tim e Rossoalice controlla sulla pagina del progetto del programma,
-http://www.moioli.net/sms
-E' possibile creare dei nuovi "plugin" semplicemente per poter usare
-altri siti. Nota che il "semplicemente" è relativo al fatto che occorrono
-INEVITABILMENTE conoscenze di programmazione, in particolare Python e HTML, e
-conoscenza del protocollo HTTP.
-Se vuoi che scriva io un nuovo plugin per te, sappi che ho bisogno di un nome
-utente e di una password per quel sito (che dovrò provare più volte durante lo
-sviluppo). Se non li ho e tu non puoi fornirmeli non ci sono possibilità!
-
-D: MoioSMS non manda le lettere accentate o altri caratteri particolari!
-R: Purtroppo uno dei componenti utilizzati da MoioSMS non lavora correttamente
-con i caratteri internazionali. Dal momento che sarebbe troppo oneroso
-sostituirlo, al momento non è possibile mandare caratteri "strani" con MoioSMS.
-
-D: Posso cambiare o rimuovere la Master Password?
-R: No. L'unico modo è cancellare il file di configurazione config.ini e
-reimmettere daccapo tutti i dati (rubrica, nomi utente e password).
-
-D: MoioSMS manda solo la prima parola del messaggio!
-R: Se usi MoioSMS dalla linea di comando, devi mettere il messaggio
-tra virgolette (Windows) o apici singoli (Unix).
-
-D: MoioSMS termina con un errore sulla variabile COMSPEC.
-R: COMSPEC è una variabile di sistema di Windows, e in alcuni casi potrebbe
-non essere settata correttamente. Se COMSPEC non è corretta è MoioSMS non
-funzionerà; puoi aggiustarla seguendo questa procedura:
-    1) clicca su "Start", poi clicca con il pulsante destro su "Risorse del
-Computer" e scegli "Proprietà" dal menù;
-    2) clicca sulla scheda "Avanzate" (in alto) e poi su "Variabili
-d'ambiente". Sotto "Variabili di sistema" assicurati che la variabile
-COMSPEC esista ed abbia il seguente valore:
-
-%SystemRoot%\system32\cmd.exe
-
-   3) se necessario, modifica la variabile COMSPEC perchè contenga
-esattamente la scritta di cui sopra.
-
-D: Ho un'altra domanda!
-R: Iscriviti al forum e chiedi lì: http://www.moioli.net/forum
-Se mi è possibile, ti aiuterò personalmente.
-
-Modalità linea di comando
--------------------------
-Quando vorrai essere più veloce nell'uso del programma, potrai imparare
-l'interfaccia da linea di comando.
-
-Istruzioni per sistemi Windows:
-    1) scarica e decomprimi la versione di MoioSMS per linea di comando;
-    2) apri il prompt dei comandi cliccando il Menu Avvio, scegliendo 
-       "Esegui...", scrivendo "cmd" e cliccando OK;
-    3) spostati nella directory dove risiede MoioSMS, con il comando:
-       "cd nomedirectory" (senza virgolette). NB: nomedirectory è il path 
-       completo del file MoioSMS.exe. Se non lo conosci, puoi leggerlo dalla
-       scheda Proprietà che si ottiene cliccando con il pulsante destro del
-       mouse sul file stesso e scegliendo "Proprietà...";
-    4) dai il comando: MoioSMS numero "testo da inviare" sito (nota che il testo
-       da inviare *E'* tra virgolette);
-    5) Fatto! Il tuo messaggio sarà inviato senza ulteriori richieste!
-
-Istruzioni per sistemi Linux o Unix:
-    1) apri una shell o un emulatore di terminale (solitamente premento
-       ctrl+alt+Fn o lanciando xterm);
-    2) spostati nella directory dove risiede MoioSMS, con il comando:
-       "cd nomedirectory" (senza virgolette). NB: nomedirectory è il path 
-       completo del file MoioSMS.py;
-    4) dai il comando: python MoioSMS.py numero 'testo da inviare' sito (nota
-       che il testo da inviare *E'* tra apici singoli nella maggior parte
-       delle shell, ad esempio bash);
-    5) Fatto! Il tuo messaggio sarà inviato senza ulteriori richieste!
-
-La cosa diventa ancor più utile se lasci aperta la finestra del prompt: potrai
-così inviare un altro messaggio in pochissimi secondi! Ideale per chi fa uso
-pesante di SMS!
-
-Esiste anche una funzionalità di rubrica:
-
-MoioSMS -a pincopallino 349123456
-
-che aggiunge il contatto "pincopallino" in rubrica e
-
-MoioSMS -m
-
-che mostra la rubrica corrente. In questo modo si può usare un comando
-come:
-
-MoioSMS pincopallino "Ciao, come stai? Silvio"
-
-e lasciare che MoioSMS ricerchi automaticamente il numero.
-Esistono anche altre opzioni, per una lista completa digita:
-
-MoioSMS -h
-
-Note sulla sicurezza
---------------------
-MoioSMS salva su disco i nomi utenti e le password dei siti utilizzati, per non
-richiederli ad ogni utilizzo. Se si usa il programma da un computer condiviso
-con  altri utenti questi ultimi potrebbero leggere questi "dati sensibili".
-Dal momento che alcuni utenti di MoioSMS hanno espresso preoccupazione nei
-confronti di questa possibilità, è stata inserita dalla versione 2.06 un'opzione
-per crittare (salvare in modo protetto) i propri dati sensibili: grazie a questo
-sistema è necessario conoscere una "Master Password" aggiuntiva per accedere ai
-nomi utente e alle password. Ti verrà richiesto se vuoi usare la Master Password
-al momento del salvataggio dei dati.
-Nota che MoioSMS non salva mai su disco nulla prima di ottenere un esplicito
-consenso da parte dell'utente.
-Nota anche che nonostante il livello di sicurezza complessivo del programma sia
-a mio parere più che soddisfacente per i suoi scopi, non è possibile garantire
-che MoioSMS sia completamente sicuro, come del resto nessun altro programma.
-Tra gli altri fattori di rischio bisogna evidenziare che molti siti richiedono
-di inviare le password in chiaro sulla rete e non esiste modo per risolvere il
-problema (anche i normali browser invieranno i dati senza protezioni in questi
-casi).
-
 Note legali
 -----------
-Usando MoioSMS sei obbligato a seguire le regole imposte dai siti che usi.
+Usando ermeSms sei obbligato a seguire le regole imposte dai siti che usi.
 Per esempio, non è possibile usare gli SMS dal sito di Vodafone per
 scopi pubblicitari o inviarne ENORMI QUANTITA'.
 
-** DECLINO OGNI RESPONSABILITA' DERIVANTE DALL'USO DI MOIOSMS!!! **
+** DECLINO OGNI RESPONSABILITA' DERIVANTE DALL'USO DI ERMESMS!!! **
 
-Questo significa che MoioSMS potrebbe inchiodarti il PC, cancellare tutti i
+Questo significa che ermeSms potrebbe inchiodarti il PC, cancellare tutti i
 tuoi dati o anche MANGIARE TUTTO IL FORMAGGIO che hai in casa ed io non
 mi assumo alcuna responsabilità.
 In realtà, ovviamente, non farà niente di tutto ciò :-)
