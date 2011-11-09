@@ -1,8 +1,8 @@
-This is the pyMoioSMS README file
+This is the ermeSms README file
 
-Copyright © 2010 by Thomas Bertani <sylar@anche.no>.
+Copyright © 2011 Thomas Bertani <sylar@anche.no>.
 
-pyMoioSMS is a fork of the project by Donatello Volonghi, 2009 <bunbury86@gmail.com>, based on the original MoioSMS 2 by Silvio Moioli, 2008 <silvio@moioli.net>.
+ermeSms is a fork of the project by Donatello Volonghi, 2009 <bunbury86@gmail.com>, based on the original MoioSMS 2 by Silvio Moioli, 2008 <silvio@moioli.net>.
 
 The program is distributed under the terms of the GNU General Public License; see COPYING for the full GPL text.
 
@@ -44,117 +44,15 @@ Versioni software:
 -pyCurl 7.19.0 (Curl 7.19.6)
 -psutil 0.1.2
 
-Cos'è MoioSMS?
---------------
-MoioSMS è il mio programma per mandare velocemente gli SMS via Web.
-
-Vorresti mandare SMS da un sito ma non hai voglia di:
-    autenticarti?
-    assorbirti chili di pubblicità?
-    confermare 1000 volte il tuo messaggio?
-
-Bene! Con MoioSMS bastano un paio di click e il
-messaggino sarà mandato in pochi secondi.
-
-MoioSMS è GRATUITO e LIBERO, cioè è liberamente scaricabile e modificabile.
-Se apporti cambiamenti fammelo sapere!
-
-Come lo uso?
-------------
-Il programma si avvia con un semplice doppio click. Niente installazione!
-Quando necessario, ti sarà chiesto lo stretto indispensabile e potrai mandare
-l'SMS.
-In seguito, puoi imparare a utilizzare MoioSMS da linea di comando, il modo più
-veloce ed efficiente, che è descritto più avanti.
-
-Ho un problema...
------------------
-1. Prova a leggere le risposte alle domande frequenti riportate qui sotto;
-2. Se usi Linux o Mac, dai un'occhiata al file LEGGIMI relativo;
-3. se proprio non riesci a risolvere il tuo problema, chiedi aiuto sul
-   forum: http://www.moioli.net/forum
-
-Modalità linea di comando
--------------------------
-Quando vorrai essere più veloce nell'uso del programma, potrai imparare
-l'interfaccia da linea di comando.
-
-Istruzioni per sistemi Windows:
-    1) scarica e decomprimi la versione di MoioSMS per linea di comando;
-    2) apri il prompt dei comandi cliccando il Menu Avvio, scegliendo 
-       "Esegui...", scrivendo "cmd" e cliccando OK;
-    3) spostati nella directory dove risiede MoioSMS, con il comando:
-       "cd nomedirectory" (senza virgolette). NB: nomedirectory è il path 
-       completo del file MoioSMS.exe. Se non lo conosci, puoi leggerlo dalla
-       scheda Proprietà che si ottiene cliccando con il pulsante destro del
-       mouse sul file stesso e scegliendo "Proprietà...";
-    4) dai il comando: MoioSMS numero "testo da inviare" sito (nota che il testo
-       da inviare *E'* tra virgolette);
-    5) Fatto! Il tuo messaggio sarà inviato senza ulteriori richieste!
-
-Istruzioni per sistemi Linux o Unix:
-    1) apri una shell o un emulatore di terminale (solitamente premento
-       ctrl+alt+Fn o lanciando xterm);
-    2) spostati nella directory dove risiede MoioSMS, con il comando:
-       "cd nomedirectory" (senza virgolette). NB: nomedirectory è il path 
-       completo del file MoioSMS.py;
-    4) dai il comando: python MoioSMS.py numero 'testo da inviare' sito (nota
-       che il testo da inviare *E'* tra apici singoli nella maggior parte
-       delle shell, ad esempio bash);
-    5) Fatto! Il tuo messaggio sarà inviato senza ulteriori richieste!
-
-La cosa diventa ancor più utile se lasci aperta la finestra del prompt: potrai
-così inviare un altro messaggio in pochissimi secondi! Ideale per chi fa uso
-pesante di SMS!
-
-Esiste anche una funzionalità di rubrica:
-
-MoioSMS -a pincopallino 349123456
-
-che aggiunge il contatto "pincopallino" in rubrica e
-
-MoioSMS -m
-
-che mostra la rubrica corrente. In questo modo si può usare un comando
-come:
-
-MoioSMS pincopallino "Ciao, come stai? Silvio"
-
-e lasciare che MoioSMS ricerchi automaticamente il numero.
-Esistono anche altre opzioni, per una lista completa digita:
-
-MoioSMS -h
-
-Note sulla sicurezza
---------------------
-MoioSMS salva su disco i nomi utenti e le password dei siti utilizzati, per non
-richiederli ad ogni utilizzo. Se si usa il programma da un computer condiviso
-con  altri utenti questi ultimi potrebbero leggere questi "dati sensibili".
-Dal momento che alcuni utenti di MoioSMS hanno espresso preoccupazione nei
-confronti di questa possibilità, è stata inserita dalla versione 2.06 un'opzione
-per crittare (salvare in modo protetto) i propri dati sensibili: grazie a questo
-sistema è necessario conoscere una "Master Password" aggiuntiva per accedere ai
-nomi utente e alle password. Ti verrà richiesto se vuoi usare la Master Password
-al momento del salvataggio dei dati.
-Nota che MoioSMS non salva mai su disco nulla prima di ottenere un esplicito
-consenso da parte dell'utente.
-Nota anche che nonostante il livello di sicurezza complessivo del programma sia
-a mio parere più che soddisfacente per i suoi scopi, non è possibile garantire
-che MoioSMS sia completamente sicuro, come del resto nessun altro programma.
-Tra gli altri fattori di rischio bisogna evidenziare che molti siti richiedono
-di inviare le password in chiaro sulla rete e non esiste modo per risolvere il
-problema (anche i normali browser invieranno i dati senza protezioni in questi
-casi).
-
 Note legali
 -----------
-Usando MoioSMS sei obbligato a seguire le regole imposte dai siti che usi.
+Usando ermeSms sei obbligato a seguire le regole imposte dai siti che usi.
 Per esempio, non è possibile usare gli SMS dal sito di Vodafone per
 scopi pubblicitari o inviarne ENORMI QUANTITA'.
 
-** DECLINO OGNI RESPONSABILITA' DERIVANTE DALL'USO DI MOIOSMS!!! **
+** DECLINO OGNI RESPONSABILITA' DERIVANTE DALL'USO DI ERMESMS!!! **
 
-Questo significa che MoioSMS potrebbe inchiodarti il PC, cancellare tutti i
+Questo significa che ermeSms potrebbe inchiodarti il PC, cancellare tutti i
 tuoi dati o anche MANGIARE TUTTO IL FORMAGGIO che hai in casa ed io non
 mi assumo alcuna responsabilità.
 In realtà, ovviamente, non farà niente di tutto ciò :-)

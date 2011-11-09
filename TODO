@@ -1,6 +1,6 @@
 -import contacts from MoioSMS 2
 -verify GPL compliance: http://www.gnu.org/licenses/gpl-howto.html
--manage special characters: http://github.com/sylarpowa/pyMoioSMS/issues#issue/1
+-manage special characters: http://github.com/sylarpowa/ermeSms/issues#issue/1
 -i18n
 -add a menu with "Preferences"
 -neoPhysis integration (via D-Bus?)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# TODO -- integrate the importer in pyMoioSMS
+# TODO -- integrate the importer in ermeSms
 
 from ConfigParser import ConfigParser, NoSectionError
-from moio.PreferenceManager import PreferenceManager
+from ermesms.PreferenceManager import PreferenceManager
 
 question = "Do you want to import MoioSMS 2 contacts? (Y/n) --> "
 answer = raw_input(question)
