@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import math
 
 import pycurl
@@ -38,7 +40,7 @@ class Sender(Plugin):
         self.connectionManager.setCurlProxy(proxy)
         if self.connectionManager.isInternetReachable() == False:
             raise ConnectionError()
-        if self.isUnicodeCompliant == False:
+        if not self.isUnicodeCompliant():
             text = self.replaceNonAscii(text)
         length = len(text)
         if length > self.maxLength*99:#massima lunghezza 99 messaggi maxLength caratteri ognuno
@@ -51,7 +53,7 @@ class Sender(Plugin):
             self.sendOne(number, i, dati, ui)
 
     def replaceNonAscii(sender, text):
-        """Modifica alcuni caratteri non-ASCII dalla stringa."""
+        """Replace some non-ASCII characters with similar ASCII expressions."""
         replace_map = (
                 (u"à", "a'"), (u"á", "a'"), (u"è", "e'"), (u"é", "e'"),
                 (u"í", "i'"), (u"ì", "i'"), (u"ó", "o'"), (u"ò", "o'"),
@@ -60,7 +62,7 @@ class Sender(Plugin):
                 (u"ç", "c"), (u"[", "("), (u"]", ")"), (u"{", "("),
                 (u"}", ")"), (u"^", ""), (u"£", "L."), (u"\\", "BkSlash"),
                 (u"|", "Pipe"), (u"§", "Par."), (u"°", "o"), (u"€", "EUR"),
-                (u"~", "Tilde"), (u"`", "'"))
+                (u"~", "Tilde"), (u"`", "'"), (u"¡", ""), (u"¿", ""))
         for old, new in replace_map: text = text.replace(old, new)
         return text
 
@@ -102,15 +104,16 @@ class Sender(Plugin):
         else:
             return int(math.ceil(textLength/(self.maxLength - 8.0)))
 
-    def newCharCount(self,text):
-        if self.isUnicodeCompliant == True:
+    def newCharCount(self, text):
+        if self.isUnicodeCompliant():
             textLength = len(text)
             textCount = self.countTexts(text)
         else:
             textLength = len(self.replaceNonAscii(text))
             textCount = self.countTexts(self.replaceNonAscii(text))
         if textCount == 2:
-            return (textLength-self.maxLength)
-        elif not textCount == 1:
+            return (textLength - self.maxLength)
+        elif textCount != 1:
             prefixLength = int(math.log10(textCount-1))*2+4
             return (textLength-(self.maxLength-prefixLength)*(textCount-1))
+

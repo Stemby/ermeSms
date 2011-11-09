@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 from ermesms.lib.singletonmixin import Singleton
 
 class Plugin(Singleton):
@@ -17,7 +19,7 @@ class Plugin(Singleton):
         raise NotImplementedError()
 
     def isUnicodeCompliant(self):
-        """Return true if the Web service is compatible with Unicode
+        """Return True if the Web service is compatible with Unicode
         characters."""
         raise NotImplementedError()
 

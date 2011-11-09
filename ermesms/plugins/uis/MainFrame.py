@@ -432,7 +432,7 @@ class MainFrame(QFrame):
                 #2.1- L'utente ha appena scritto un carattere del mesaggio
                 #     o ha selezionato un nuovo sender
                 sender = Sender.getPlugins()[self.getSender()]
-                if sender.isUnicodeCompliant == True:
+                if sender.isUnicodeCompliant():
                     texts = sender.splitText(text)
                 else:
                     texts = sender.splitText(sender.replaceNonAscii(text))
