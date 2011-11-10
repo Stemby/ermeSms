@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# TODO: unicode management
+# TODO: translate to English
+# NOTE: some strings are in Italian because this is an Italian Website
+
 import re
 import sys
 from cStringIO import StringIO
@@ -28,36 +32,39 @@ class Vodafone(Sender):
     """Incremento della gauge per pagina."""
 
     def isAvailable(self):
-        """Ritorna true se questo plugin è utilizzabile."""
-        #Deve essere disponibile un qualunque CaptchaDecoder
+        """Return True if this plugin is usable."""
+        # A CaptchaDecoder must be available
         return CaptchaDecoder.getBestPlugin() is not None
 
     def isUnicodeCompliant(self):
         """Return True if the Web service is compatible with Unicode
         characters."""
-        #return True # NOTE: it doesn't work... why?????
+        #return True # FIXME: it doesn't work... see:
+                     #        ermesms.CodingManager.urlEncode(self, dictionary)
         return False
 
-    def sendOne(self, number, text, dati = None, ui = None):
-        """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
-        con le credenziali specificate, supponendo Internet raggiungibile.
-        """
+    def sendOne(self, number, text, data=None, ui=None):
+        """Send an SMS message with only ASCII characters and maximum length
+        maxLength using the specified credentials, supposing Internet
+        reachable.
+        """ # FIXME: why only ASCII?
         try:
-            #Costruisco un nuovo oggetto Curl e lo inizializzo
+            # Create a new cURL object and initialize it
             c = self.connectionManager.getCurl()
 
-            #Assegna le variabili standard
-            username = dati['Nome utente']
-            password = dati['Password']
-            sim = str(dati['SIM'])
+            # Set the standard variables
+            username = data['Nome utente']
+            password = data['Password']
+            sim = str(data['SIM'])
 
             if number[:3] == "+39":
                 number = number[3:]
             elif number[0]=="+":
                 raise SiteCustomError(self.__class__.__name__,
-                u"Questo sito permette di inviare SMS solo verso cellulari italiani.")
+                "With this website you can send SMS messages only to Italian "
+                "mobile phones.")
 
-            #Visito la pagina iniziale
+            # Visit the starting page
             saver = StringIO()
             c.setopt(pycurl.URL, "http://www.vodafone.it/190/trilogy/jsp/home.do")
             self.perform(self.stop, saver)
@@ -66,9 +73,9 @@ class Vodafone(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)
 
-            #Sono già autenticato?
+            # Am I already logged in?
             if(re.search("Ciao: <b><!-- TY_DISP -->", saver.getvalue()) is None):
-                #No, ammazzo i vecchi cookie e mi riautentico
+                # No; kill old cookies and log in
                 self.connectionManager.forgetCookiesFromDomain("190.it")
                 self.connectionManager.forgetCookiesFromDomain("vodafone.it")
                 saver = StringIO()
@@ -99,7 +106,7 @@ class Vodafone(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)
 
-            #Visito la pubblicità obbligatoria
+            # Visit the obligatory advertising
             c.setopt(pycurl.POST, False)
             c.setopt(pycurl.URL,
                 "http://www.vodafone.it/190/trilogy/jsp/dispatcher.do?ty_key=fdt_invia_sms&tk=9616,2")
@@ -110,14 +117,14 @@ class Vodafone(Sender):
 
             if ui: ui.gaugeIncrement(self.incValue)
 
-            #Visito il form degli SMS (anche qui obbligatoriamente...)
+            # Visit the SMS form
             c.setopt(pycurl.URL,
                 "http://www.areaprivati.vodafone.it/190/trilogy/jsp/dispatcher.do?ty_key=fsms_hp&ipage=next")
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
 
-            #Spedisco l'SMS
+            # Send the SMS message
             saver = StringIO()
             postFields = {}
             postFields["pageTypeId"] = "9604"

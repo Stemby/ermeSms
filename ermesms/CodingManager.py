@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# NOTE: probably this module will be unuseful when we'll migrate to Python 3
+
 import locale
 import sys
 import urllib
@@ -67,8 +69,8 @@ class CodingManager(Singleton):
     def urlEncode(self, dictionary):
         """Converte il dizionario in una stringa in formato
         application/x-www-form-urlencoded"""
-        #Per evitare errori di codifica, sostituisco con ? i
-        #caratteri non-ascii
+        # For avoiding coding issues, replace non-ASCII characters with '?'
+        # FIXME: Unicode MUST be managed correctly by ermeSms
         safeDictionary = {}
         for k, v in dictionary.iteritems():
             safeDictionary[k.encode("ascii", "replace")] = v.encode("ascii", "replace")
@@ -92,3 +94,4 @@ class CodingManager(Singleton):
     def unicodeToIso88591(self, string):
         """Converte una stringa da iso-8859-1 a Unicode."""
         return string.encode("iso-8859-1", "replace")
+
