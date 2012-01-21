@@ -73,7 +73,7 @@ class VodafoneWidget(Sender):
 
             self.checkForErrors(saver.getvalue())
 
-            if (re.search("Ciao: <b><!-- TY_DISP -->", saver.getvalue()) is None):
+            if (re.search("Ciao ", saver.getvalue()) is None):
                 raise SiteAuthError(self.__class__.__name__)                
                
             if ui: ui.gaugeIncrement(self.incValue)
