@@ -61,7 +61,7 @@ class Vodafone(Sender):
             if ui: ui.gaugeIncrement(self.incValue)
 
             #Sono già autenticato?
-            if(re.search("Ciao: <b><!-- TY_DISP -->", saver.getvalue()) is None):
+            if(re.search("Ciao ", saver.getvalue()) is None):
                 #No, ammazzo i vecchi cookie e mi riautentico
                 self.connectionManager.forgetCookiesFromDomain("190.it")
                 self.connectionManager.forgetCookiesFromDomain("vodafone.it")
@@ -77,7 +77,7 @@ class Vodafone(Sender):
                 self.checkForErrors(saver.getvalue())
                 self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
 
-                if (re.search("Ciao: <b><!-- TY_DISP -->", saver.getvalue()) is None):
+                if (re.search("Ciao ", saver.getvalue()) is None):
                     raise SiteAuthError(self.__class__.__name__)
 
             if ui: ui.gaugeIncrement(self.incValue)
