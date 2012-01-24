@@ -63,6 +63,7 @@ class Wadja(Sender):
             if (re.search("Sign out", saver.getvalue()) is None) and \
                (re.search("Esci", saver.getvalue()) is None):
                 saver = StringIO()
+
                 c.setopt(pycurl.URL, "http://m.wadja.com/login/default.aspx?url=%2fdefault.aspx")
                 postFields = {}
                 postFields["__VIEWSTATE"] = view

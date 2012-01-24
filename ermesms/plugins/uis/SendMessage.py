@@ -87,6 +87,7 @@ class SendMessage(threading.Thread):
                     done = True
                     hadError = u"L'ultimo SMS non è stato" +\
                                u" inviato a causa di un errore."
+
                 else:
                     for i in sender.requiresRegistration:
                         self.pm.addAccount(i,data[i],senderName,self.masterKey)
@@ -120,6 +121,7 @@ class SendMessage(threading.Thread):
             except (SiteConnectionError, SiteCustomError, SenderError,
                     CaptchaError, NotFoundError), e:
                 done = True
+
                 hadError = u"L'ultimo SMS non è stato" +\
                            u" inviato a causa di un errore."
                 self.mf.emit(SIGNAL('criticalError'), e.__str__())

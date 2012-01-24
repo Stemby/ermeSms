@@ -116,6 +116,7 @@ class YesMMS(Sender):
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
             self.codingManager.urlEncode(postFields, self.encoding))
+
             c.setopt(pycurl.URL,"http://www.yesmms.com/cgi-bin/yesmms/yesmms.cgi")
             self.perform(self.stop, saver)
 
