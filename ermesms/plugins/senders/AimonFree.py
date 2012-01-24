@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 from cStringIO import StringIO
 
@@ -14,20 +16,23 @@ from ermesms.errors.SenderError import SenderError
 
 class AimonFree(Sender):
     """Permette di spedire SMS dal sito Aimon.it"""
-   
+
     maxLength = 114
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
-   
+
     requiresRegistration = ['Nome utente','Password']
     """Cosa richiede questo plugin?"""
 
     incValue = 2
-    """Incremento della gauge per pagina."""     
-   
+    """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
+
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
         return True
-       
+
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
@@ -35,20 +40,21 @@ class AimonFree(Sender):
         try:
             #Costruisco un nuovo oggetto Curl e lo inizializzo
             c = self.connectionManager.getCurl()
-            
+
             if number[:3] == "+39": number = number[3:]
 
             #Assegna le variabili standard
             username = dati['Nome utente']
-            password = dati['Password']                  
-        
+            password = dati['Password']
+
             c.setopt(pycurl.URL, "http://aimon.it/?cmd=smsgratis")
             postFields = {}
             postFields["inputUsername"] = username + '@aimon.it'
             postFields["inputPassword"] = password
             postFields["submit"] = 'procedi'
             c.setopt(pycurl.POST, True)
-            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             saver = StringIO()
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
@@ -65,14 +71,14 @@ class AimonFree(Sender):
             postFields["destinatario"] = number
             postFields["btnSubmit"] = "Invia SMS"
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL, 'http://aimon.it/index.php?cmd=smsgratis&sez=smsgratis')
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
-            
+
             if (re.search("Messaggio inviato con successo", saver.getvalue()) is None):
                 raise SenderError(self.__class__.__name__)
-           
+
         except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))

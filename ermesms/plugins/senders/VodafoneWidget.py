@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -25,6 +28,9 @@ class VodafoneWidget(Sender):
 
     incValue = 7
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -68,7 +74,8 @@ class VodafoneWidget(Sender):
             postFields["cu_channel"] = 'MM'
             postFields["cu_notrace"] = 'true'
             c.setopt(pycurl.POST, True)
-            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             self.perform(self.stop, saver)
 
             self.checkForErrors(saver.getvalue())
@@ -104,7 +111,7 @@ class VodafoneWidget(Sender):
             postFields["message"] = text
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "https://widget.vodafone.it/190/fsms/prepare.do?channel=VODAFONE_DW")
             self.perform(self.stop, saver)
@@ -134,7 +141,7 @@ class VodafoneWidget(Sender):
                 
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS,
-                    self.codingManager.urlEncode(postFields))
+                    self.codingManager.urlEncode(postFields, self.encoding))
                 saver = StringIO()
                 c.setopt(pycurl.URL,
                     "https://widget.vodafone.it/190/fsms/send.do?channel=VODAFONE_DW")
@@ -191,3 +198,4 @@ class VodafoneWidget(Sender):
             raise SiteCustomError(self.__class__.__name__, u"Verifica il codice inserito e invia il tuo SMS.")        
         if(re.search('n="ERRORCODE" v="117"', page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Contenuto non disponibile.")
+

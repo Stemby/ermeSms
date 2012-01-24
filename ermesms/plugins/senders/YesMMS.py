@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -15,7 +17,7 @@ from ermesms.errors.SenderError import SenderError
 
 class YesMMS(Sender):
     """Permette di spedire SMS dal sito www.yesmms.com"""
-    
+
     maxLength = 500
     """Lunghezza massima del messaggio singolo inviabile da questo sito."""
 
@@ -23,12 +25,15 @@ class YesMMS(Sender):
     """Cosa richiede questo plugin?"""
 
     incValue = 4
-    """Incremento della gauge per pagina."""     
-    
+    """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
+
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
         return True
-    
+
     def sendOne(self, number, text, dati = None, ui = None):
         """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
         con le credenziali specificate, supponendo Internet raggiungibile.
@@ -36,13 +41,13 @@ class YesMMS(Sender):
         try:
             #Costruisco un nuovo oggetto Curl e lo inizializzo
             c = self.connectionManager.getCurl()
-            
+
             if not number[0] == "+": number = '+39' + number
 
             #Assegna le variabili standard
             username = dati['Nome utente']
             password = dati['Password']
-        
+
             #Visito la pagina iniziale
             saver = StringIO()
             c.setopt(pycurl.POST, True)
@@ -51,9 +56,10 @@ class YesMMS(Sender):
             postFields["action"] = 'login'
             postFields["nick"] = username
             postFields["password"] = password
-            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             c.setopt(pycurl.URL, "http://www.yesmms.com/cgi-bin/yesmms/yesstart.cgi")
-            self.perform(self.stop, saver)             
+            self.perform(self.stop, saver)
 
             if (re.search("Wrong Password", saver.getvalue()) is not None):
                 raise SiteAuthError(self.__class__.__name__)
@@ -61,8 +67,8 @@ class YesMMS(Sender):
                 raise SiteCustomError(self.__class__.__name__, u"Errore di Login")
             if (re.search("did not logout correctly", saver.getvalue()) is not None):
                 raise SiteCustomError(self.__class__.__name__, u"Utente gia' loggato, riprova tra 30 minuti")
-                
-            try:          
+
+            try:
                 session = re.search('(?<=(session" value="))[^"]+', saver.getvalue()).group(0)
                 time = re.search('(?<=(nowtime" value="))[^"]+', saver.getvalue()).group(0)                
             except AttributeError:
@@ -79,10 +85,11 @@ class YesMMS(Sender):
             postFields["country"] = '212'
             postFields["lang"] = 'it'
             postFields["submit"] = 'continue'
-            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             c.setopt(pycurl.URL, "http://www.yesmms.com/cgi-bin/yesmms/yesintro.cgi")
-            self.perform(self.stop, saver)             
-                
+            self.perform(self.stop, saver)
+
             if ui: ui.gaugeIncrement(self.incValue)
 
             #Visito la una pagina degli sms
@@ -91,11 +98,12 @@ class YesMMS(Sender):
             postFields = {}
             postFields["session"] = session
             postFields["lang"] = 'it'
-            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             c.setopt(pycurl.URL, "http://www.yesmms.com/cgi-bin/yesmms/yeslogin.cgi")
-            self.perform(self.stop, saver)             
-                
-            if ui: ui.gaugeIncrement(self.incValue)            
+            self.perform(self.stop, saver)
+
+            if ui: ui.gaugeIncrement(self.incValue)
 
             #Spedisco l'SMS
             saver = StringIO()
@@ -107,7 +115,7 @@ class YesMMS(Sender):
             postFields["action"] = 'send'
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-            self.codingManager.urlEncode(postFields))
+            self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,"http://www.yesmms.com/cgi-bin/yesmms/yesmms.cgi")
             self.perform(self.stop, saver)
 
@@ -116,9 +124,9 @@ class YesMMS(Sender):
             postFields["session"] = session
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-            self.codingManager.urlEncode(postFields))
+            self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,"http://www.yesmms.com/cgi-bin/yesmms/yeslogout.cgi")
-            self.perform(self.stop)            
+            self.perform(self.stop)
 
             if (re.search("SMS sent", saver.getvalue()) is None):
                 if (re.search("The message contains bad", saver.getvalue()) is not None):
@@ -132,7 +140,8 @@ class YesMMS(Sender):
                 elif (re.search("The max. number of FREE SMS per hour has been reached", saver.getvalue()) is not None):
                     raise SiteCustomError(self.__class__.__name__, u"Limite orario di sms raggiunto, riprova piu' tardi")                
                 else: raise SenderError(self.__class__.__name__)
-        
+
         except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
+

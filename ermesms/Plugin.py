@@ -18,11 +18,6 @@ class Plugin(Singleton):
         """Ritorna true se questo plugin è utilizzabile."""
         raise NotImplementedError()
 
-    def isUnicodeCompliant(self):
-        """Return True if the Web service is compatible with Unicode
-        characters."""
-        raise NotImplementedError()
-
     def getPlugins(cls):
         """Ritorna un'istanza di ogni plugin disponibile in un dizionario
         indicizzato per nome.
@@ -35,3 +30,4 @@ class Plugin(Singleton):
                 result[i.__name__] = obj
         return result
     getPlugins = classmethod(getPlugins)
+

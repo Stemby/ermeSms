@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 from cStringIO import StringIO
 
@@ -23,6 +25,9 @@ class Tin(Sender):
 
     incValue = 6
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -55,7 +60,7 @@ class Tin(Sender):
             postFields["dominio"] = username[username.find("@")+1:]
             postFields["password"] = password
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL, "http://communicator.virgilio.it/asp/a3login.asp")
             self.perform(self.stop)
 
@@ -74,15 +79,15 @@ class Tin(Sender):
             postFields["a3afep"]="http://communicator.alice.it/asp/login.asp"
             postFields["a3se"]="http://communicator.alice.it/asp/login.asp"
             postFields["a3dcep"]="http://communicator.alice.it/asp/homepage.asp?s=005"
-            c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             c.setopt(pycurl.URL, "http://aaacsc.alice.it/piattaformaAAA/controller/AuthenticationServlet")
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
 
-            c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode({}))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode({},
+                    self.encoding))
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/menu.asp?dest=WP")
             self.perform(self.stop)
             c.setopt(pycurl.URL, "http://communicator.alice.it/asp/loadWP.asp")
@@ -110,7 +115,7 @@ class Tin(Sender):
             getFields["username"]=username
             c.setopt(pycurl.URL,
                 "http://gsmailmdumail.alice.it:8080/supermail/controller?" +
-                self.codingManager.urlEncode(getFields))
+                self.codingManager.urlEncode(getFields, self.encoding))
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -125,13 +130,13 @@ class Tin(Sender):
             postFields["testo"] = text
             postFields["recipient"] = number
             c.setopt(pycurl.POSTFIELDS,
-            self.codingManager.urlEncode(postFields))
+            self.codingManager.urlEncode(postFields, self.encoding))
             getFields = {}
             getFields["username"]=username
             getFields["action"]="sendsmspreview"
             c.setopt(pycurl.URL,
                 "http://gsmailmdumail.alice.it:8080/supermail/controller?" +
-                self.codingManager.urlEncode(getFields))
+                self.codingManager.urlEncode(getFields, self.encoding))
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -144,7 +149,7 @@ class Tin(Sender):
             getFields["action"]="sendsms"
             c.setopt(pycurl.URL,
                 "http://gsmailmdumail.alice.it:8080/supermail/controller?" +
-                self.codingManager.urlEncode(getFields))
+                self.codingManager.urlEncode(getFields, self.encoding))
             self.perform(self.stop, saver)
 
             if (re.search("Messaggio inviato correttamente al server", saver.getvalue()) is None):
@@ -153,3 +158,4 @@ class Tin(Sender):
         except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
+

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -28,6 +30,9 @@ class Tim(Sender):
 
     incValue = 4
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -66,8 +71,8 @@ class Tim(Sender):
             postFields["portale"] = "timPortale"
             postFields["login"] = username
             postFields["password"] = password
-            c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+            c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "https://www.tim.it/authfe/login.do")
             self.perform(self.stop, saver)
@@ -99,9 +104,10 @@ class Tim(Sender):
             postFields["freeNumbers"] = number
             postFields["textAreaStandard"] = text
             postFields["deliverySmsClass"] = 'STANDARD'
-            postdata = self.codingManager.urlEncode(postFields)+"&"+\
-                       urllib.urlencode({"t:formdata":formdata1})
-            c.setopt(pycurl.POSTFIELDS, postdata )
+            postdata = self.codingManager.urlEncode(postFields,
+                    self.encoding) + "&" + urllib.urlencode(
+                            {"t:formdata":formdata1})
+            c.setopt(pycurl.POSTFIELDS, postdata)
             c.setopt(pycurl.POST, True)
             url = "https://smsweb.tim.it/sms-web/adddispatch.adddispatchform"
             if jsession: url += ";jsessionid="+jsession
@@ -135,7 +141,7 @@ class Tim(Sender):
                 postFields["t:formdata"] = formdata
                 postFields["t:ac"] = "Dispatch"
                 c.setopt(pycurl.POSTFIELDS,
-                    self.codingManager.urlEncode(postFields))
+                    self.codingManager.urlEncode(postFields, self.encoding))
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.URL, "https://smsweb.tim.it/sms-web/validatecaptcha.validatecaptchaform" )
                 saver = StringIO()
@@ -167,3 +173,4 @@ class Tim(Sender):
         if (re.search(u'essere autenticati', page) is not None) or \
            (re.search(u'loginerror.do', page) is not None):
             raise SiteAuthError(self.__class__.__name__)
+

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO: unicode management
 # TODO: translate to English
 # NOTE: some strings are in Italian because this is an Italian Website
 
@@ -31,23 +30,18 @@ class Vodafone(Sender):
     incValue = 7
     """Incremento della gauge per pagina."""
 
+    def __init__(self):
+        self.encoding = 'iso-8859-1'
+
     def isAvailable(self):
         """Return True if this plugin is usable."""
         # A CaptchaDecoder must be available
         return CaptchaDecoder.getBestPlugin() is not None
 
-    def isUnicodeCompliant(self):
-        """Return True if the Web service is compatible with Unicode
-        characters."""
-        #return True # FIXME: it doesn't work... see:
-                     #        ermesms.CodingManager.urlEncode(self, dictionary)
-        return False
-
     def sendOne(self, number, text, data=None, ui=None):
-        """Send an SMS message with only ASCII characters and maximum length
-        maxLength using the specified credentials, supposing Internet
-        reachable.
-        """ # FIXME: why only ASCII?
+        """Send an SMS message with maximum length maxLength using the specified
+        credentials, supposing Internet reachable."""
+
         try:
             # Create a new cURL object and initialize it
             c = self.connectionManager.getCurl()
@@ -57,16 +51,17 @@ class Vodafone(Sender):
             password = data['Password']
             sim = str(data['SIM'])
 
-            if number[:3] == "+39":
+            if number[:3] == '+39':
                 number = number[3:]
-            elif number[0]=="+":
+            elif number[0] == '+':
                 raise SiteCustomError(self.__class__.__name__,
-                "With this website you can send SMS messages only to Italian "
-                "mobile phones.")
+                        "With this website you can send SMS messages only to "
+                        "Italian mobile phones.")
 
             # Visit the starting page
             saver = StringIO()
-            c.setopt(pycurl.URL, "http://www.vodafone.it/190/trilogy/jsp/home.do")
+            c.setopt(pycurl.URL,
+                    "http://www.vodafone.it/190/trilogy/jsp/home.do")
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
             self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
@@ -79,12 +74,14 @@ class Vodafone(Sender):
                 self.connectionManager.forgetCookiesFromDomain("190.it")
                 self.connectionManager.forgetCookiesFromDomain("vodafone.it")
                 saver = StringIO()
-                c.setopt(pycurl.URL, "https://www.vodafone.it/190/trilogy/jsp/login.do")
+                c.setopt(pycurl.URL,
+                        "https://www.vodafone.it/190/trilogy/jsp/login.do")
                 postFields = {}
                 postFields["username"] = username
                 postFields["password"] = password
                 c.setopt(pycurl.POST, True)
-                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                    postFields, self.encoding))
                 self.perform(self.stop, saver)
 
                 self.checkForErrors(saver.getvalue())
@@ -99,7 +96,9 @@ class Vodafone(Sender):
             if sim and (re.search('value="'+sim+'" selected >',
                                   saver.getvalue()) is None):
                 saver = StringIO()
-                c.setopt(pycurl.URL, "http://www.areaprivati.vodafone.it/190/trilogy/jsp/swapSim.do?tk=9616,1&ty_sim="+sim)
+                c.setopt(pycurl.URL,
+                        "http://www.areaprivati.vodafone.it/190/trilogy/jsp/"
+                        "swapSim.do?tk=9616,1&ty_sim="+sim)
                 self.perform(self.stop, saver)
                 self.checkForErrors(saver.getvalue())
                 self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
@@ -109,7 +108,8 @@ class Vodafone(Sender):
             # Visit the obligatory advertising
             c.setopt(pycurl.POST, False)
             c.setopt(pycurl.URL,
-                "http://www.vodafone.it/190/trilogy/jsp/dispatcher.do?ty_key=fdt_invia_sms&tk=9616,2")
+                "http://www.vodafone.it/190/trilogy/jsp/"
+                "dispatcher.do?ty_key=fdt_invia_sms&tk=9616,2")
             self.perform(self.stop)
 
             self.checkForErrors(saver.getvalue())
@@ -119,7 +119,8 @@ class Vodafone(Sender):
 
             # Visit the SMS form
             c.setopt(pycurl.URL,
-                "http://www.areaprivati.vodafone.it/190/trilogy/jsp/dispatcher.do?ty_key=fsms_hp&ipage=next")
+                "http://www.areaprivati.vodafone.it/190/trilogy/jsp/"
+                "dispatcher.do?ty_key=fsms_hp&ipage=next")
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -134,7 +135,7 @@ class Vodafone(Sender):
             postFields["message"] = text
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "http://www.areaprivati.vodafone.it/190/fsms/prepare.do")
             self.perform(self.stop, saver)
@@ -143,10 +144,12 @@ class Vodafone(Sender):
             self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
 
             if (re.search(
-                "Ti ricordiamo che puoi inviare SMS via Web solo a numeri di cellulare Vodafone",
+                "Ti ricordiamo che puoi inviare SMS via Web solo a numeri di "
+                "cellulare Vodafone",
                   saver.getvalue()) is not None or
                 re.search(
-                "Il numero di telefono del destinatario del messaggio non e' valido",
+                "Il numero di telefono del destinatario del messaggio non e' "
+                "valido",
                 saver.getvalue()) is not None):
                 raise SiteCustomError(self.__class__.__name__,
                         u"Questo sito permette di inviare " +
@@ -163,12 +166,15 @@ class Vodafone(Sender):
                     try:
                         saver = StringIO()
                         c.setopt(pycurl.POST, False)
-                        c.setopt(pycurl.URL, "http://www.areaprivati.vodafone.it/190/fsms/generateimg.do")
+                        c.setopt(pycurl.URL,
+                                "http://www.areaprivati.vodafone.it/190/fsms/"
+                                "generateimg.do")
                         self.perform(self.stop, saver)
 
                         self.checkForErrors(saver.getvalue())
                         self.checkManteinance(c.getinfo(pycurl.EFFECTIVE_URL))
-                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin().decodeCaptcha(saver, self.__class__.__name__)
+                        postFields["verifyCode"] = CaptchaDecoder.getBestPlugin(
+                                ).decodeCaptcha(saver, self.__class__.__name__)
                         c.setopt(pycurl.POST, True)
                     except CaptchaError:
                         raise SenderError(self.__class__.__name__)
@@ -185,7 +191,7 @@ class Vodafone(Sender):
 
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS,
-                    self.codingManager.urlEncode(postFields))
+                    self.codingManager.urlEncode(postFields, self.encoding))
 
                 #Confermo l'invio
                 saver = StringIO()
@@ -209,7 +215,42 @@ class Vodafone(Sender):
 
         except pycurl.error, e:
             errno, msg = e
-            raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
+            raise SiteConnectionError(self.__class__.__name__,
+                    self.codingManager.iso88591ToUnicode(msg))
+
+    def replaceSpecialChars(self, text):
+        """Replace non-recognized characters with similar expressions."""
+        replace_map = (
+                # ASCII
+                ("@", "AT"), ("[", "("), ("\\", "BkSlash"), ("]", ")"),
+                ("^", "Circumflex"), ("`", "'"), ("{", "("), ("|", "Pipe"),
+                ("}", ")"), ("~", "Tilde"),
+
+                # ISO 8859-1
+                (u"¢", "Cent"), (u"¦", "Pipe"), (u"¨", "Umlaut"), (u"©", "(C)"),
+                (u"ª", "a"), (u"«", "<"), (u"¬", "NOT"), (u"­", "\n"),
+                (u"®", "(R)"), (u"¯", "Macron"), (u"°", "o"), (u"±", "+-"),
+                (u"²", "2"), (u"³", "3"), (u"´", "'"), (u"µ", "Micro"),
+                (u"¶", "Pilcrow"), (u"·", "DOT"), (u"¸", "Cedilla"),
+                (u"¹", "1"), (u"º", "o"), (u"»", ">"), (u"¼", "1/4"),
+                (u"½", "1/2"), (u"¾", "3/4"), (u"À", "A'"), (u"Á", "A'"),
+                (u"Â", "A"), (u"Ã", "A"), (u"È", u"É"), (u"Ê", "E"),
+                (u"Ë", "E"), (u"Ì", "I'"), (u"Í", "I'"), (u"Î", "I"),
+                (u"Ï", "I"), (u"Ð", "ETH"), (u"Ò", "O'"), (u"Ó", "O'"),
+                (u"Ô", "O"), (u"Õ", "O"), (u"×", "x"), (u"Ù", "U'"),
+                (u"Ú", "U'"), (u"Û", "U"), (u"Ý", "Y'"), (u"Þ", "THORN"),
+                (u"á", u"à"), (u"â", "a"), (u"ã", "a"), (u"ç", "c"),
+                (u"ê", "e"), (u"ë", "e"), (u"í", u"ì"), (u"î", "i"),
+                (u"ï", "i"), (u"ð", "Eth"), (u"ó", u"ò"), (u"ô", "o"),
+                (u"õ", "o"), (u"÷", "Obelus"), (u"ú", u"ù"), (u"û", "u"),
+                (u"ý", "y'"), (u"þ", "Thorn"), (u"ÿ", "y"),
+
+                # UTF-8
+                (u"€", "EUR"))
+
+        for old, new in replace_map:
+            text = text.replace(old, new)
+        return text
 
     def checkForErrors(self, page):
         """Solleva un'eccezione se la pagina contiene una segnalazione d'errore dal sito."""
@@ -221,3 +262,4 @@ class Vodafone(Sender):
     def checkManteinance(self, url):
         if "courtesy" in url:
             raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
+

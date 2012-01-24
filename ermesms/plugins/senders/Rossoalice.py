@@ -1,5 +1,6 @@
-#!/usr/bin/python2.4
 # -*- coding: utf-8 -*-
+
+# TODO: translate to English
 
 import re
 from cStringIO import StringIO
@@ -26,6 +27,9 @@ class Rossoalice(Sender):
 
     incValue = 5
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -56,7 +60,7 @@ class Rossoalice(Sender):
             postFields["login"] = username + "@alice.it"
             postFields["password"] = password
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "http://authsrs.alice.it/aap/validatecredential")
             self.perform(self.stop, saver)
@@ -89,12 +93,12 @@ class Rossoalice(Sender):
 
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/CheckDest.jsp")
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             self.perform(self.stop)
 
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/inviaSms.jsp")
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             self.perform(self.stop)
 
             if ui: ui.gaugeIncrement(self.incValue)
@@ -120,7 +124,7 @@ class Rossoalice(Sender):
             except CaptchaError: print "An error occurred while trying to decode captcha"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                  self.codingManager.urlEncode(postFields))
+                  self.codingManager.urlEncode(postFields, self.encoding))
             saver = StringIO()
             c.setopt(pycurl.URL, "http://webloginmobile.rossoalice.alice.it/alice/jsp/SMS/inviaSms.jsp")
             self.perform(self.stop, saver)
@@ -140,3 +144,4 @@ class Rossoalice(Sender):
         except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
+

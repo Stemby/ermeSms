@@ -1,6 +1,5 @@
 -import contacts from MoioSMS 2
 -verify GPL compliance: http://www.gnu.org/licenses/gpl-howto.html
--manage special characters: http://github.com/sylarpowa/ermeSms/issues#issue/1
 -i18n
 -add a menu with "Preferences"
 -neoPhysis integration (via D-Bus?)
@@ -16,3 +15,4 @@
 -Ordinare a scelta: non solo tra i 3 modi offerti ora
 -Possibilità di eliminare il proxy impostato. Succede che se sei in un luogo che richiede il proxy (es. uni) e poi torni a casa e non lo devi usare, di fallisce sempre l'invio e non lo puoi eliminare. Bisogna aggiungere un tasto per poterlo eliminare (magari in una finestra di preferenze come sotto)
 -Preferences con enable log, view log, edit proxy, enable/disable autodecode: inserire una finestra di preferenze dove mettere le cose scritte (e magari altre, tipo l'eliminazione della master password (o magari la sua modifica))
+

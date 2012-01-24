@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -23,6 +25,9 @@ class VodafoneMMS(Sender):
 
     requiresRegistration = ['Mittente']
     """Cosa richiede questo plugin?"""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -57,7 +62,7 @@ class VodafoneMMS(Sender):
             postFields["nextPage"] = "/web/servletresult.html"
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL, "http://mmsviaweb.net.vodafone.it/WebComposer/web/elaborapop.jsp")
             self.perform(self.stop, saver)
             self.checkForErrors(saver.getvalue())
@@ -73,3 +78,4 @@ class VodafoneMMS(Sender):
         """Solleva un'eccezione se la pagina contiene una segnalazione d'errore dal sito."""
         if(re.search("verificato un errore durante la procedura", page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
+

@@ -66,15 +66,15 @@ class CodingManager(Singleton):
         """Converte una stringa da ASCII codificato a stringa di bit."""
         return string.decode("base64")
 
-    def urlEncode(self, dictionary):
-        """Converte il dizionario in una stringa in formato
-        application/x-www-form-urlencoded"""
-        # For avoiding coding issues, replace non-ASCII characters with '?'
-        # FIXME: Unicode MUST be managed correctly by ermeSms
-        safeDictionary = {}
+    def urlEncode(self, dictionary, encoding):
+        """Convert the dictionary in an application/x-www-form-urlencoded
+        string."""
+        encoded_dict = {}
         for k, v in dictionary.iteritems():
-            safeDictionary[k.encode("ascii", "replace")] = v.encode("ascii", "replace")
-        return urllib.urlencode(safeDictionary)
+            encoded_dict[k.encode(encoding)] = v.encode(encoding)
+        print encoded_dict # NOTE: debug
+        print urllib.urlencode(encoded_dict) # NOTE: debug
+        return urllib.urlencode(encoded_dict)
 
     def xmlEncode(self, unicodeString, encoding="ascii"):
         """

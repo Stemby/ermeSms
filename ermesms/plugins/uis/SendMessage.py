@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+# TODO: translate to English
+
 import threading
 import os
 import sys
@@ -30,13 +32,13 @@ class SendMessage(threading.Thread):
         self.pm = self.mf.pm
         self.masterKey = self.mf.masterKey
 
-           
+
     def run(self):
         """Spedisce un messaggio e aggiorna la grafica."""
         #imposta senderName e identifica l'invio offline
         senderName = self.senderName
         sender = Sender.getPlugins()[senderName]
-                       
+
         done = False
         hadError = False
         while done == False:
@@ -55,25 +57,26 @@ class SendMessage(threading.Thread):
                     proxy = ''
 
                 #resetta la gauge
-                self.mf.gaugeIncrement(0)                     
-              
+                self.mf.gaugeIncrement(0)
+
                 sender.send(proxy, dn, self.text, reg, self.mf)
 
                 #log
                 self.mf.emit(SIGNAL('logSave'), senderName, self.dest,
-                               sender.replaceNonAscii(self.text))
+                               sender.replaceSpecialChars(self.text))
                 #salvo il gestore
                 self.pm.setContactSender(self.dest,senderName)
                 #aggiungo 1 ai mex inviati
-                textCount=sender.countTexts(sender.replaceNonAscii(self.text))
+                textCount=sender.countTexts(sender.replaceSpecialChars(
+                    self.text))
                 if self.pm.isSentSenderAvailable(senderName):
                     sentmessage = int(self.pm.getSentSender(senderName))+\
                                   textCount
                 else: sentmessage = textCount
                 self.pm.setSentSender(senderName,str(sentmessage))
-                
+
                 done = True
-                
+
             except PreferenceManagerError:
                 data = {'message' : "Immetti dei dati validi per accedere " + \
                     "al sito " + senderName }
@@ -83,7 +86,7 @@ class SendMessage(threading.Thread):
                 if not data:
                     done = True
                     hadError = u"L'ultimo SMS non è stato" +\
-                               u" inviato a causa di un errore."                   
+                               u" inviato a causa di un errore."
                 else:
                     for i in sender.requiresRegistration:
                         self.pm.addAccount(i,data[i],senderName,self.masterKey)
@@ -98,12 +101,12 @@ class SendMessage(threading.Thread):
                 if not data:
                     done = True
                     hadError = u"L'ultimo SMS non è stato" +\
-                               u" inviato a causa di un errore."                   
+                               u" inviato a causa di un errore."
                 else:
                     self.pm.clearAccount(senderName)
                     for i in sender.requiresRegistration:
                         self.pm.addAccount(i,data[i],senderName,self.masterKey)
-            except ConnectionError:        
+            except ConnectionError:
                 self.mf.emit(SIGNAL('proxyRequest'))
                 data = self.mf.qReq.get(True)
                 if not data:
@@ -113,10 +116,10 @@ class SendMessage(threading.Thread):
             except StopError:
                 done = True
                 hadError = u"L'ultimo SMS non è stato inviato per" + \
-                           u" interruzione dell'utente."                    
+                           u" interruzione dell'utente."
             except (SiteConnectionError, SiteCustomError, SenderError,
                     CaptchaError, NotFoundError), e:
-                done = True                  
+                done = True
                 hadError = u"L'ultimo SMS non è stato" +\
                            u" inviato a causa di un errore."
                 self.mf.emit(SIGNAL('criticalError'), e.__str__())
@@ -132,7 +135,7 @@ class SendMessage(threading.Thread):
 
         #se invio offline, comunico l'esito
         if self.offline: self.mf.qRes.put(hadError)
-        #se invio direttamente aggiorno tutto                
+        #se invio direttamente aggiorno tutto
         else: self.mf.emit(SIGNAL('sentMessageUpdate'), hadError)
 
 
@@ -142,7 +145,7 @@ class SendDelayed(threading.Thread):
         threading.Thread.__init__(self)
         self.mf = mf
         self.data = data
-        
+
     def run(self):
         #invio gli sms in un altro thread
         result = []
@@ -154,3 +157,4 @@ class SendDelayed(threading.Thread):
             self.mf.offlineSend.emit(SIGNAL('singleSent'), hadError, data)
             result.append((i,hadError,data))
         self.mf.offlineSend.emit(SIGNAL('sentOfflineUpdate'), result)
+

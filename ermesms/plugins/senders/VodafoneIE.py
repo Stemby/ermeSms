@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -24,6 +27,9 @@ class VodafoneIE(Sender):
 
     incValue = 4
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -68,7 +74,8 @@ class VodafoneIE(Sender):
                 postFields["username"] = username
                 postFields["password"] = password
                 c.setopt(pycurl.POST, True)
-                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                    postFields, self.encoding))
                 self.perform(self.stop, saver)
                 self.checkForErrors(saver.getvalue())
 
@@ -106,7 +113,7 @@ class VodafoneIE(Sender):
             postFields["futuretime"] = 'false'
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "https://www.vodafone.ie/myv/messaging/webtext/Process.shtml")
             self.perform(self.stop, saver)
@@ -131,3 +138,4 @@ class VodafoneIE(Sender):
             raise SiteCustomError(self.__class__.__name__, u"Testo del messaggio mancante")
         if(re.search("We're sorry, an error has occurred", page) is not None):
             raise SiteCustomError(self.__class__.__name__, u"Errore del server")
+

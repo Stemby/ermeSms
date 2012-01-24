@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 import sys
 from cStringIO import StringIO
@@ -26,6 +28,9 @@ class VodafoneSim2(Sender):
 
     incValue = 7
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -71,7 +76,8 @@ class VodafoneSim2(Sender):
                 postFields["username"] = username
                 postFields["password"] = password
                 c.setopt(pycurl.POST, True)
-                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(postFields))
+                c.setopt(pycurl.POSTFIELDS, self.codingManager.urlEncode(
+                    postFields, self.encoding))
                 self.perform(self.stop, saver)
 
                 self.checkForErrors(saver.getvalue())
@@ -121,7 +127,7 @@ class VodafoneSim2(Sender):
             postFields["message"] = text
             c.setopt(pycurl.POST, True)
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "http://www.areaprivati.vodafone.it/190/fsms/prepare.do")
             self.perform(self.stop, saver)
@@ -172,7 +178,7 @@ class VodafoneSim2(Sender):
 
                 c.setopt(pycurl.POST, True)
                 c.setopt(pycurl.POSTFIELDS,
-                    self.codingManager.urlEncode(postFields))
+                    self.codingManager.urlEncode(postFields, self.encoding))
 
                 #Confermo l'invio
                 saver = StringIO()
@@ -208,3 +214,4 @@ class VodafoneSim2(Sender):
     def checkManteinance(self, url):
         if "courtesy" in url:
             raise SiteCustomError(self.__class__.__name__, u"Il sito è in manutenzione, riprova più tardi.")
+

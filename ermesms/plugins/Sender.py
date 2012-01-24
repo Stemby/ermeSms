@@ -3,7 +3,6 @@
 # TODO: translate to English
 
 import math
-
 import pycurl
 
 from ermesms.Plugin import Plugin
@@ -28,20 +27,18 @@ class Sender(Plugin):
     perform = connectionManager.ePerform
     """Reimplementazione di curl perform"""
 
-    def sendOne(self, number, text, dati = None, ui = None):
-        """Spedisce un SMS con soli caratteri ASCII e di lunghezza massima maxLength
-        con le credenziali specificate, supponendo Internet raggiungibile.
-        """
+    def sendOne(self, number, text, data=None, ui=None):
+        """Send an SMS message with maximum length maxLength using the specified
+        credentials, supposing Internet reachable."""
         raise NotImplementedError()
 
-    def send(self, proxy, number, text, dati = None, ui = None):
-        """Spedisce un SMS (con le eventuali credenziali specificate)."""
+    def send(self, proxy, number, text, data=None, ui=None):
+        """Send an SMS message (with any specified credentials)."""
         #Controllo pre-condizioni
         self.connectionManager.setCurlProxy(proxy)
         if self.connectionManager.isInternetReachable() == False:
             raise ConnectionError()
-        if not self.isUnicodeCompliant():
-            text = self.replaceNonAscii(text)
+        text = self.replaceSpecialChars(text)
         length = len(text)
         if length > self.maxLength*99:#massima lunghezza 99 messaggi maxLength caratteri ognuno
             raise TooLongMessageError()
@@ -50,20 +47,10 @@ class Sender(Plugin):
         for i in texts:
             #resetta la gauge
             if ui: ui.gaugeIncrement(0)
-            self.sendOne(number, i, dati, ui)
+            self.sendOne(number, i, data, ui)
 
-    def replaceNonAscii(sender, text):
-        """Replace some non-ASCII characters with similar ASCII expressions."""
-        replace_map = (
-                (u"à", "a'"), (u"á", "a'"), (u"è", "e'"), (u"é", "e'"),
-                (u"í", "i'"), (u"ì", "i'"), (u"ó", "o'"), (u"ò", "o'"),
-                (u"ú", "u'"), (u"ù", "u'"), (u"À", "A'"), (u"È", "E'"),
-                (u"É", "E'"), (u"Ì", "I'"), (u"Ò", "O'"), (u"Ù", "U'"),
-                (u"ç", "c"), (u"[", "("), (u"]", ")"), (u"{", "("),
-                (u"}", ")"), (u"^", ""), (u"£", "L."), (u"\\", "BkSlash"),
-                (u"|", "Pipe"), (u"§", "Par."), (u"°", "o"), (u"€", "EUR"),
-                (u"~", "Tilde"), (u"`", "'"), (u"¡", ""), (u"¿", ""))
-        for old, new in replace_map: text = text.replace(old, new)
+    def replaceSpecialChars(self, text):
+        """Replace non-recognized characters with similar expressions."""
         return text
 
     def splitText(self, text):
@@ -105,12 +92,8 @@ class Sender(Plugin):
             return int(math.ceil(textLength/(self.maxLength - 8.0)))
 
     def newCharCount(self, text):
-        if self.isUnicodeCompliant():
-            textLength = len(text)
-            textCount = self.countTexts(text)
-        else:
-            textLength = len(self.replaceNonAscii(text))
-            textCount = self.countTexts(self.replaceNonAscii(text))
+        textLength = len(self.replaceSpecialChars(text))
+        textCount = self.countTexts(self.replaceSpecialChars(text))
         if textCount == 2:
             return (textLength - self.maxLength)
         elif textCount != 1:

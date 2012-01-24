@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# TODO: translate to English
+
 import re
 from cStringIO import StringIO
 
@@ -23,6 +25,9 @@ class Enel(Sender):
 
     incValue = 5
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -59,7 +64,7 @@ class Enel(Sender):
             postFields["txtUsername"] = username
             postFields["txtPassword"] = password
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL, "http://www.enel.it/AuthFiles/Login.aspx")
             self.perform(self.stop, saver)
 
@@ -92,7 +97,7 @@ class Enel(Sender):
             postFields["gsm"] = number[3:]
             postFields["cksmsenel"] = checkCode
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp?SMSstartpage=http://www.enel.it/Index.asp")
             self.perform(self.stop, saver)
@@ -126,7 +131,7 @@ class Enel(Sender):
             postFields["x"+str(xFieldKey)] = str(xFieldValue)
             postFields["cksmsenel"] = checkCode
             c.setopt(pycurl.POSTFIELDS,
-                self.codingManager.urlEncode(postFields))
+                self.codingManager.urlEncode(postFields, self.encoding))
 
             c.setopt(pycurl.URL,
                 "http://servizi.enel.it/sms/service/scrivisms.asp")
@@ -142,3 +147,4 @@ class Enel(Sender):
         except pycurl.error, e:
             errno, msg = e
             raise SiteConnectionError(self.__class__.__name__, self.codingManager.iso88591ToUnicode(msg))
+

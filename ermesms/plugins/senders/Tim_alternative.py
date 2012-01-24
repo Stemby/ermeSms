@@ -3,6 +3,8 @@
 # Versione modificata da Paolo Viotti in data 8/12/2010
 # Usa mechanize invece di pycurl
 
+# TODO: translate to English
+
 import re
 import sys
 #import traceback
@@ -33,6 +35,9 @@ class Tim(Sender):
 
     incValue = 4
     """Incremento della gauge per pagina."""
+
+    def __init__(self):
+        self.encoding = 'FIXME'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
@@ -115,3 +120,4 @@ class Tim(Sender):
         if (re.search(u'essere autenticati', page) is not None) or \
            (re.search(u'loginerror.do', page) is not None):
             raise SiteAuthError(self.__class__.__name__)
+
