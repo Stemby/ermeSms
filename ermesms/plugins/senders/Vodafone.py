@@ -222,9 +222,9 @@ class Vodafone(Sender):
         """Replace non-recognized characters with similar expressions."""
         replace_map = (
                 # ASCII
-                ("@", "AT"), ("[", "("), ("\\", "BkSlash"), ("]", ")"),
-                ("^", "Circumflex"), ("`", "'"), ("{", "("), ("|", "Pipe"),
-                ("}", ")"), ("~", "Tilde"),
+                ("[", "("), ("\\", "BkSlash"), ("]", ")"), ("^", "Circumflex"),
+                ("`", "'"), ("{", "("), ("|", "Pipe"), ("}", ")"),
+                ("~", "Tilde"),
 
                 # ISO 8859-1
                 (u"¢", "Cent"), (u"¦", "Pipe"), (u"¨", "Umlaut"), (u"©", "(C)"),
