@@ -30,7 +30,7 @@ class VodafoneWidget(Sender):
     """Incremento della gauge per pagina."""
 
     def __init__(self):
-        self.encoding = 'FIXME'
+        self.encoding = 'iso-8859-1'
 
     def isAvailable(self):
         """Ritorna true se questo plugin è utilizzabile."""
