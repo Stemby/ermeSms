@@ -19,7 +19,7 @@ class SenderError(Exception):
                u"MoioSMS necessita un aggiornamento. \n\n" +
                u"Se il problema persiste ed è possibile inviare SMS \n" +
                u"dal Web, controlla che non sia uscita una nuova \n" +
-               u"versione sul forum del sito ufficiale: \n"
-               u"http://www.ermesmsli.net/forum/")
+               u"versione sul sito ufficiale: \n"
+               u"https://github.com/thomasbertani/ermeSms")
 
         return (msg)
